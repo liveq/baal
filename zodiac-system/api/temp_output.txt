@@ -1,0 +1,3 @@
+<string>:10: SyntaxWarning: invalid escape sequence '\!'
+<string>:53: SyntaxWarning: invalid escape sequence '\!'
+selectHistoricalFigure function updated

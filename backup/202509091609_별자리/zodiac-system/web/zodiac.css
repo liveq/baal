@@ -1,0 +1,1858 @@
+/* 별자리 운세 스타일 */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+.zodiac-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 120px 20px 20px;
+    margin-left: 210px;
+    transition: margin-left 0.3s ease;
+    min-height: 100vh;
+}
+
+/* ===== 좌측 네비게이션 스타일 (6x2 그리드로 수정) ===== */
+.zodiac-nav {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    width: 200px;
+    background: rgba(255, 255, 255, 0.98);
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+    overflow-y: auto;
+    transition: transform 0.3s ease;
+}
+
+.zodiac-nav.collapsed {
+    transform: translateX(-200px);
+}
+
+.zodiac-nav.collapsed ~ .zodiac-container {
+    margin-left: 20px;
+}
+
+.zodiac-nav.collapsed ~ .zodiac-container .zodiac-header {
+    left: 10px;
+}
+
+.zodiac-nav.collapsed ~ .zodiac-container .compact-input-bar {
+    left: 10px;
+}
+
+.nav-header {
+    padding: 12px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    text-align: center;
+    position: sticky;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    top: 0;
+    z-index: 10;
+}
+
+.nav-header h3 {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.nav-items {
+    padding: 8px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+}
+
+.nav-item {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 4px;
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    min-height: 65px;
+}
+
+.nav-item:hover {
+    background: #f8f9fa;
+    border-color: #667eea;
+    transform: scale(1.05);
+}
+
+.nav-item.active {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border-color: transparent;
+    color: white;
+}
+
+.nav-symbol {
+    font-size: 18px;
+    margin-bottom: 4px;
+}
+
+.nav-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+}
+
+.nav-name {
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.nav-date {
+    font-size: 9px;
+    opacity: 0.7;
+}
+
+.nav-item.active .nav-date {
+    opacity: 0.9;
+}
+
+/* 햄버거 메뉴 토글 버튼 */
+.nav-toggle {
+    position: fixed;
+    left: 200px;
+    top: 20px;
+    width: 30px;
+    height: 30px;
+    background: white;
+    border: 2px solid #667eea;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 101;
+    transition: left 0.3s ease, background 0.3s ease, transform 0.3s ease;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    font-size: 14px;
+}
+
+.nav-toggle:hover {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    transform: scale(1.1);
+}
+
+.nav-toggle.collapsed {
+    left: 10px;
+}
+
+.nav-toggle span {
+    font-size: 20px;
+    transition: transform 0.3s ease;
+}
+
+.zodiac-nav.collapsed ~ .nav-toggle span {
+    transform: rotate(90deg);
+}
+
+/* 네비게이션 스크롤바 */
+.zodiac-nav::-webkit-scrollbar {
+    width: 6px;
+}
+
+.zodiac-nav::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.zodiac-nav::-webkit-scrollbar-thumb {
+    background: #667eea;
+    border-radius: 3px;
+}
+
+.zodiac-nav::-webkit-scrollbar-thumb:hover {
+    background: #764ba2;
+}
+
+/* 헤더 스타일 - 고정 */
+.zodiac-header {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    padding: 12px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 200px;
+    right: 0;
+    z-index: 50;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.main-btn {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(102, 126, 234, 0.2);
+    color: #667eea;
+    border: 1px solid rgba(102, 126, 234, 0.3);
+    padding: 6px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 18px;
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.main-btn:hover {
+    background: rgba(102, 126, 234, 0.3);
+    transform: translateY(-50%) scale(1.1);
+}
+
+.close-btn {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: linear-gradient(135deg, rgba(251, 207, 232, 0.3), rgba(255, 159, 195, 0.3));
+    color: #ec4899;
+    border: 1px solid rgba(236, 72, 153, 0.2);
+    padding: 6px 10px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    z-index: 10;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.close-btn:hover {
+    background: linear-gradient(135deg, rgba(236, 72, 153, 0.3), rgba(219, 39, 119, 0.3));
+    transform: translateY(-50%) rotate(90deg) scale(1.1);
+    color: #be185d;
+}
+
+.zodiac-header h1 {
+    font-size: 18px;
+    color: white;
+    margin: 0;
+}
+
+.header-date {
+    position: absolute;
+    right: 20px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.9);
+}
+
+/* 컴팩트한 입력 바 스타일 - 고정 */
+.compact-input-bar {
+    background: linear-gradient(135deg, rgba(255,255,255,0.98), rgba(249,250,251,0.98));
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    border-bottom: 1px solid rgba(102,126,234,0.1);
+    position: fixed;
+    top: 48px;
+    left: 200px;
+    right: 0;
+    z-index: 45;
+}
+
+.input-section {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.input-section label {
+    font-size: 13px;
+    color: #666;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/* 컴팩트 날짜 입력 래퍼 */
+.date-input-wrapper.compact {
+    position: relative;
+    display: inline-block;
+}
+
+.date-input-wrapper.compact:hover .date-picker-btn.compact {
+    opacity: 1;
+    visibility: visible;
+}
+
+.compact-input {
+    width: 60px;
+    padding: 6px 8px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 13px;
+    text-align: center;
+    transition: all 0.2s ease;
+}
+
+.compact-input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 2px rgba(102,126,234,0.1);
+}
+
+/* 컴팩트 날짜 선택 버튼 (1시 방향) */
+.date-picker-btn.compact {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: none;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    z-index: 10;
+}
+
+.date-picker-btn.compact:hover {
+    transform: scale(1.1);
+    box-shadow: 0 3px 8px rgba(102,126,234,0.4);
+}
+
+.compact-btn {
+    padding: 6px 16px;
+    border: none;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+}
+
+.compact-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(102,126,234,0.3);
+}
+
+.compact-btn.compat {
+    background: linear-gradient(135deg, #f093fb, #f5576c);
+}
+
+.compact-btn.check {
+    background: linear-gradient(135deg, #fa709a, #fee140);
+}
+
+.partner-section {
+    border-left: 2px solid rgba(240,147,251,0.3);
+    padding-left: 15px;
+}
+
+.separator {
+    color: #f5576c;
+    font-size: 18px;
+    margin: 0 5px;
+}
+
+/* 홈 버튼 */
+.home-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    color: white;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    transition: all 0.3s ease;
+    margin-right: 15px;
+    flex-shrink: 0;
+}
+
+.home-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: white;
+    transform: scale(1.1);
+    box-shadow: 0 3px 10px rgba(255,255,255,0.3);
+}
+
+/* 뒤로가기 버튼 */
+.back-btn {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border: none;
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    margin-right: 15px;
+    flex-shrink: 0;
+    box-shadow: 0 2px 6px rgba(118,75,162,0.3);
+}
+
+.back-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 3px 10px rgba(118,75,162,0.4);
+    background: linear-gradient(135deg, #764ba2, #667eea);
+}
+
+/* 공유 버튼 */
+.share-btn {
+    background: linear-gradient(135deg, #56CCF2, #2F80ED);
+    border: none;
+    color: white;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 6px rgba(47,128,237,0.3);
+    flex-shrink: 0;
+}
+
+.share-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 3px 10px rgba(47,128,237,0.4);
+}
+
+/* 생년월일 입력 섹션 (기존 유지) */
+.birth-input-section {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    padding: 30px;
+    margin-bottom: 30px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.input-container h2 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* 인라인 입력 컨테이너 (한 줄 레이아웃) */
+.input-container-inline {
+    padding: 20px;
+}
+
+.input-container-inline h2 {
+    display: inline-block;
+    margin-right: 20px;
+    color: #333;
+    font-size: 16px;
+    vertical-align: middle;
+}
+
+.inline-input-row {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+}
+
+.partner-input-row {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #e0e0e0;
+}
+
+.date-input-group {
+    display: flex;
+    gap: 10px;
+}
+
+/* 궁합 버튼 스타일 */
+.compat-btn {
+    background: linear-gradient(135deg, #f093fb, #f5576c);
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 25px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.compat-btn:hover {
+    transform: scale(1.05);
+}
+
+.check-compat-btn {
+    background: linear-gradient(135deg, #fa709a, #fee140);
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 25px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    margin-left: 10px;
+}
+
+.check-compat-btn:hover {
+    transform: scale(1.05);
+}
+
+.date-input-group input {
+    width: 100px;
+    padding: 10px;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    font-size: 16px;
+    text-align: center;
+    transition: border-color 0.3s ease;
+}
+
+.date-input-group input:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+.find-btn {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 25px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.find-btn:hover {
+    transform: scale(1.05);
+}
+
+/* 별자리 선택 휠 */
+.zodiac-wheel-section {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    padding: 30px;
+    margin-bottom: 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.zodiac-wheel-section h3 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.zodiac-wheel {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+}
+
+.zodiac-item {
+    background: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 15px;
+    padding: 15px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.zodiac-item:hover {
+    border-color: #667eea;
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+}
+
+.zodiac-item.active {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border-color: transparent;
+}
+
+.zodiac-symbol {
+    display: block;
+    font-size: 36px;
+    margin-bottom: 5px;
+}
+
+.zodiac-name {
+    display: block;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 3px;
+}
+
+.zodiac-date {
+    display: block;
+    font-size: 12px;
+    opacity: 0.7;
+}
+
+/* 운세 디스플레이 */
+.fortune-display {
+    background: linear-gradient(135deg, rgba(255,255,255,0.98), rgba(249,250,251,0.98));
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    margin-top: 10px;
+}
+
+/* 탭 메뉴 래퍼 (별자리 정보 + 탭 + 공유 버튼) */
+.tab-menu-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+    padding: 8px;
+    background: linear-gradient(135deg, rgba(102,126,234,0.05), rgba(118,75,162,0.05));
+    border-radius: 10px;
+}
+
+.zodiac-info-compact {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+}
+
+.zodiac-info-compact .zodiac-icon {
+    font-size: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: white;
+    border-radius: 50%;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.zodiac-info-compact div {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.zodiac-info-compact .zodiac-title {
+    font-size: 14px;
+    color: #333;
+    font-weight: 600;
+}
+
+.zodiac-info-compact .zodiac-period {
+    color: #666;
+    font-size: 11px;
+}
+
+/* 탭 메뉴 */
+.tab-menu {
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    gap: 3px;
+    background: rgba(0,0,0,0.02);
+    padding: 4px;
+    border-radius: 8px;
+}
+
+.tab-btn {
+    background: transparent;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #666;
+    font-weight: 500;
+}
+
+.tab-btn:hover {
+    background: rgba(102,126,234,0.1);
+    color: #667eea;
+}
+
+.tab-btn.active {
+    background: white;
+    color: #667eea;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    font-weight: 600;
+}
+
+/* 탭 컨텐츠 */
+.tab-panel {
+    display: none;
+}
+
+.tab-panel.active {
+    display: block;
+}
+
+/* 운세 요약 */
+.fortune-summary {
+    background: linear-gradient(135deg, rgba(245,247,250,0.5), rgba(195,207,226,0.3));
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid rgba(102,126,234,0.1);
+}
+
+.overall-fortune {
+    font-size: 13px;
+    line-height: 1.5;
+    color: #444;
+}
+
+/* 통합된 운세 (점수 + 메시지) */
+.fortune-combined {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+.fortune-item {
+    background: white;
+    border-radius: 8px;
+    padding: 10px;
+    border: 1px solid rgba(0,0,0,0.05);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+}
+
+.fortune-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 6px;
+}
+
+.fortune-header .score-icon {
+    font-size: 16px;
+}
+
+.fortune-header .score-label {
+    font-weight: 600;
+    color: #555;
+    font-size: 12px;
+    flex: 1;
+}
+
+.fortune-header .score-value {
+    font-size: 12px;
+    font-weight: bold;
+    color: #667eea;
+}
+
+.progress-bar {
+    background: #f0f0f0;
+    border-radius: 3px;
+    height: 5px;
+    margin: 6px 0;
+    overflow: hidden;
+}
+
+.progress {
+    height: 100%;
+    background: linear-gradient(90deg, #667eea, #764ba2);
+    border-radius: 3px;
+    transition: width 1s ease;
+}
+
+.fortune-text {
+    margin: 8px 0 0 0;
+    color: #666;
+    line-height: 1.4;
+    font-size: 11px;
+}
+
+/* 행운 아이템 한줄 레이아웃 */
+.lucky-items-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 15px;
+    padding: 10px;
+    background: linear-gradient(135deg, rgba(102,126,234,0.03), rgba(118,75,162,0.03));
+    border-radius: 8px;
+    border: 1px solid rgba(102,126,234,0.08);
+}
+
+.lucky-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 10px;
+    background: white;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.lucky-item span {
+    font-size: 10px;
+    color: #666;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.lucky-color {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+}
+
+.lucky-number,
+.lucky-time {
+    font-size: 14px;
+    font-weight: bold;
+    color: #667eea;
+}
+
+/* 오늘의 조언 컴팩트 */
+.advice-box-compact {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 5px 10px;
+    background: white;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.advice-box-compact span {
+    font-size: 11px;
+    color: #667eea;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.advice-box-compact p {
+    margin: 0;
+    font-size: 11px;
+    color: #555;
+    line-height: 1.4;
+}
+
+/* 조언 박스 */
+.advice-box {
+    background: linear-gradient(135deg, #ffecd2, #fcb69f);
+    border-radius: 15px;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.advice-box h4 {
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.advice-box p {
+    color: #555;
+    line-height: 1.6;
+}
+
+/* 기간 정보 */
+.period-info {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.period-info h3 {
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.theme {
+    font-size: 18px;
+    color: #667eea;
+    font-weight: bold;
+}
+
+/* 주요 날짜 */
+.key-days {
+    background: #f8f9fa;
+    border-radius: 15px;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.key-days h4 {
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.key-days ul {
+    list-style: none;
+    padding: 0;
+}
+
+.key-days li {
+    padding: 5px 0;
+    color: #666;
+}
+
+/* 연간 하이라이트 */
+.year-highlights {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin: 20px 0;
+}
+
+.highlight-item {
+    background: white;
+    border-radius: 15px;
+    padding: 20px;
+    border: 1px solid #e0e0e0;
+}
+
+.highlight-item h4 {
+    margin-bottom: 10px;
+    color: #333;
+}
+
+/* 궁합 */
+.compatibility-input {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.compatibility-input h3 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.compatibility-input select {
+    width: 250px;
+    padding: 10px;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    font-size: 16px;
+    margin-right: 10px;
+}
+
+.check-btn {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    padding: 10px 30px;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.check-btn:hover {
+    transform: scale(1.05);
+}
+
+.compatibility-result {
+    text-align: center;
+}
+
+.compatibility-score {
+    margin-bottom: 30px;
+}
+
+.score-circle {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20px auto;
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+}
+
+.score-circle span {
+    font-size: 48px;
+    color: white;
+    font-weight: bold;
+}
+
+.compatibility-description {
+    background: #f8f9fa;
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
+/* 초기 화면 별자리 소개 스타일 */
+.zodiac-intro {
+    padding: 10px 10px;
+    animation: fadeIn 0.5s ease;
+}
+
+.intro-title {
+    text-align: center;
+    font-size: 22px;
+    color: #333;
+    margin-bottom: 15px;
+    font-weight: 700;
+    margin-top: 0;
+}
+
+.zodiac-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    max-width: 860px;
+    margin: 0 auto;
+}
+
+.zodiac-card {
+    background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+    border-radius: 12px;
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+    border: 2px solid transparent;
+    position: relative;
+}
+
+.magnifier-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    font-size: 14px;
+    cursor: pointer;
+    opacity: 0;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+    z-index: 10;
+}
+
+.zodiac-card:hover .magnifier-btn,
+.zodiac-info-compact:hover .magnifier-btn {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.magnifier-btn:hover {
+    background: linear-gradient(135deg, #764ba2, #667eea);
+    transform: scale(1.2) rotate(15deg);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.5);
+}
+
+.zodiac-card:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+    border: 2px solid #667eea;
+    background: linear-gradient(135deg, #fff 0%, #ede7f6 100%);
+}
+
+.zodiac-emoji {
+    font-size: 26px;
+    display: block;
+    margin-bottom: 6px;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+
+.zodiac-card h3 {
+    font-size: 13px;
+    color: #333;
+    margin-bottom: 3px;
+    font-weight: 600;
+}
+
+.zodiac-date {
+    font-size: 10px;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.zodiac-desc {
+    font-size: 10px;
+    color: #555;
+    line-height: 1.3;
+}
+
+/* 별자리 설명 모달 스타일 */
+.zodiac-modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    animation: fadeIn 0.3s ease;
+}
+
+.modal-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    max-width: 500px;
+    width: 90%;
+    max-height: 70vh;
+    overflow-y: auto;
+    animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translate(-50%, -40%);
+        opacity: 0;
+    }
+    to {
+        transform: translate(-50%, -50%);
+        opacity: 1;
+    }
+}
+
+.modal-close {
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    background: linear-gradient(135deg, rgba(251, 207, 232, 0.5), rgba(255, 159, 195, 0.5));
+    color: #ec4899;
+    border: none;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    font-size: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.modal-close:hover {
+    background: linear-gradient(135deg, rgba(236, 72, 153, 0.5), rgba(219, 39, 119, 0.5));
+    transform: rotate(90deg);
+}
+
+.modal-title {
+    color: #333;
+    font-size: 24px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.modal-body {
+    color: #555;
+    line-height: 1.8;
+    font-size: 14px;
+}
+
+.modal-body h3 {
+    color: #667eea;
+    font-size: 16px;
+    margin-top: 15px;
+    margin-bottom: 10px;
+}
+
+.modal-body ul {
+    margin-left: 20px;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 1200px) {
+    .zodiac-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .zodiac-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .intro-title {
+        font-size: 24px;
+    }
+}
+
+@media (max-width: 480px) {
+    .zodiac-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.compatibility-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+/* Period header styles */
+.period-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+    border-radius: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.period-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+}
+
+.period-theme {
+    font-size: 14px;
+    color: #666;
+    font-style: italic;
+}
+
+/* Fortune overview */
+.fortune-overview {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.fortune-overview p {
+    margin: 0;
+    line-height: 1.6;
+    color: #555;
+}
+
+/* Key info bar */
+.key-info-bar {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 12px;
+    background: #f0f4ff;
+    border-radius: 10px;
+    margin-top: 20px;
+    font-size: 14px;
+}
+
+.key-label {
+    font-weight: bold;
+    color: #667eea;
+}
+
+.key-value {
+    color: #333;
+}
+
+/* Compact advice box */
+.advice-box.compact {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05));
+    border-radius: 10px;
+    margin-top: 15px;
+}
+
+.advice-label {
+    font-weight: bold;
+    color: #667eea;
+    white-space: nowrap;
+}
+
+.advice-text {
+    color: #555;
+    line-height: 1.5;
+}
+
+/* Compact Compatibility Styles */
+.compat-input-bar {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.compat-label {
+    font-weight: bold;
+    color: #333;
+}
+
+.compat-select {
+    flex: 1;
+    max-width: 250px;
+    padding: 8px 12px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.compat-check-btn {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: transform 0.3s;
+}
+
+.compat-check-btn:hover {
+    transform: scale(1.05);
+}
+
+/* Compatibility Result - Compact */
+.compatibility-result.compact {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.compat-score-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 20px;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+    border-radius: 12px;
+    flex-wrap: wrap;
+}
+
+.score-display {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.score-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #667eea;
+}
+
+.score-number {
+    font-size: 36px;
+    font-weight: bold;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.sub-score {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.sub-label {
+    font-size: 14px;
+    color: #666;
+    font-weight: 600;
+}
+
+.sub-value {
+    font-size: 20px;
+    font-weight: bold;
+    color: #764ba2;
+}
+
+.compat-description-bar {
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 10px;
+}
+
+.compat-description-bar p {
+    margin: 0;
+    color: #555;
+    line-height: 1.5;
+}
+
+/* Compatibility Details Grid */
+.compat-details-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+}
+
+.compat-card {
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 15px;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.compat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.compat-card-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.compat-icon {
+    font-size: 16px;
+}
+
+.compat-title {
+    font-weight: bold;
+    color: #333;
+    font-size: 14px;
+}
+
+.compat-text {
+    margin: 0;
+    color: #666;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+/* Advice Bar */
+.compat-advice-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px;
+    background: #f0f4ff;
+    border-radius: 10px;
+}
+
+.advice-icon {
+    font-size: 20px;
+}
+
+.advice-label {
+    font-weight: bold;
+    color: #667eea;
+}
+
+.advice-content {
+    flex: 1;
+    color: #555;
+    line-height: 1.5;
+}
+
+/* Extra Space for Future Content */
+.compat-extra-space {
+    min-height: 100px;
+    padding: 20px;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .zodiac-header {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .zodiac-wheel {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .date-input-group {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .date-input-group input {
+        width: 200px;
+    }
+    
+    /* 모바일에서 뒤로가기 버튼 크기 조정 */
+    .back-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 18px;
+        margin-right: 10px;
+    }
+
+    .fortune-scores,
+    .fortune-details {
+        grid-template-columns: 1fr;
+    }
+
+    .year-highlights {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ===== 날짜 선택기 추가 스타일 (새로 추가) ===== */
+
+/* 날짜 입력 래퍼 */
+.date-input-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+/* 날짜 선택 버튼 (돋보기) */
+.date-picker-btn {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: white;
+    border: 2px solid #667eea;
+    cursor: pointer;
+    font-size: 12px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+}
+
+/* 호버 시 돋보기 버튼 표시 */
+.date-input-wrapper:hover .date-picker-btn {
+    display: flex;
+}
+
+.date-picker-btn:hover {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    transform: scale(1.1);
+}
+
+/* 날짜 선택 팝업 공통 스타일 */
+.date-picker-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    max-width: 400px;
+    width: 90%;
+    max-height: 70vh;
+    overflow: hidden;
+}
+
+/* 팝업 헤더 */
+.picker-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+}
+
+.picker-header span {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.picker-close {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background 0.3s ease;
+}
+
+.picker-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* 년도 선택기 */
+.year-picker-content {
+    padding: 20px;
+    max-height: 400px;
+    overflow-y: auto;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+.year-item {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.year-item:hover {
+    background: #f0f0f0;
+    border-color: #667eea;
+}
+
+.year-item.selected {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border-color: transparent;
+}
+
+/* 월 선택기 */
+.month-picker-content {
+    padding: 20px;
+}
+
+.month-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+}
+
+.month-item {
+    padding: 20px;
+    text-align: center;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.month-item:hover {
+    background: #f0f0f0;
+    border-color: #667eea;
+    transform: translateY(-2px);
+}
+
+.month-item.selected {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border-color: transparent;
+}
+
+/* 일 선택기 (달력 스타일) */
+.day-picker-content {
+    padding: 20px;
+}
+
+.day-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+}
+
+.day-header {
+    text-align: center;
+    font-weight: bold;
+    color: #666;
+    padding: 5px;
+    font-size: 12px;
+}
+
+.day-item {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 14px;
+}
+
+.day-item:hover {
+    background: #f0f0f0;
+    border-color: #667eea;
+}
+
+.day-item.selected {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border-color: transparent;
+}
+
+.day-item.disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* 스크롤바 스타일 */
+.year-picker-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.year-picker-content::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.year-picker-content::-webkit-scrollbar-thumb {
+    background: #667eea;
+    border-radius: 10px;
+}
+
+.year-picker-content::-webkit-scrollbar-thumb:hover {
+    background: #764ba2;
+}
+
+/* 오버레이 */
+.date-picker-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    display: none;
+}
+
+.date-picker-overlay.active {
+    display: block;
+}
+
+/* ===== 토스트 메시지 스타일 (새로 추가) ===== */
+.toast-message {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    padding: 15px 25px;
+    border-radius: 50px;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+    z-index: 10000;
+    opacity: 0;
+    transform: translateX(100px);
+    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    max-width: 300px;
+    word-break: keep-all;
+}
+
+.toast-message.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.toast-message::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    background: linear-gradient(135deg, #667eea, #764ba2, #667eea);
+    border-radius: 50px;
+    z-index: -1;
+    opacity: 0;
+    animation: shimmer 2s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+    0%, 100% { opacity: 0; }
+    50% { opacity: 0.5; }
+}
+
+/* 모바일 반응형 */
+@media (max-width: 480px) {
+    .toast-message {
+        top: 10px;
+        right: 10px;
+        left: 10px;
+        max-width: none;
+        text-align: center;
+    }
+}
+
+.zodiac-info-compact .magnifier-btn {
+    right: -10px;
+    top: -5px;
+}
+
+.zodiac-info-compact {
+    padding-right: 20px;
+    overflow: visible;
+}
+
+@media (max-width: 768px) {
+    .zodiac-info-compact .magnifier-btn {
+        right: 5px;
+        top: 5px;
+    }
+    
+    .zodiac-info-compact {
+        padding-right: 15px;
+    }
+}

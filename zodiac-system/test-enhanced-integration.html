@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced API Integration Test</title>
+    <style>
+        body {
+            font-family: 'Malgun Gothic', sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #ffffff;
+        }
+        .test-section {
+            background: #2d2d2d;
+            border: 1px solid #444;
+            border-radius: 8px;
+            margin: 20px 0;
+            padding: 20px;
+        }
+        .test-button {
+            background: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .test-button:hover {
+            background: #45a049;
+        }
+        .result {
+            background: #1e1e1e;
+            border: 1px solid #555;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 10px 0;
+            white-space: pre-wrap;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .success { color: #4CAF50; }
+        .error { color: #f44336; }
+        .warning { color: #ff9800; }
+        .info { color: #2196f3; }
+        
+        .figure-info {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        .figure-name {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .figure-details {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <h1>🌟 Enhanced Zodiac API Integration Test</h1>
+    <p>역사적 인물 데이터와 기존 운세 데이터의 통합 테스트</p>
+
+    <div class="test-section">
+        <h2>📊 API 로드 상태 확인</h2>
+        <button class="test-button" onclick="checkAPIStatus()">API 상태 확인</button>
+        <div id="api-status-result" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>🎭 일일 운세 테스트 (역사적 인물 통합)</h2>
+        <p>여러 별자리의 일일 운세를 확인하여 역사적 인물 통합이 제대로 작동하는지 테스트합니다.</p>
+        
+        <div>
+            <button class="test-button" onclick="testZodiacFortune(1)">양자리 테스트</button>
+            <button class="test-button" onclick="testZodiacFortune(2)">황소자리 테스트</button>
+            <button class="test-button" onclick="testZodiacFortune(5)">사자자리 테스트</button>
+            <button class="test-button" onclick="testZodiacFortune(12)">물고기자리 테스트</button>
+        </div>
+        
+        <div id="daily-fortune-result" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>🔍 데이터 소스 비교</h2>
+        <p>같은 별자리에 대해 여러 번 호출하여 일관성과 역사적 인물 선택 패턴을 확인합니다.</p>
+        
+        <button class="test-button" onclick="testDataConsistency()">일관성 테스트 (양자리)</button>
+        <div id="consistency-result" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>📈 메시지 품질 분석</h2>
+        <button class="test-button" onclick="analyzeMessageQuality()">메시지 품질 분석</button>
+        <div id="message-quality-result" class="result"></div>
+    </div>
+
+    <script src="api/zodiac-api-real.js"></script>
+    <script>
+        let testResults = [];
+
+        async function checkAPIStatus() {
+            const resultDiv = document.getElementById('api-status-result');
+            resultDiv.innerHTML = '🔄 API 상태 확인 중...';
+
+            try {
+                // API 인스턴스 확인
+                if (typeof zodiacAPI === 'undefined') {
+                    throw new Error('zodiacAPI 인스턴스를 찾을 수 없습니다');
+                }
+
+                let status = '✅ API 로드 상태:\n';
+                status += `- zodiacAPI 인스턴스: ${typeof zodiacAPI}\n`;
+                status += `- 클래스명: ${zodiacAPI.constructor.name}\n`;
+                
+                // 데이터 로드 상태 확인
+                await new Promise(resolve => setTimeout(resolve, 2000)); // 로드 대기
+                
+                status += `- fortuneData: ${zodiacAPI.fortuneData ? '✅ 로드됨' : '❌ 없음'}\n`;
+                status += `- historicalFigures: ${zodiacAPI.historicalFigures ? '✅ 로드됨' : '❌ 없음'}\n`;
+                
+                if (zodiacAPI.historicalFigures && zodiacAPI.historicalFigures.zodiacFigures) {
+                    const zodiacCount = Object.keys(zodiacAPI.historicalFigures.zodiacFigures).length;
+                    status += `- 별자리 데이터 수: ${zodiacCount}개\n`;
+                }
+
+                if (zodiacAPI.fortuneData && zodiacAPI.fortuneData.daily) {
+                    const dailyCount = Object.keys(zodiacAPI.fortuneData.daily).length;
+                    status += `- 일일 운세 데이터: ${dailyCount}일\n`;
+                }
+
+                resultDiv.innerHTML = status;
+                resultDiv.className = 'result success';
+            } catch (error) {
+                resultDiv.innerHTML = `❌ 오류: ${error.message}\n${error.stack}`;
+                resultDiv.className = 'result error';
+            }
+        }
+
+        async function testZodiacFortune(zodiacId) {
+            const resultDiv = document.getElementById('daily-fortune-result');
+            resultDiv.innerHTML = `🔄 별자리 ${zodiacId} 일일 운세 테스트 중...`;
+
+            try {
+                const fortune = await zodiacAPI.getDailyFortune(zodiacId);
+                
+                let result = `🌟 별자리 ${zodiacId} 일일 운세 결과:\n`;
+                result += `- 날짜: ${fortune.date}\n`;
+                result += `- 데이터 소스: ${fortune.source}\n`;
+                result += `- 전체 메시지: ${fortune.overall}\n\n`;
+                
+                if (fortune.historicalFigure) {
+                    result += `🎭 연관된 역사적 인물:\n`;
+                    result += `- 이름: ${fortune.historicalFigure.name}\n`;
+                    result += `- 시대: ${fortune.historicalFigure.period}\n`;
+                    result += `- 국가: ${fortune.historicalFigure.country}\n`;
+                    result += `- 주요 업적: ${fortune.historicalFigure.achievement || 'N/A'}\n\n`;
+                }
+                
+                result += `📊 점수:\n`;
+                if (fortune.scores) {
+                    Object.entries(fortune.scores).forEach(([key, value]) => {
+                        result += `- ${key}: ${value}점\n`;
+                    });
+                }
+                
+                result += `\n💭 카테고리별 메시지:\n`;
+                if (fortune.fortunes) {
+                    Object.entries(fortune.fortunes).forEach(([key, value]) => {
+                        result += `- ${key}: ${value}\n`;
+                    });
+                }
+
+                result += `\n🍀 행운:\n`;
+                if (fortune.lucky) {
+                    Object.entries(fortune.lucky).forEach(([key, value]) => {
+                        result += `- ${key}: ${value}\n`;
+                    });
+                }
+                
+                result += `\n💡 조언: ${fortune.advice}`;
+
+                resultDiv.innerHTML = result;
+                resultDiv.className = 'result success';
+                
+                // 결과 저장
+                testResults.push({
+                    zodiacId,
+                    timestamp: new Date().toISOString(),
+                    fortune
+                });
+                
+            } catch (error) {
+                resultDiv.innerHTML = `❌ 오류: ${error.message}\n${error.stack}`;
+                resultDiv.className = 'result error';
+            }
+        }
+
+        async function testDataConsistency() {
+            const resultDiv = document.getElementById('consistency-result');
+            resultDiv.innerHTML = '🔄 데이터 일관성 테스트 중...';
+
+            try {
+                const tests = [];
+                // 같은 별자리로 3번 테스트
+                for (let i = 0; i < 3; i++) {
+                    const fortune = await zodiacAPI.getDailyFortune(1); // 양자리
+                    tests.push(fortune);
+                    await new Promise(resolve => setTimeout(resolve, 500));
+                }
+
+                let result = '🔍 양자리 일관성 테스트 결과:\n\n';
+                
+                tests.forEach((test, index) => {
+                    result += `테스트 ${index + 1}:\n`;
+                    result += `- 데이터 소스: ${test.source}\n`;
+                    result += `- 역사적 인물: ${test.historicalFigure ? test.historicalFigure.name : 'None'}\n`;
+                    result += `- 전체 메시지 길이: ${test.overall.length}자\n`;
+                    result += `- 조언 메시지: ${test.advice.substring(0, 50)}...\n\n`;
+                });
+
+                // 일관성 체크
+                const sources = tests.map(t => t.source);
+                const figures = tests.map(t => t.historicalFigure?.name).filter(Boolean);
+                
+                result += '📊 일관성 분석:\n';
+                result += `- 모든 테스트 소스 동일: ${new Set(sources).size === 1 ? '✅' : '❌'}\n`;
+                result += `- 역사적 인물 선택: ${figures.length > 0 ? '✅' : '❌'} (${figures.length}/3)\n`;
+                result += `- 고유 인물 수: ${new Set(figures).size}명\n`;
+
+                if (figures.length > 0) {
+                    result += `- 선택된 인물들: ${[...new Set(figures)].join(', ')}\n`;
+                }
+
+                resultDiv.innerHTML = result;
+                resultDiv.className = 'result info';
+                
+            } catch (error) {
+                resultDiv.innerHTML = `❌ 오류: ${error.message}`;
+                resultDiv.className = 'result error';
+            }
+        }
+
+        async function analyzeMessageQuality() {
+            const resultDiv = document.getElementById('message-quality-result');
+            resultDiv.innerHTML = '🔄 메시지 품질 분석 중...';
+
+            try {
+                const zodiacIds = [1, 5, 9, 12]; // 다양한 원소 테스트
+                const results = [];
+                
+                for (const zodiacId of zodiacIds) {
+                    const fortune = await zodiacAPI.getDailyFortune(zodiacId);
+                    results.push({
+                        zodiacId,
+                        zodiacName: zodiacAPI.zodiacSigns[zodiacId - 1].name,
+                        fortune
+                    });
+                }
+
+                let analysis = '📈 메시지 품질 분석 결과:\n\n';
+                
+                results.forEach(({ zodiacId, zodiacName, fortune }) => {
+                    analysis += `🌟 ${zodiacName} (ID: ${zodiacId}):\n`;
+                    analysis += `- 데이터 소스: ${fortune.source}\n`;
+                    analysis += `- 역사적 인물: ${fortune.historicalFigure ? fortune.historicalFigure.name : 'None'}\n`;
+                    
+                    if (fortune.historicalFigure) {
+                        analysis += `- 인물 시대: ${fortune.historicalFigure.period}\n`;
+                        analysis += `- 주요 업적: ${fortune.historicalFigure.achievement ? fortune.historicalFigure.achievement.split(' - ')[0] : 'N/A'}\n`;
+                    }
+                    
+                    analysis += `- 전체 메시지 길이: ${fortune.overall.length}자\n`;
+                    analysis += `- 조언 길이: ${fortune.advice.length}자\n`;
+                    
+                    // 메시지 품질 점수
+                    let qualityScore = 0;
+                    if (fortune.historicalFigure) qualityScore += 30;
+                    if (fortune.overall.includes(fortune.historicalFigure?.name)) qualityScore += 20;
+                    if (fortune.advice.includes(fortune.historicalFigure?.name)) qualityScore += 20;
+                    if (fortune.overall.length > 30) qualityScore += 15;
+                    if (fortune.advice.length > 50) qualityScore += 15;
+                    
+                    analysis += `- 품질 점수: ${qualityScore}/100\n\n`;
+                });
+
+                // 전체 통계
+                const withFigures = results.filter(r => r.fortune.historicalFigure).length;
+                const avgOverallLength = results.reduce((sum, r) => sum + r.fortune.overall.length, 0) / results.length;
+                const avgAdviceLength = results.reduce((sum, r) => sum + r.fortune.advice.length, 0) / results.length;
+                
+                analysis += '📊 전체 통계:\n';
+                analysis += `- 역사적 인물 연결률: ${(withFigures/results.length*100).toFixed(1)}% (${withFigures}/${results.length})\n`;
+                analysis += `- 평균 전체 메시지 길이: ${avgOverallLength.toFixed(1)}자\n`;
+                analysis += `- 평균 조언 길이: ${avgAdviceLength.toFixed(1)}자\n`;
+                
+                // 데이터 소스 분포
+                const sourceCounts = {};
+                results.forEach(r => {
+                    sourceCounts[r.fortune.source] = (sourceCounts[r.fortune.source] || 0) + 1;
+                });
+                
+                analysis += '\n📋 데이터 소스 분포:\n';
+                Object.entries(sourceCounts).forEach(([source, count]) => {
+                    analysis += `- ${source}: ${count}회 (${(count/results.length*100).toFixed(1)}%)\n`;
+                });
+
+                resultDiv.innerHTML = analysis;
+                resultDiv.className = 'result info';
+                
+            } catch (error) {
+                resultDiv.innerHTML = `❌ 오류: ${error.message}\n${error.stack}`;
+                resultDiv.className = 'result error';
+            }
+        }
+
+        // 페이지 로드 시 자동으로 API 상태 확인
+        window.addEventListener('load', () => {
+            setTimeout(checkAPIStatus, 1000);
+        });
+    </script>
+</body>
+</html>

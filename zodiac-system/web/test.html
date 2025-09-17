@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>운세 데이터 테스트</title>
+</head>
+<body>
+    <h1>운세 데이터 테스트</h1>
+    <div id="result"></div>
+    
+    <script src="../api/zodiac-api-real.js"></script>
+    <script>
+        async function testData() {
+            const resultDiv = document.getElementById('result');
+            
+            // 양자리 오늘 운세 테스트
+            const dailyFortune = await zodiacAPI.getDailyFortune(1);
+            
+            resultDiv.innerHTML = `
+                <h2>양자리 일일 운세</h2>
+                <p><strong>날짜:</strong> ${dailyFortune.date}</p>
+                <p><strong>전체:</strong> ${dailyFortune.overall}</p>
+                <p><strong>점수:</strong></p>
+                <ul>
+                    <li>애정: ${dailyFortune.scores.love}점</li>
+                    <li>금전: ${dailyFortune.scores.money}점</li>
+                    <li>직장: ${dailyFortune.scores.work}점</li>
+                    <li>건강: ${dailyFortune.scores.health}점</li>
+                </ul>
+                <p><strong>상세 운세:</strong></p>
+                <ul>
+                    <li>애정: ${dailyFortune.fortunes.love}</li>
+                    <li>금전: ${dailyFortune.fortunes.money}</li>
+                    <li>직장: ${dailyFortune.fortunes.work}</li>
+                    <li>건강: ${dailyFortune.fortunes.health}</li>
+                </ul>
+                <p><strong>행운:</strong></p>
+                <ul>
+                    <li>색상: ${dailyFortune.lucky.color}</li>
+                    <li>숫자: ${dailyFortune.lucky.number}</li>
+                    <li>시간: ${dailyFortune.lucky.time}</li>
+                </ul>
+                <p><strong>조언:</strong> ${dailyFortune.advice}</p>
+                
+                <h2>콘솔에서 전체 데이터 확인</h2>
+                <p>F12를 눌러 콘솔을 확인하세요.</p>
+            `;
+            
+            console.log('일일 운세 데이터:', dailyFortune);
+            console.log('전체 운세 데이터:', zodiacAPI.fortuneData);
+        }
+        
+        // 페이지 로드 후 테스트 실행
+        window.addEventListener('load', () => {
+            setTimeout(testData, 1000); // 데이터 로드 대기
+        });
+    </script>
+</body>
+</html>

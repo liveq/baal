@@ -1,0 +1,381 @@
+{
+  "metadata": {
+    "version": "1.0.0",
+    "created": "2025-09-12",
+    "description": "240명 역사적 인물별 맞춤 행동 조언 시스템",
+    "purpose": "점수 기반 실행 가능한 구체적 조언 제공",
+    "safetyGuidelines": [
+      "관계 결정 조언 금지 (이별, 결혼 등)",
+      "재정/투자 구체적 조언 금지", 
+      "의료/건강 진단성 조언 금지",
+      "인생 중대사 결정 조언 금지"
+    ],
+    "scoreGroupDirections": {
+      "high": "도전적 조언 (새로운 프로젝트, 리더십, 높은 목표)",
+      "medium": "균형적 조언 (가족시간, 운동습관, 취미활동)",
+      "low": "회복적 조언 (충분한 휴식, 기본 정리, 자신에게 친절)"
+    }
+  },
+  "zodiacAdvice": {
+    "aries": {
+      "name": "양자리",
+      "figures": [
+        {
+          "name": "레오나르도 다빈치",
+          "scoreGroup": "high",
+          "actionAdvice": "새로운 창작 활동이나 혁신적인 아이디어를 실현해보세요"
+        },
+        {
+          "name": "율리우스 카이사르", 
+          "scoreGroup": "high",
+          "actionAdvice": "전략적 계획을 세우고 담대한 첫걸음을 내딛어보세요"
+        },
+        {
+          "name": "빈센트 반 고흐",
+          "scoreGroup": "low", 
+          "actionAdvice": "창의적인 표현 활동을 통해 마음을 달래보세요"
+        },
+        {
+          "name": "아인슈타인",
+          "scoreGroup": "high",
+          "actionAdvice": "호기심 가득한 새로운 학습에 도전해보세요"
+        },
+        {
+          "name": "찰리 채플린",
+          "scoreGroup": "medium",
+          "actionAdvice": "유머와 웃음으로 주변 사람들과 즐거운 시간을 보내보세요"
+        }
+      ]
+    },
+    "taurus": {
+      "name": "황소자리", 
+      "figures": [
+        {
+          "name": "셰익스피어",
+          "scoreGroup": "high",
+          "actionAdvice": "글쓰기나 독서를 통해 내면의 풍요로움을 키워보세요"
+        },
+        {
+          "name": "나폴레옹",
+          "scoreGroup": "high", 
+          "actionAdvice": "체계적인 계획으로 하루 일정을 전략적으로 관리해보세요"
+        },
+        {
+          "name": "칸트",
+          "scoreGroup": "medium",
+          "actionAdvice": "규칙적인 산책이나 사색의 시간을 가져보세요"
+        },
+        {
+          "name": "베토벤",
+          "scoreGroup": "medium",
+          "actionAdvice": "좋아하는 음악을 듣거나 연주하며 감정을 표현해보세요"
+        },
+        {
+          "name": "마르크스",
+          "scoreGroup": "medium",
+          "actionAdvice": "사회적 문제에 관심을 가지고 작은 봉사활동에 참여해보세요"
+        }
+      ]
+    },
+    "gemini": {
+      "name": "쌍둥이자리",
+      "figures": [
+        {
+          "name": "존 F. 케네디",
+          "scoreGroup": "high",
+          "actionAdvice": "새로운 네트워킹 기회를 만들고 소통 능력을 발휘해보세요"
+        },
+        {
+          "name": "밥 딜런",
+          "scoreGroup": "high",
+          "actionAdvice": "창의적인 자기표현을 통해 새로운 재능을 발견해보세요"
+        },
+        {
+          "name": "도날드 트럼프",
+          "scoreGroup": "medium",
+          "actionAdvice": "다양한 관점을 수용하며 균형잡힌 소통을 연습해보세요"
+        },
+        {
+          "name": "이안 플래밍",
+          "scoreGroup": "medium",
+          "actionAdvice": "흥미로운 책을 읽거나 새로운 이야기를 만들어보세요"
+        },
+        {
+          "name": "조지 오웰",
+          "scoreGroup": "medium",
+          "actionAdvice": "일기를 쓰거나 깊이 있는 사고의 시간을 가져보세요"
+        }
+      ]
+    },
+    "cancer": {
+      "name": "게자리",
+      "figures": [
+        {
+          "name": "넬슨 만델라",
+          "scoreGroup": "high",
+          "actionAdvice": "화합과 이해를 통해 주변의 갈등을 중재해보세요"
+        },
+        {
+          "name": "헤밍웨이",
+          "scoreGroup": "medium",
+          "actionAdvice": "자연 속에서 조용한 시간을 보내며 마음의 평화를 찾아보세요"
+        },
+        {
+          "name": "프란츠 카프카",
+          "scoreGroup": "low",
+          "actionAdvice": "내면의 감정을 정리하고 충분한 휴식을 취해보세요"
+        },
+        {
+          "name": "달라이 라마",
+          "scoreGroup": "high",
+          "actionAdvice": "명상이나 마음챙김을 통해 내면의 평화를 키워보세요"
+        },
+        {
+          "name": "프리다 칼로",
+          "scoreGroup": "low",
+          "actionAdvice": "예술적 표현을 통해 내면의 치유를 경험해보세요"
+        }
+      ]
+    },
+    "leo": {
+      "name": "사자자리",
+      "figures": [
+        {
+          "name": "나폴레옹 보나파르트",
+          "scoreGroup": "high", 
+          "actionAdvice": "리더십을 발휘할 수 있는 새로운 역할이나 프로젝트를 시작해보세요"
+        },
+        {
+          "name": "앤디 워홀",
+          "scoreGroup": "high",
+          "actionAdvice": "독창적인 예술 활동이나 창작으로 자신만의 스타일을 표현해보세요"
+        },
+        {
+          "name": "재클린 케네디",
+          "scoreGroup": "medium",
+          "actionAdvice": "우아함과 품격을 갖춘 자기 관리에 신경써보세요"
+        },
+        {
+          "name": "베니토 무솔리니",
+          "scoreGroup": "low",
+          "actionAdvice": "겸손함을 배우고 다른 사람의 의견에 귀 기울여보세요"
+        },
+        {
+          "name": "마돈나",
+          "scoreGroup": "high",
+          "actionAdvice": "자신감 있는 도전으로 새로운 무대에 서보세요"
+        }
+      ]
+    },
+    "virgo": {
+      "name": "처녀자리",
+      "figures": [
+        {
+          "name": "마더 테레사",
+          "scoreGroup": "high",
+          "actionAdvice": "봉사나 도움의 손길로 주변에 따뜻함을 전해보세요"
+        },
+        {
+          "name": "워런 버핏",
+          "scoreGroup": "high",
+          "actionAdvice": "체계적인 계획과 꼼꼼한 분석으로 목표를 향해 나아가보세요"
+        },
+        {
+          "name": "마이클 잭슨",
+          "scoreGroup": "medium",
+          "actionAdvice": "완벽을 추구하기보다 과정 자체를 즐겨보세요"
+        },
+        {
+          "name": "스티븐 킹",
+          "scoreGroup": "medium", 
+          "actionAdvice": "규칙적인 루틴 속에서 창의적 활동을 지속해보세요"
+        },
+        {
+          "name": "키아누 리브스",
+          "scoreGroup": "medium",
+          "actionAdvice": "겸손함과 진정성으로 사람들과 진심 어린 소통을 해보세요"
+        }
+      ]
+    },
+    "libra": {
+      "name": "천칭자리",
+      "figures": [
+        {
+          "name": "간디",
+          "scoreGroup": "high",
+          "actionAdvice": "내면의 평화를 찾는 명상이나 마음챙김의 시간을 가져보세요"
+        },
+        {
+          "name": "존 레논",
+          "scoreGroup": "high",
+          "actionAdvice": "평화와 사랑을 전하는 의미 있는 활동에 참여해보세요"
+        },
+        {
+          "name": "오스카 와일드",
+          "scoreGroup": "medium",
+          "actionAdvice": "아름다운 예술 작품을 감상하며 심미적 감각을 기워보세요"
+        },
+        {
+          "name": "마가렛 대처",
+          "scoreGroup": "high", 
+          "actionAdvice": "균형잡힌 판단력으로 중요한 결정을 내려보세요"
+        },
+        {
+          "name": "브리트니 스피어스",
+          "scoreGroup": "low",
+          "actionAdvice": "자신만의 속도로 천천히 회복하고 균형을 찾아보세요"
+        }
+      ]
+    },
+    "scorpio": {
+      "name": "전갈자리", 
+      "figures": [
+        {
+          "name": "파블로 피카소",
+          "scoreGroup": "high",
+          "actionAdvice": "강렬한 열정으로 새로운 예술적 도전을 시작해보세요"
+        },
+        {
+          "name": "마리 퀴리",
+          "scoreGroup": "high",
+          "actionAdvice": "깊이 있는 탐구와 연구로 전문성을 키워보세요"
+        },
+        {
+          "name": "테오도어 루스벨트",
+          "scoreGroup": "high",
+          "actionAdvice": "용기 있는 도전으로 불가능해 보이는 목표에 도전해보세요"
+        },
+        {
+          "name": "힐러리 클린턴",
+          "scoreGroup": "medium",
+          "actionAdvice": "신중하면서도 결단력 있는 리더십을 발휘해보세요"
+        },
+        {
+          "name": "레오나르도 디카프리오",
+          "scoreGroup": "medium",
+          "actionAdvice": "환경보호나 사회적 가치에 관심을 가져보세요"
+        }
+      ]
+    },
+    "sagittarius": {
+      "name": "사수자리",
+      "figures": [
+        {
+          "name": "윈스턴 처칠",
+          "scoreGroup": "high",
+          "actionAdvice": "용기와 희망으로 어려운 상황을 돌파해보세요"
+        },
+        {
+          "name": "월트 디즈니",
+          "scoreGroup": "high", 
+          "actionAdvice": "상상력을 발휘해서 꿈같은 아이디어를 현실로 만들어보세요"
+        },
+        {
+          "name": "프랭크 시나트라",
+          "scoreGroup": "medium",
+          "actionAdvice": "자유로운 마음으로 새로운 경험과 모험을 즐겨보세요"
+        },
+        {
+          "name": "스티븐 스필버그",
+          "scoreGroup": "high",
+          "actionAdvice": "스토리텔링이나 창작 활동으로 영감을 나누어보세요"
+        },
+        {
+          "name": "짐 모리슨",
+          "scoreGroup": "low",
+          "actionAdvice": "절제와 균형을 통해 건전한 자기표현을 연습해보세요"
+        }
+      ]
+    },
+    "capricorn": {
+      "name": "염소자리",
+      "figures": [
+        {
+          "name": "마틴 루터 킹",
+          "scoreGroup": "high",
+          "actionAdvice": "정의로운 신념으로 의미 있는 변화를 이끌어보세요"
+        },
+        {
+          "name": "스티븐 호킹",
+          "scoreGroup": "high",
+          "actionAdvice": "어려운 도전 앞에서도 끈기 있게 학습하고 탐구해보세요"
+        },
+        {
+          "name": "엘비스 프레슬리",
+          "scoreGroup": "medium",
+          "actionAdvice": "꾸준한 연습과 노력으로 재능을 발전시켜보세요"
+        },
+        {
+          "name": "무하마드 알리",
+          "scoreGroup": "high",
+          "actionAdvice": "강한 의지력으로 자신만의 길을 개척해보세요"
+        },
+        {
+          "name": "데이비드 보위",
+          "scoreGroup": "high",
+          "actionAdvice": "끊임없는 자기 혁신으로 새로운 모습을 발견해보세요"
+        }
+      ]
+    },
+    "aquarius": {
+      "name": "물병자리",
+      "figures": [
+        {
+          "name": "에이브러햄 링컨",
+          "scoreGroup": "high",
+          "actionAdvice": "인도주의적 가치로 사회에 긍정적 영향을 미쳐보세요"
+        },
+        {
+          "name": "토마스 에디슨",
+          "scoreGroup": "high",
+          "actionAdvice": "혁신적인 아이디어로 문제 해결에 도전해보세요"
+        },
+        {
+          "name": "프랭클린 루스벨트",
+          "scoreGroup": "high",
+          "actionAdvice": "희망과 용기로 어려운 시기를 이겨내는 리더십을 보여주세요"
+        },
+        {
+          "name": "로널드 레이건",
+          "scoreGroup": "medium",
+          "actionAdvice": "낙관적인 에너지로 주변 사람들에게 희망을 전해보세요"
+        },
+        {
+          "name": "오프라 윈프리",
+          "scoreGroup": "high",
+          "actionAdvice": "따뜻한 소통과 격려로 타인에게 힘을 주어보세요"
+        }
+      ]
+    },
+    "pisces": {
+      "name": "물고기자리",
+      "figures": [
+        {
+          "name": "미켈란젤로",
+          "scoreGroup": "high",
+          "actionAdvice": "영감이 떠오르는 창작 활동에 몰입해보세요"
+        },
+        {
+          "name": "알베르트 아인슈타인",
+          "scoreGroup": "high",
+          "actionAdvice": "직관과 상상력을 활용해서 새로운 관점을 탐구해보세요"
+        },
+        {
+          "name": "스티브 잡스",
+          "scoreGroup": "high",
+          "actionAdvice": "완벽을 향한 열정으로 혁신적인 결과를 만들어보세요"
+        },
+        {
+          "name": "커트 코베인",
+          "scoreGroup": "low",
+          "actionAdvice": "감정을 건전하게 표현할 수 있는 창작이나 취미를 찾아보세요"
+        },
+        {
+          "name": "엘리자베스 테일러",
+          "scoreGroup": "medium",
+          "actionAdvice": "아름다움과 우아함을 추구하며 자신을 소중히 여기세요"
+        }
+      ]
+    }
+  }
+}

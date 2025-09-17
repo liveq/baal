@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>별자리 운세 시스템 디버그 테스트</title>
+    <style>
+        body {
+            font-family: 'Malgun Gothic', sans-serif;
+            margin: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .debug-section {
+            border: 2px solid #3498db;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            background: #f8f9fa;
+        }
+
+        .debug-section h2 {
+            color: #2980b9;
+            margin-top: 0;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+
+        .test-button {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .test-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .console-output {
+            background: #1a1a1a;
+            color: #00ff00;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            min-height: 200px;
+            overflow-y: auto;
+            max-height: 400px;
+            white-space: pre-wrap;
+            margin: 15px 0;
+        }
+
+        .status {
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+
+        .status.loading {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .data-display {
+            background: #e7f3ff;
+            border: 1px solid #bee5eb;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .zodiac-selector {
+            margin: 20px 0;
+        }
+
+        .zodiac-selector select {
+            padding: 10px;
+            border-radius: 8px;
+            border: 2px solid #ddd;
+            font-size: 16px;
+            width: 200px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .info-card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .clear-console {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 별자리 운세 시스템 디버그 테스트</h1>
+        
+        <!-- 시스템 상태 섹션 -->
+        <div class="debug-section">
+            <h2>📊 시스템 상태</h2>
+            <div id="systemStatus" class="status loading">시스템 로딩 중...</div>
+            <button class="test-button" onclick="checkSystemStatus()">시스템 상태 확인</button>
+        </div>
+
+        <!-- 데이터 로드 테스트 섹션 -->
+        <div class="debug-section">
+            <h2>📁 데이터 로드 테스트</h2>
+            <button class="test-button" onclick="testDirectJSONLoad()">직접 JSON 로드 테스트</button>
+            <button class="test-button" onclick="testAPIDataLoad()">API 데이터 로드 테스트</button>
+            <div id="dataLoadStatus"></div>
+            <div id="dataStructure" class="data-display" style="display: none;"></div>
+        </div>
+
+        <!-- 운세 테스트 섹션 -->
+        <div class="debug-section">
+            <h2>🌟 운세 테스트</h2>
+            <div class="zodiac-selector">
+                <label for="zodiacSelect">별자리 선택: </label>
+                <select id="zodiacSelect">
+                    <option value="1">♈ 양자리 (3.21~4.19)</option>
+                    <option value="2">♉ 황소자리 (4.20~5.20)</option>
+                    <option value="3">♊ 쌍둥이자리 (5.21~6.20)</option>
+                    <option value="4">♋ 게자리 (6.21~7.22)</option>
+                    <option value="5">♌ 사자자리 (7.23~8.22)</option>
+                    <option value="6">♍ 처녀자리 (8.23~9.22)</option>
+                    <option value="7">♎ 천칭자리 (9.23~10.22)</option>
+                    <option value="8">♏ 전갈자리 (10.23~11.21)</option>
+                    <option value="9">♐ 사수자리 (11.22~12.21)</option>
+                    <option value="10">♑ 염소자리 (12.22~1.19)</option>
+                    <option value="11">♒ 물병자리 (1.20~2.18)</option>
+                    <option value="12">♓ 물고기자리 (2.19~3.20)</option>
+                </select>
+            </div>
+            <button class="test-button" onclick="testDailyFortune()">일일 운세 테스트</button>
+            <button class="test-button" onclick="testAllZodiacFortunes()">모든 별자리 운세 테스트</button>
+            <div id="fortuneTestResult" class="data-display" style="display: none;"></div>
+        </div>
+
+        <!-- 경로 테스트 섹션 -->
+        <div class="debug-section">
+            <h2>🛤️ 경로 테스트</h2>
+            <button class="test-button" onclick="testPaths()">파일 경로 테스트</button>
+            <div id="pathTestResult"></div>
+        </div>
+
+        <!-- 콘솔 출력 섹션 -->
+        <div class="debug-section">
+            <h2>🖥️ 콘솔 출력</h2>
+            <button class="clear-console" onclick="clearConsole()">콘솔 지우기</button>
+            <div id="consoleOutput" class="console-output">콘솔 출력이 여기에 표시됩니다...\n</div>
+        </div>
+    </div>
+
+    <!-- API 스크립트 로드 -->
+    <script src="api/zodiac-api-real.js"></script>
+    
+    <script>
+        // 콘솔 출력을 HTML로 리디렉션
+        const originalConsoleLog = console.log;
+        const originalConsoleError = console.error;
+        const originalConsoleWarn = console.warn;
+        const consoleOutput = document.getElementById('consoleOutput');
+
+        function addToConsole(message, type = 'log') {
+            const timestamp = new Date().toLocaleTimeString();
+            const color = type === 'error' ? '#ff6b6b' : 
+                         type === 'warn' ? '#feca57' : '#00ff00';
+            consoleOutput.innerHTML += `<span style="color: ${color};">[${timestamp}] ${message}</span>\n`;
+            consoleOutput.scrollTop = consoleOutput.scrollHeight;
+        }
+
+        console.log = function(...args) {
+            originalConsoleLog.apply(console, args);
+            addToConsole(args.join(' '), 'log');
+        };
+
+        console.error = function(...args) {
+            originalConsoleError.apply(console, args);
+            addToConsole(args.join(' '), 'error');
+        };
+
+        console.warn = function(...args) {
+            originalConsoleWarn.apply(console, args);
+            addToConsole(args.join(' '), 'warn');
+        };
+
+        function clearConsole() {
+            consoleOutput.innerHTML = '콘솔이 지워졌습니다...\n';
+        }
+
+        // 시스템 상태 확인
+        async function checkSystemStatus() {
+            console.log('=== 시스템 상태 확인 시작 ===');
+            const statusDiv = document.getElementById('systemStatus');
+            
+            try {
+                statusDiv.className = 'status loading';
+                statusDiv.textContent = '시스템 상태 확인 중...';
+                
+                // API 인스턴스 확인
+                if (typeof zodiacAPI !== 'undefined') {
+                    console.log('✅ zodiacAPI 인스턴스 존재');
+                    console.log('📋 zodiacAPI 속성:', Object.getOwnPropertyNames(zodiacAPI));
+                    
+                    // 데이터 상태 확인
+                    console.log('💾 fortuneData 상태:', !!zodiacAPI.fortuneData);
+                    if (zodiacAPI.fortuneData) {
+                        console.log('📊 데이터 키들:', Object.keys(zodiacAPI.fortuneData));
+                    }
+                    
+                    statusDiv.className = 'status success';
+                    statusDiv.textContent = '✅ 시스템 정상 동작 중';
+                } else {
+                    throw new Error('zodiacAPI 인스턴스가 없습니다');
+                }
+            } catch (error) {
+                console.error('❌ 시스템 상태 확인 실패:', error);
+                statusDiv.className = 'status error';
+                statusDiv.textContent = '❌ 시스템 오류 발생: ' + error.message;
+            }
+        }
+
+        // 직접 JSON 로드 테스트
+        async function testDirectJSONLoad() {
+            console.log('=== 직접 JSON 로드 테스트 시작 ===');
+            const statusDiv = document.getElementById('dataLoadStatus');
+            const structureDiv = document.getElementById('dataStructure');
+            
+            try {
+                statusDiv.innerHTML = '<div class="status loading">JSON 파일 직접 로드 중...</div>';
+                
+                console.log('🔄 fetch 시도: api/fortune-data.json');
+                const response = await fetch('api/fortune-data.json');
+                console.log('📊 Response:', {
+                    status: response.status,
+                    statusText: response.statusText,
+                    ok: response.ok,
+                    url: response.url
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                console.log('✅ JSON 로드 성공');
+                console.log('📋 데이터 구조:', {
+                    daily: Object.keys(data.daily || {}).length + ' 개 날짜',
+                    yearly: !!data.yearly,
+                    weekly: !!data.weekly,
+                    monthly: !!data.monthly,
+                    compatibility: !!data.compatibility
+                });
+                
+                statusDiv.innerHTML = '<div class="status success">✅ JSON 직접 로드 성공</div>';
+                structureDiv.style.display = 'block';
+                structureDiv.innerHTML = `
+                    <h3>📊 로드된 데이터 구조</h3>
+                    <p><strong>Daily:</strong> ${Object.keys(data.daily || {}).length} 개 날짜</p>
+                    <p><strong>Yearly:</strong> ${!!data.yearly ? '존재' : '없음'}</p>
+                    <p><strong>Weekly:</strong> ${!!data.weekly ? '존재' : '없음'}</p>
+                    <p><strong>Monthly:</strong> ${!!data.monthly ? '존재' : '없음'}</p>
+                    <p><strong>Compatibility:</strong> ${!!data.compatibility ? '존재' : '없음'}</p>
+                    <hr>
+                    <h4>샘플 데이터 (첫 번째 날짜):</h4>
+                    <pre>${JSON.stringify(Object.values(data.daily || {})[0] || {}, null, 2)}</pre>
+                `;
+                
+            } catch (error) {
+                console.error('❌ 직접 JSON 로드 실패:', error);
+                statusDiv.innerHTML = '<div class="status error">❌ JSON 로드 실패: ' + error.message + '</div>';
+                structureDiv.style.display = 'none';
+            }
+        }
+
+        // API 데이터 로드 테스트
+        async function testAPIDataLoad() {
+            console.log('=== API 데이터 로드 테스트 시작 ===');
+            const statusDiv = document.getElementById('dataLoadStatus');
+            
+            try {
+                statusDiv.innerHTML = '<div class="status loading">API를 통한 데이터 로드 중...</div>';
+                
+                if (typeof zodiacAPI === 'undefined') {
+                    throw new Error('zodiacAPI 인스턴스가 없습니다');
+                }
+                
+                // API의 loadFortuneData 직접 호출
+                await zodiacAPI.loadFortuneData();
+                
+                if (zodiacAPI.fortuneData) {
+                    console.log('✅ API 데이터 로드 성공');
+                    statusDiv.innerHTML = '<div class="status success">✅ API 데이터 로드 성공</div>';
+                } else {
+                    throw new Error('API 데이터가 비어있습니다');
+                }
+                
+            } catch (error) {
+                console.error('❌ API 데이터 로드 실패:', error);
+                statusDiv.innerHTML = '<div class="status error">❌ API 데이터 로드 실패: ' + error.message + '</div>';
+            }
+        }
+
+        // 일일 운세 테스트
+        async function testDailyFortune() {
+            console.log('=== 일일 운세 테스트 시작 ===');
+            const zodiacId = document.getElementById('zodiacSelect').value;
+            const resultDiv = document.getElementById('fortuneTestResult');
+            
+            try {
+                resultDiv.style.display = 'block';
+                resultDiv.innerHTML = '<div class="status loading">일일 운세 로드 중...</div>';
+                
+                if (typeof zodiacAPI === 'undefined') {
+                    throw new Error('zodiacAPI 인스턴스가 없습니다');
+                }
+                
+                console.log('🌟 getDailyFortune 호출, zodiacId:', zodiacId);
+                const fortune = await zodiacAPI.getDailyFortune(parseInt(zodiacId));
+                
+                console.log('✅ 일일 운세 로드 성공:', fortune);
+                
+                resultDiv.innerHTML = `
+                    <h3>🌟 일일 운세 결과</h3>
+                    <div class="status success">✅ 로드 성공</div>
+                    <div class="info-grid">
+                        <div class="info-card">
+                            <h4>기본 정보</h4>
+                            <p><strong>별자리 ID:</strong> ${fortune.zodiacId}</p>
+                            <p><strong>날짜:</strong> ${fortune.date}</p>
+                            <p><strong>전체 운세:</strong> ${fortune.overall || 'N/A'}</p>
+                        </div>
+                        <div class="info-card">
+                            <h4>점수</h4>
+                            ${fortune.scores ? `
+                                <p><strong>애정:</strong> ${fortune.scores.love}점</p>
+                                <p><strong>금전:</strong> ${fortune.scores.money}점</p>
+                                <p><strong>업무:</strong> ${fortune.scores.work}점</p>
+                                <p><strong>건강:</strong> ${fortune.scores.health}점</p>
+                            ` : '<p>점수 정보 없음</p>'}
+                        </div>
+                        <div class="info-card">
+                            <h4>세부 운세</h4>
+                            ${fortune.fortunes ? `
+                                <p><strong>애정:</strong> ${fortune.fortunes.love}</p>
+                                <p><strong>금전:</strong> ${fortune.fortunes.money}</p>
+                                <p><strong>업무:</strong> ${fortune.fortunes.work}</p>
+                                <p><strong>건강:</strong> ${fortune.fortunes.health}</p>
+                            ` : '<p>세부 운세 정보 없음</p>'}
+                        </div>
+                        <div class="info-card">
+                            <h4>행운 정보</h4>
+                            ${fortune.lucky ? `
+                                <p><strong>행운의 색:</strong> ${fortune.lucky.color}</p>
+                                <p><strong>행운의 숫자:</strong> ${fortune.lucky.number}</p>
+                                <p><strong>행운의 시간:</strong> ${fortune.lucky.time}</p>
+                            ` : '<p>행운 정보 없음</p>'}
+                        </div>
+                    </div>
+                    <div class="info-card">
+                        <h4>조언</h4>
+                        <p>${fortune.advice || 'N/A'}</p>
+                    </div>
+                `;
+                
+            } catch (error) {
+                console.error('❌ 일일 운세 테스트 실패:', error);
+                resultDiv.innerHTML = '<div class="status error">❌ 일일 운세 로드 실패: ' + error.message + '</div>';
+            }
+        }
+
+        // 모든 별자리 운세 테스트
+        async function testAllZodiacFortunes() {
+            console.log('=== 모든 별자리 운세 테스트 시작 ===');
+            const resultDiv = document.getElementById('fortuneTestResult');
+            
+            try {
+                resultDiv.style.display = 'block';
+                resultDiv.innerHTML = '<div class="status loading">모든 별자리 운세 로드 중...</div>';
+                
+                if (typeof zodiacAPI === 'undefined') {
+                    throw new Error('zodiacAPI 인스턴스가 없습니다');
+                }
+                
+                const results = [];
+                for (let i = 1; i <= 12; i++) {
+                    console.log(`🔄 별자리 ${i} 운세 로드 중...`);
+                    try {
+                        const fortune = await zodiacAPI.getDailyFortune(i);
+                        results.push({ zodiacId: i, success: true, fortune });
+                    } catch (error) {
+                        console.error(`❌ 별자리 ${i} 운세 로드 실패:`, error);
+                        results.push({ zodiacId: i, success: false, error: error.message });
+                    }
+                }
+                
+                console.log('✅ 모든 별자리 운세 테스트 완료');
+                
+                let html = '<h3>🌟 모든 별자리 운세 테스트 결과</h3>';
+                html += `<div class="status success">✅ ${results.filter(r => r.success).length}/12 개 성공</div>`;
+                
+                results.forEach((result, index) => {
+                    const zodiacNames = ['', '양자리', '황소자리', '쌍둥이자리', '게자리', '사자자리', '처녀자리', 
+                                       '천칭자리', '전갈자리', '사수자리', '염소자리', '물병자리', '물고기자리'];
+                    
+                    html += `<div class="info-card">`;
+                    html += `<h4>${zodiacNames[result.zodiacId]} (ID: ${result.zodiacId})</h4>`;
+                    
+                    if (result.success) {
+                        html += `<div class="status success">✅ 성공</div>`;
+                        html += `<p><strong>전체 운세:</strong> ${result.fortune.overall || 'N/A'}</p>`;
+                        html += `<p><strong>조언:</strong> ${result.fortune.advice || 'N/A'}</p>`;
+                    } else {
+                        html += `<div class="status error">❌ 실패: ${result.error}</div>`;
+                    }
+                    html += `</div>`;
+                });
+                
+                resultDiv.innerHTML = html;
+                
+            } catch (error) {
+                console.error('❌ 모든 별자리 운세 테스트 실패:', error);
+                resultDiv.innerHTML = '<div class="status error">❌ 테스트 실패: ' + error.message + '</div>';
+            }
+        }
+
+        // 경로 테스트
+        async function testPaths() {
+            console.log('=== 경로 테스트 시작 ===');
+            const resultDiv = document.getElementById('pathTestResult');
+            
+            const paths = [
+                'api/fortune-data.json',
+                './api/fortune-data.json',
+                '../api/fortune-data.json',
+                '/api/fortune-data.json'
+            ];
+            
+            let html = '<h3>🛤️ 경로 테스트 결과</h3>';
+            
+            for (const path of paths) {
+                try {
+                    console.log(`🔄 테스트 경로: ${path}`);
+                    const response = await fetch(path);
+                    
+                    if (response.ok) {
+                        html += `<div class="status success">✅ ${path} - 접근 가능</div>`;
+                        console.log(`✅ ${path} 접근 성공`);
+                    } else {
+                        html += `<div class="status error">❌ ${path} - HTTP ${response.status}</div>`;
+                        console.log(`❌ ${path} 접근 실패: ${response.status}`);
+                    }
+                } catch (error) {
+                    html += `<div class="status error">❌ ${path} - ${error.message}</div>`;
+                    console.error(`❌ ${path} 접근 실패:`, error.message);
+                }
+            }
+            
+            resultDiv.innerHTML = html;
+        }
+
+        // 페이지 로드 시 초기 상태 확인
+        window.addEventListener('load', () => {
+            console.log('🚀 디버그 페이지 로드 완료');
+            console.log('📍 현재 URL:', window.location.href);
+            console.log('📁 현재 경로:', window.location.pathname);
+            
+            setTimeout(() => {
+                checkSystemStatus();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

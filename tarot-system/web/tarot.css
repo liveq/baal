@@ -1,0 +1,1548 @@
+/* 완전 재설계된 타로카드 시스템 CSS - 분할 레이아웃 */
+
+:root {
+    /* 신비로운 타로 시스템 컬러 팔레트 */
+    --tarot-primary: #4a154b;
+    --tarot-secondary: #764ba2;
+    --tarot-mystical: #2d1b69;
+    --tarot-sacred: #8b5a2b;
+    --tarot-gold: #ffd700;
+    --tarot-gold-light: #fff8dc;
+    --tarot-dark: #1a1a2e;
+    --tarot-light: #f8f9fa;
+    --tarot-white: #ffffff;
+    --tarot-gray: #6c757d;
+    --tarot-border: #dee2e6;
+    --tarot-purple: #5c3682;
+    --tarot-cosmic: #16213e;
+    --tarot-celestial: #0f3460;
+    --tarot-divine: #9d4edd;
+    
+    /* 황금 비율 */
+    --golden-ratio: 1.618;
+    --golden-small: 0.618;
+    
+    /* 컴팩트 카드 크기 - 요구사항에 맞게 조정 */
+    --mini-card-width: 60px;
+    --mini-card-height: 90px;
+    
+    /* 네비게이션 */
+    --nav-width: 200px;
+    
+    /* 전환 효과 */
+    --transition: all 0.3s ease;
+    --transition-fast: all 0.2s ease;
+    --transition-slow: all 0.5s ease;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: 
+        linear-gradient(135deg, var(--tarot-cosmic) 0%, var(--tarot-mystical) 25%, var(--tarot-primary) 50%, var(--tarot-secondary) 100%),
+        radial-gradient(ellipse at top left, rgba(255, 215, 0, 0.1) 0%, transparent 50%),
+        radial-gradient(ellipse at bottom right, rgba(157, 78, 221, 0.1) 0%, transparent 50%),
+        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="stars" patternUnits="userSpaceOnUse" width="100" height="100"><circle cx="25" cy="25" r="1" fill="%23ffffff" opacity="0.1"/><circle cx="75" cy="75" r="0.5" fill="%23ffd700" opacity="0.2"/><circle cx="50" cy="10" r="0.8" fill="%239d4edd" opacity="0.15"/><circle cx="10" cy="60" r="0.6" fill="%23ffffff" opacity="0.08"/><circle cx="85" cy="40" r="0.7" fill="%23ffd700" opacity="0.12"/></pattern></defs><rect width="100" height="100" fill="url(%23stars)"/></svg>') repeat;
+    color: var(--tarot-dark);
+    line-height: 1.6;
+    min-height: 100vh;
+    background-attachment: fixed;
+    background-size: 100% 100%, 800px 800px, 600px 600px, 200px 200px;
+}
+
+/* =========================
+   네비게이션 시스템
+========================= */
+
+.nav-toggle {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    z-index: 1001;
+    background: var(--tarot-primary);
+    color: var(--tarot-white);
+    border: none;
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: var(--transition);
+    display: none;
+}
+
+.nav-toggle:hover {
+    background: var(--tarot-secondary);
+    transform: scale(1.05);
+}
+
+.tarot-nav {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: var(--nav-width);
+    height: 100vh;
+    background: linear-gradient(180deg, var(--tarot-primary) 0%, var(--tarot-mystical) 100%);
+    border-right: 2px solid var(--tarot-border);
+    overflow-y: auto;
+    z-index: 1000;
+    transition: var(--transition);
+    box-shadow: 4px 0 15px rgba(0, 0, 0, 0.15);
+}
+
+.nav-header {
+    padding: 20px 15px;
+    background: linear-gradient(135deg, var(--tarot-primary), var(--tarot-secondary));
+    color: var(--tarot-white);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.nav-header h3 {
+    font-size: 16px;
+    font-weight: 600;
+    flex: 1;
+    text-align: center;
+}
+
+.main-btn, .close-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: var(--tarot-white);
+    border-radius: 6px;
+    padding: 6px 8px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: var(--transition);
+}
+
+.main-btn:hover, .close-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
+}
+
+.nav-categories {
+    padding: 10px 0;
+}
+
+.nav-category {
+    margin-bottom: 2px;
+}
+
+.category-header {
+    width: 100%;
+    background: transparent;
+    border: none;
+    color: var(--tarot-white);
+    padding: 12px 15px;
+    text-align: left;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+}
+
+.category-header:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.category-header.active {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.category-icon {
+    margin-right: 8px;
+    font-size: 16px;
+}
+
+.category-title {
+    flex: 1;
+    font-weight: 500;
+}
+
+.category-arrow {
+    transition: var(--transition);
+    font-size: 12px;
+}
+
+.category-header.active .category-arrow {
+    transform: rotate(180deg);
+}
+
+.category-items {
+    max-height: 0;
+    overflow: hidden;
+    transition: var(--transition-slow);
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.category-items.active {
+    max-height: 500px;
+}
+
+.nav-item {
+    width: 100%;
+    background: transparent;
+    border: none;
+    color: var(--tarot-white);
+    padding: 10px 30px;
+    text-align: left;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    font-size: 13px;
+    opacity: 0.9;
+}
+
+.nav-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+    opacity: 1;
+    padding-left: 35px;
+}
+
+.nav-item.active {
+    background: var(--tarot-gold);
+    color: var(--tarot-dark);
+    opacity: 1;
+    font-weight: 500;
+}
+
+.nav-icon {
+    margin-right: 8px;
+    font-size: 14px;
+    width: 20px;
+    text-align: center;
+}
+
+.nav-footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.2);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.nav-special-btn {
+    width: 100%;
+    background: var(--tarot-gold);
+    color: var(--tarot-dark);
+    border: none;
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: var(--transition);
+    font-weight: 500;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.nav-special-btn:hover {
+    background: var(--tarot-gold-light);
+    transform: translateY(-2px);
+}
+
+.nav-special-btn:last-child {
+    margin-bottom: 0;
+}
+
+/* =========================
+   메인 컨테이너 및 분할 레이아웃
+========================= */
+
+.tarot-container {
+    margin-left: var(--nav-width);
+    min-height: 100vh;
+    transition: var(--transition);
+    display: flex;
+    flex-direction: column;
+}
+
+.tarot-header {
+    background: rgba(255, 255, 255, 0.95);
+    border-bottom: 2px solid var(--tarot-border);
+    padding: 15px 25px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    backdrop-filter: blur(10px);
+}
+
+.tarot-header h1 {
+    font-size: 24px;
+    color: var(--tarot-primary);
+    font-weight: 700;
+    margin: 0;
+    transition: var(--transition);
+}
+
+.tarot-header h1:hover {
+    color: var(--tarot-secondary);
+}
+
+.header-controls {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.spread-title {
+    font-size: 16px;
+    color: var(--tarot-gray);
+    font-weight: 500;
+    min-width: 120px;
+    text-align: right;
+}
+
+.draw-button {
+    background: linear-gradient(135deg, var(--tarot-primary), var(--tarot-secondary));
+    color: var(--tarot-white);
+    border: none;
+    border-radius: 25px;
+    padding: 12px 20px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: var(--transition);
+    box-shadow: 0 4px 12px rgba(74, 21, 75, 0.3);
+}
+
+.draw-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(74, 21, 75, 0.4);
+}
+
+.draw-button .btn-icon {
+    font-size: 16px;
+}
+
+.draw-button .btn-text {
+    font-weight: 600;
+}
+
+/* =========================
+   분할 메인 콘텐츠 영역
+========================= */
+
+.main-content {
+    display: flex;
+    flex: 1;
+    min-height: calc(100vh - 70px);
+    overflow: hidden;
+}
+
+/* =========================
+   왼쪽 패널: 카드 시각화 (40%)
+========================= */
+
+.cards-panel {
+    flex: 0 0 40%;
+    padding: 25px 20px;
+    background: 
+        linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.85) 100%),
+        radial-gradient(circle at center, rgba(255, 215, 0, 0.05) 0%, transparent 60%);
+    border-right: 3px solid var(--tarot-border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow-y: auto;
+    box-shadow: inset -4px 0 12px rgba(0, 0, 0, 0.05);
+}
+
+/* 웰컴 섹션 */
+.welcome-section {
+    text-align: center;
+    max-width: 400px;
+    padding: 30px;
+}
+
+.welcome-content {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 20px;
+    padding: 40px 30px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 215, 0, 0.2);
+}
+
+.welcome-icon {
+    font-size: 48px;
+    display: block;
+    margin-bottom: 20px;
+    animation: mysticalGlow 3s ease-in-out infinite alternate;
+}
+
+.welcome-content h2 {
+    color: var(--tarot-primary);
+    margin-bottom: 15px;
+    font-size: 22px;
+    font-weight: 600;
+}
+
+.welcome-content p {
+    color: var(--tarot-gray);
+    margin-bottom: 20px;
+    line-height: 1.6;
+}
+
+.mystical-quote {
+    background: linear-gradient(135deg, var(--tarot-gold-light), rgba(255, 215, 0, 0.1));
+    border-left: 4px solid var(--tarot-gold);
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+.mystical-quote p {
+    font-style: italic;
+    color: var(--tarot-sacred);
+    font-weight: 500;
+    margin: 0;
+    font-size: 14px;
+}
+
+/* 스프레드 컨테이너 */
+.spread-container {
+    width: 100%;
+    max-width: 450px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--tarot-border);
+}
+
+.spread-header {
+    text-align: center;
+    margin-bottom: 25px;
+    border-bottom: 2px solid var(--tarot-border);
+    padding-bottom: 15px;
+}
+
+.spread-header h3 {
+    color: var(--tarot-primary);
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.spread-header p {
+    color: var(--tarot-gray);
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.spread-stats {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.spread-stats span {
+    background: var(--tarot-gold-light);
+    color: var(--tarot-sacred);
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+/* 미니 카드 영역 */
+.mini-cards-area {
+    margin-bottom: 25px;
+}
+
+.cards-grid {
+    display: grid;
+    gap: 15px;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
+}
+
+/* 스프레드별 그리드 레이아웃 */
+.cards-grid.layout-single {
+    grid-template-columns: 1fr;
+    justify-items: center;
+}
+
+.cards-grid.layout-horizontal {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.cards-grid.layout-cross {
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+    gap: 12px;
+    max-width: 350px;
+}
+
+.cards-grid.layout-pentagram {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    position: relative;
+    width: 300px;
+    height: 300px;
+}
+
+.cards-grid.layout-vertical {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.cards-grid.layout-circle {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    position: relative;
+    width: 350px;
+    height: 350px;
+}
+
+/* 미니 카드 스타일 */
+.mini-card {
+    width: var(--mini-card-width);
+    height: var(--mini-card-height);
+    background: linear-gradient(135deg, var(--tarot-mystical), var(--tarot-primary));
+    border: 2px solid var(--tarot-gold);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: var(--transition);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--tarot-white);
+    font-size: 12px;
+    font-weight: 500;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+}
+
+.mini-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 90"><rect width="60" height="90" fill="%23764ba2" opacity="0.1"/><circle cx="30" cy="45" r="15" stroke="%23ffd700" stroke-width="1" fill="none" opacity="0.6"/></svg>');
+    opacity: 0.7;
+}
+
+.mini-card.face-down {
+    background: linear-gradient(135deg, var(--tarot-cosmic), var(--tarot-mystical));
+    border-color: var(--tarot-border);
+}
+
+.mini-card.face-down::before {
+    content: '🌙';
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    background: none;
+    position: static;
+}
+
+.mini-card.face-up {
+    background: linear-gradient(135deg, var(--tarot-white), var(--tarot-light));
+    color: var(--tarot-dark);
+    border-color: var(--tarot-gold);
+    box-shadow: 0 6px 20px rgba(255, 215, 0, 0.3);
+}
+
+.mini-card.selected {
+    transform: scale(1.1);
+    border-color: var(--tarot-gold);
+    box-shadow: 0 8px 25px rgba(255, 215, 0, 0.5);
+    z-index: 10;
+}
+
+.mini-card.revealed {
+    border-color: var(--tarot-divine);
+    box-shadow: 0 6px 18px rgba(157, 78, 221, 0.3);
+}
+
+.mini-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* 카드 내용 */
+.card-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 4px;
+}
+
+.card-symbol {
+    font-size: 18px;
+    margin-bottom: 4px;
+}
+
+.card-name {
+    font-size: 10px;
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+.card-position-label {
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--tarot-dark);
+    color: var(--tarot-white);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 500;
+    opacity: 0;
+    transition: var(--transition);
+    white-space: nowrap;
+}
+
+.mini-card:hover .card-position-label {
+    opacity: 1;
+}
+
+/* 진행 상태 표시 */
+.reading-progress {
+    text-align: center;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 6px;
+    background: var(--tarot-border);
+    border-radius: 3px;
+    margin-bottom: 12px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--tarot-gold), var(--tarot-divine));
+    width: 0;
+    transition: width 0.5s ease;
+    border-radius: 3px;
+}
+
+.progress-text {
+    color: var(--tarot-gray);
+    font-size: 14px;
+    font-weight: 500;
+    margin: 0;
+}
+
+/* 로딩 오버레이 */
+.loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.95);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+}
+
+.loading-content {
+    text-align: center;
+    padding: 30px;
+}
+
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--tarot-border);
+    border-top: 3px solid var(--tarot-gold);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 15px;
+}
+
+.loading-content p {
+    color: var(--tarot-gray);
+    font-weight: 500;
+    margin: 0;
+}
+
+/* =========================
+   오른쪽 패널: 해석 영역 (60%)
+========================= */
+
+.interpretation-panel {
+    flex: 0 0 60%;
+    background: rgba(255, 255, 255, 0.98);
+    padding: 30px;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: inset 4px 0 12px rgba(0, 0, 0, 0.05);
+}
+
+.interpretation-content {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* 해석 상태별 스타일 */
+.interpretation-state {
+    animation: fadeInUp 0.5s ease;
+}
+
+.state-header {
+    margin-bottom: 30px;
+    text-align: center;
+    border-bottom: 2px solid var(--tarot-border);
+    padding-bottom: 20px;
+}
+
+.state-header h2 {
+    color: var(--tarot-primary);
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.state-subtitle {
+    color: var(--tarot-gray);
+    font-size: 16px;
+    margin: 0;
+}
+
+/* 상태 1: 웰컴 가이드 */
+.guide-content {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.guide-section h3 {
+    color: var(--tarot-primary);
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.guide-steps {
+    margin-bottom: 30px;
+}
+
+.step-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 12px;
+    border-left: 4px solid var(--tarot-gold);
+    transition: var(--transition);
+}
+
+.step-item:hover {
+    background: rgba(255, 255, 255, 1);
+    transform: translateX(5px);
+}
+
+.step-number {
+    background: var(--tarot-primary);
+    color: var(--tarot-white);
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+.step-content strong {
+    color: var(--tarot-primary);
+    font-size: 16px;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.step-content p {
+    color: var(--tarot-gray);
+    margin: 0;
+    line-height: 1.5;
+}
+
+.mystical-wisdom {
+    background: linear-gradient(135deg, rgba(157, 78, 221, 0.05), rgba(255, 215, 0, 0.05));
+    border-radius: 15px;
+    padding: 25px;
+    border: 1px solid rgba(157, 78, 221, 0.1);
+}
+
+.wisdom-quote {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.quote-icon {
+    font-size: 24px;
+    margin-bottom: 10px;
+    display: block;
+    color: var(--tarot-gold);
+}
+
+.wisdom-quote p {
+    font-style: italic;
+    color: var(--tarot-primary);
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.wisdom-note p {
+    color: var(--tarot-gray);
+    text-align: center;
+    margin: 0;
+    font-size: 14px;
+}
+
+/* 상태 2: 카드 준비 완료 */
+.ready-content {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.spread-overview {
+    margin-bottom: 25px;
+    padding: 20px;
+    background: rgba(255, 215, 0, 0.05);
+    border-radius: 12px;
+    border-left: 4px solid var(--tarot-gold);
+}
+
+.next-action {
+    text-align: center;
+    padding: 25px;
+    background: linear-gradient(135deg, rgba(74, 21, 75, 0.05), rgba(157, 78, 221, 0.05));
+    border-radius: 12px;
+}
+
+.action-guide {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.guide-icon {
+    font-size: 32px;
+    animation: bounce 2s infinite;
+}
+
+.action-guide p {
+    color: var(--tarot-primary);
+    font-size: 16px;
+    margin: 0;
+}
+
+.action-guide strong {
+    font-weight: 600;
+}
+
+.action-guide small {
+    color: var(--tarot-gray);
+    font-size: 13px;
+    max-width: 300px;
+    line-height: 1.4;
+}
+
+/* 상태 3: 개별 카드 해석 */
+.position-meaning {
+    background: linear-gradient(135deg, var(--tarot-gold-light), rgba(255, 215, 0, 0.1));
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 25px;
+    border-left: 4px solid var(--tarot-gold);
+}
+
+.position-name {
+    color: var(--tarot-primary);
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.position-description {
+    color: var(--tarot-gray);
+    margin: 0;
+    line-height: 1.5;
+}
+
+.card-info {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.card-identity h4 {
+    color: var(--tarot-primary);
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.card-orientation {
+    display: inline-block;
+    background: var(--tarot-gold);
+    color: var(--tarot-dark);
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.card-visual {
+    flex-shrink: 0;
+}
+
+.card-symbol {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, var(--tarot-mystical), var(--tarot-primary));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: var(--tarot-white);
+    box-shadow: 0 4px 15px rgba(74, 21, 75, 0.3);
+}
+
+.interpretation-content-area {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    border: 1px solid var(--tarot-border);
+}
+
+.interpretation-text {
+    color: var(--tarot-dark);
+    line-height: 1.7;
+    font-size: 15px;
+}
+
+.card-navigation {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.nav-btn {
+    background: linear-gradient(135deg, var(--tarot-primary), var(--tarot-secondary));
+    color: var(--tarot-white);
+    border: none;
+    border-radius: 25px;
+    padding: 12px 20px;
+    cursor: pointer;
+    transition: var(--transition);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+}
+
+.nav-btn:disabled {
+    background: var(--tarot-border);
+    color: var(--tarot-gray);
+    cursor: not-allowed;
+}
+
+.nav-btn:not(:disabled):hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(74, 21, 75, 0.3);
+}
+
+.card-progress {
+    background: rgba(255, 215, 0, 0.1);
+    color: var(--tarot-primary);
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+/* 상태 4: 최종 리딩 */
+.overall-reading {
+    background: linear-gradient(135deg, rgba(157, 78, 221, 0.05), rgba(255, 215, 0, 0.05));
+    border-radius: 15px;
+    padding: 30px;
+    margin-bottom: 30px;
+    border: 1px solid rgba(157, 78, 221, 0.1);
+}
+
+.reading-theme h3 {
+    color: var(--tarot-primary);
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.reading-theme p {
+    color: var(--tarot-gray);
+    margin-bottom: 20px;
+}
+
+.key-message {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 12px;
+    padding: 20px;
+    border-left: 4px solid var(--tarot-divine);
+}
+
+.cards-summary-section {
+    margin-bottom: 30px;
+}
+
+.cards-summary-section h3 {
+    color: var(--tarot-primary);
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.summary-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.summary-card-item {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    border-left: 4px solid var(--tarot-gold);
+    transition: var(--transition);
+}
+
+.summary-card-item:hover {
+    transform: translateX(5px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+}
+
+.final-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.action-btn {
+    background: linear-gradient(135deg, var(--tarot-primary), var(--tarot-secondary));
+    color: var(--tarot-white);
+    border: none;
+    border-radius: 25px;
+    padding: 12px 20px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+}
+
+.action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(74, 21, 75, 0.3);
+}
+
+.action-btn.secondary-btn {
+    background: linear-gradient(135deg, var(--tarot-divine), var(--tarot-purple));
+}
+
+.action-btn.outline-btn {
+    background: transparent;
+    color: var(--tarot-primary);
+    border: 2px solid var(--tarot-primary);
+}
+
+.action-btn.outline-btn:hover {
+    background: var(--tarot-primary);
+    color: var(--tarot-white);
+}
+
+/* =========================
+   애니메이션
+========================= */
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes mysticalGlow {
+    0% { 
+        text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        transform: scale(1);
+    }
+    100% { 
+        text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+        transform: scale(1.05);
+    }
+}
+
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-10px);
+    }
+    60% {
+        transform: translateY(-5px);
+    }
+}
+
+/* =========================
+   반응형 디자인
+========================= */
+
+@media (max-width: 1200px) {
+    .main-content {
+        flex-direction: column;
+    }
+    
+    .cards-panel {
+        flex: none;
+        min-height: 350px;
+        border-right: none;
+        border-bottom: 3px solid var(--tarot-border);
+    }
+    
+    .interpretation-panel {
+        flex: none;
+    }
+    
+    :root {
+        --mini-card-width: 50px;
+        --mini-card-height: 75px;
+    }
+}
+
+@media (max-width: 768px) {
+    .nav-toggle {
+        display: block;
+    }
+    
+    .tarot-nav {
+        transform: translateX(-100%);
+    }
+    
+    .tarot-nav.open {
+        transform: translateX(0);
+    }
+    
+    .tarot-container {
+        margin-left: 0;
+    }
+    
+    .tarot-header {
+        padding: 12px 15px;
+        margin-left: 0;
+    }
+    
+    .tarot-header h1 {
+        font-size: 20px;
+    }
+    
+    .header-controls {
+        gap: 10px;
+    }
+    
+    .spread-title {
+        display: none;
+    }
+    
+    .draw-button {
+        padding: 10px 16px;
+        font-size: 13px;
+    }
+    
+    .cards-panel, .interpretation-panel {
+        padding: 20px 15px;
+    }
+    
+    .cards-grid.layout-cross {
+        max-width: 280px;
+        gap: 8px;
+    }
+    
+    .cards-grid.layout-circle,
+    .cards-grid.layout-pentagram {
+        width: 280px;
+        height: 280px;
+    }
+    
+    :root {
+        --mini-card-width: 45px;
+        --mini-card-height: 65px;
+    }
+    
+    .step-item {
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+    }
+    
+    .card-info {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .card-navigation {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .final-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .action-btn {
+        width: 100%;
+        max-width: 250px;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .welcome-content {
+        padding: 25px 20px;
+    }
+    
+    .welcome-icon {
+        font-size: 36px;
+    }
+    
+    .welcome-content h2 {
+        font-size: 18px;
+    }
+    
+    .spread-container {
+        padding: 20px 15px;
+    }
+    
+    .interpretation-panel {
+        padding: 20px 15px;
+    }
+    
+    .state-header h2 {
+        font-size: 22px;
+    }
+    
+    .guide-content {
+        padding: 20px 15px;
+    }
+    
+    :root {
+        --mini-card-width: 40px;
+        --mini-card-height: 60px;
+    }
+}
+
+/* =========================
+   접근성 및 고대비 모드
+========================= */
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+@media (prefers-contrast: high) {
+    :root {
+        --tarot-primary: #000000;
+        --tarot-secondary: #333333;
+        --tarot-white: #ffffff;
+        --tarot-border: #000000;
+    }
+    
+    .mini-card {
+        border-width: 3px;
+    }
+    
+    .nav-item:hover {
+        background: #000000;
+    }
+}
+
+/* =========================
+   포커스 및 키보드 네비게이션
+========================= */
+
+button:focus,
+.mini-card:focus {
+    outline: 3px solid var(--tarot-gold);
+    outline-offset: 2px;
+}
+
+.mini-card:focus {
+    transform: scale(1.05);
+}
+
+/* =========================
+   프린트 스타일
+========================= */
+
+@media print {
+    .tarot-nav,
+    .nav-toggle,
+    .draw-button,
+    .final-actions {
+        display: none !important;
+    }
+    
+    .tarot-container {
+        margin-left: 0;
+    }
+    
+    .main-content {
+        flex-direction: column;
+    }
+    
+    body {
+        background: white;
+        color: black;
+    }
+    
+    .cards-panel,
+    .interpretation-panel {
+        background: white;
+        box-shadow: none;
+    }
+}
+
+/* =========================
+   모달 스타일 (필요시 사용)
+========================= */
+
+.card-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    backdrop-filter: blur(5px);
+}
+
+.modal-card {
+    background: var(--tarot-white);
+    border-radius: 15px;
+    max-width: 500px;
+    width: 100%;
+    max-height: 80vh;
+    overflow-y: auto;
+    position: relative;
+    animation: fadeInUp 0.3s ease;
+}
+
+.modal-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: var(--tarot-gray);
+    z-index: 10;
+}
+
+.modal-close:hover {
+    color: var(--tarot-primary);
+}
+
+.modal-layout {
+    padding: 30px;
+}
+
+.modal-card-visual {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, var(--tarot-mystical), var(--tarot-primary));
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    box-shadow: 0 8px 25px rgba(74, 21, 75, 0.3);
+}
+
+.modal-card-visual .card-symbol {
+    font-size: 32px;
+    color: var(--tarot-white);
+}
+
+/* =========================
+   토스트 메시지 (기존 유지)
+========================= */
+
+.toast {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: var(--tarot-primary);
+    color: var(--tarot-white);
+    padding: 15px 20px;
+    border-radius: 10px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    transform: translateX(400px);
+    transition: var(--transition);
+    z-index: 1500;
+    max-width: 300px;
+}
+
+.toast.show {
+    transform: translateX(0);
+}
+
+.toast-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* =========================
+   히스토리 모달 (기존 유지)
+========================= */
+
+.history-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 2000;
+    display: none; /* 기본적으로 숨김 */
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    backdrop-filter: blur(5px);
+}
+
+.history-modal.show {
+    display: flex; /* 표시할 때만 flex 사용 */
+}
+
+.history-modal-content {
+    background: var(--tarot-white);
+    border-radius: 15px;
+    max-width: 600px;
+    width: 100%;
+    max-height: 80vh;
+    overflow-y: auto;
+    animation: fadeInUp 0.3s ease;
+}
+
+.history-header {
+    padding: 20px;
+    border-bottom: 2px solid var(--tarot-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.history-header h3 {
+    color: var(--tarot-primary);
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.history-list {
+    padding: 20px;
+}
+
+.empty-history {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--tarot-gray);
+}
+
+.empty-icon {
+    font-size: 48px;
+    display: block;
+    margin-bottom: 15px;
+    opacity: 0.5;
+}

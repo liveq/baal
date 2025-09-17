@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>중국 12간지 띠별운세 - BAAL</title>
+    <link rel="stylesheet" href="chinese-zodiac.css">
+</head>
+<body>
+    <!-- 햄버거 메뉴 토글 버튼 -->
+    <button class="nav-toggle" onclick="toggleNav()">☰</button>
+
+    <!-- 좌측 네비게이션 -->
+    <nav class="chinese-zodiac-nav">
+        <div class="nav-header">
+            <button class="main-btn" onclick="location.href='../../'" title="메인으로">🏠</button>
+            <h3 onclick="showIntroPage()" style="cursor: pointer;" title="12간지 선택 화면으로">12간지 선택</h3>
+            <button class="close-btn" onclick="window.close()" title="닫기">✕</button>
+        </div>
+        <div class="nav-items">
+            <button class="nav-item" onclick="selectChineseZodiac(1)" data-zodiac="1">
+                <span class="nav-symbol">🐭</span>
+                <div class="nav-info">
+                    <span class="nav-name">쥐띠</span>
+                    <span class="nav-year">자(子)</span>
+                </div>
+            </button>
+            <button class="nav-item" onclick="selectChineseZodiac(2)" data-zodiac="2">
+                <span class="nav-symbol">🐂</span>
+                <div class="nav-info">
+                    <span class="nav-name">소띠</span>
+                    <span class="nav-year">축(丑)</span>
+                </div>
+            </button>
+            <button class="nav-item" onclick="selectChineseZodiac(3)" data-zodiac="3">
+                <span class="nav-symbol">🐅</span>
+                <div class="nav-info">
+                    <span class="nav-name">범띠</span>
+                    <span class="nav-year">인(寅)</span>
+                </div>
+            </button>
+            <button class="nav-item" onclick="selectChineseZodiac(4)" data-zodiac="4">
+                <span class="nav-symbol">🐰</span>
+                <div class="nav-info">
+                    <span class="nav-name">토끼띠</span>
+                    <span class="nav-year">묘(卯)</span>
+                </div>
+            </button>
+            <button class="nav-item" onclick="selectChineseZodiac(5)" data-zodiac="5">
+                <span class="nav-symbol">🐲</span>
+                <div class="nav-info">
+                    <span class="nav-name">용띠</span>
+                    <span class="nav-year">진(辰)</span>
+                </div>
+            </button>
+            <button class="nav-item" onclick="selectChineseZodiac(6)" data-zodiac="6">
+                <span class="nav-symbol">🐍</span>
+                <div class="nav-info">
+                    <span class="nav-name">뱀띠</span>
+                    <span class="nav-year">사(巳)</span>
+                </div>
+            </button>
+            <button class="nav-item" onclick="selectChineseZodiac(7)" data-zodiac="7">
+                <span class="nav-symbol">🐎</span>
+                <div class="nav-info">
+                    <span class="nav-name">말띠</span>
+                    <span class="nav-year">오(午)</span>
+                </div>
+            </button>
+            <button class="nav-item" onclick="selectChineseZodiac(8)" data-zodiac="8">
+                <span class="nav-symbol">🐑</span>
+                <div class="nav-info">
+                    <span class="nav-name">양띠</span>
+                    <span class="nav-year">미(未)</span>
+                </div>
+            </button>
+            <button class="nav-item" onclick="selectChineseZodiac(9)" data-zodiac="9">
+                <span class="nav-symbol">🐵</span>
+                <div class="nav-info">
+                    <span class="nav-name">원숭이띠</span>
+                    <span class="nav-year">신(申)</span>
+                </div>
+            </button>
+            <button class="nav-item" onclick="selectChineseZodiac(10)" data-zodiac="10">
+                <span class="nav-symbol">🐓</span>
+                <div class="nav-info">
+                    <span class="nav-name">닭띠</span>
+                    <span class="nav-year">유(酉)</span>
+                </div>
+            </button>
+            <button class="nav-item" onclick="selectChineseZodiac(11)" data-zodiac="11">
+                <span class="nav-symbol">🐕</span>
+                <div class="nav-info">
+                    <span class="nav-name">개띠</span>
+                    <span class="nav-year">술(戌)</span>
+                </div>
+            </button>
+            <button class="nav-item" onclick="selectChineseZodiac(12)" data-zodiac="12">
+                <span class="nav-symbol">🐷</span>
+                <div class="nav-info">
+                    <span class="nav-name">돼지띠</span>
+                    <span class="nav-year">해(亥)</span>
+                </div>
+            </button>
+        </div>
+    </nav>
+
+    <div class="chinese-zodiac-container">
+        <!-- 헤더 -->
+        <header class="chinese-zodiac-header">
+            <h1 onclick="showIntroPage()" style="cursor: pointer;">🐲 중국 12간지 띠별운세</h1>
+            <div class="header-date" id="headerDate"></div>
+        </header>
+
+        <!-- 생년 입력 바 -->
+        <div class="birth-year-bar">
+            <div class="input-section">
+                <label>내 띠 확인</label>
+                <div class="year-input-wrapper">
+                    <input type="number" id="birthYear" placeholder="출생년도" min="1900" max="2025" class="year-input">
+                    <button class="find-btn" onclick="findChineseZodiac()">내 띠 찾기</button>
+                </div>
+            </div>
+
+            <!-- 궁합 입력 (동적으로 표시) -->
+            <div class="input-section compat-section" id="compatSection" style="display: none;">
+                <span class="separator">❤</span>
+                <label>상대방 띠</label>
+                <select id="partnerZodiac" class="compat-select">
+                    <option value="">띠 선택</option>
+                    <option value="1">쥐띠 (자)</option>
+                    <option value="2">소띠 (축)</option>
+                    <option value="3">범띠 (인)</option>
+                    <option value="4">토끼띠 (묘)</option>
+                    <option value="5">용띠 (진)</option>
+                    <option value="6">뱀띠 (사)</option>
+                    <option value="7">말띠 (오)</option>
+                    <option value="8">양띠 (미)</option>
+                    <option value="9">원숭이띠 (신)</option>
+                    <option value="10">닭띠 (유)</option>
+                    <option value="11">개띠 (술)</option>
+                    <option value="12">돼지띠 (해)</option>
+                </select>
+                <button class="compat-btn" onclick="checkZodiacCompatibility()">궁합</button>
+            </div>
+        </div>
+
+        <!-- 초기 화면: 12간지 소개 -->
+        <section class="chinese-zodiac-intro" id="chineseZodiacIntro">
+            <h2 class="intro-title">🏮 중국 12간지 이야기</h2>
+            <div class="zodiac-grid">
+                <div class="zodiac-card rat" onclick="selectChineseZodiac(1)" onmouseenter="showMagnifier(this, 1)" onmouseleave="hideMagnifier(this)">
+                    <button class="magnifier-btn" onclick="event.stopPropagation(); showZodiacModal(1)">🔍</button>
+                    <span class="zodiac-emoji">🐭</span>
+                    <h3>쥐띠</h3>
+                    <p class="zodiac-info">자(子) | 지혜와 영리함</p>
+                </div>
+                <div class="zodiac-card ox" onclick="selectChineseZodiac(2)" onmouseenter="showMagnifier(this, 2)" onmouseleave="hideMagnifier(this)">
+                    <button class="magnifier-btn" onclick="event.stopPropagation(); showZodiacModal(2)">🔍</button>
+                    <span class="zodiac-emoji">🐂</span>
+                    <h3>소띠</h3>
+                    <p class="zodiac-info">축(丑) | 인내와 성실함</p>
+                </div>
+                <div class="zodiac-card tiger" onclick="selectChineseZodiac(3)" onmouseenter="showMagnifier(this, 3)" onmouseleave="hideMagnifier(this)">
+                    <button class="magnifier-btn" onclick="event.stopPropagation(); showZodiacModal(3)">🔍</button>
+                    <span class="zodiac-emoji">🐅</span>
+                    <h3>범띠</h3>
+                    <p class="zodiac-info">인(寅) | 용기와 도전</p>
+                </div>
+                <div class="zodiac-card rabbit" onclick="selectChineseZodiac(4)" onmouseenter="showMagnifier(this, 4)" onmouseleave="hideMagnifier(this)">
+                    <button class="magnifier-btn" onclick="event.stopPropagation(); showZodiacModal(4)">🔍</button>
+                    <span class="zodiac-emoji">🐰</span>
+                    <h3>토끼띠</h3>
+                    <p class="zodiac-info">묘(卯) | 온화함과 평화</p>
+                </div>
+                <div class="zodiac-card dragon" onclick="selectChineseZodiac(5)" onmouseenter="showMagnifier(this, 5)" onmouseleave="hideMagnifier(this)">
+                    <button class="magnifier-btn" onclick="event.stopPropagation(); showZodiacModal(5)">🔍</button>
+                    <span class="zodiac-emoji">🐲</span>
+                    <h3>용띠</h3>
+                    <p class="zodiac-info">진(辰) | 권위와 성공</p>
+                </div>
+                <div class="zodiac-card snake" onclick="selectChineseZodiac(6)" onmouseenter="showMagnifier(this, 6)" onmouseleave="hideMagnifier(this)">
+                    <button class="magnifier-btn" onclick="event.stopPropagation(); showZodiacModal(6)">🔍</button>
+                    <span class="zodiac-emoji">🐍</span>
+                    <h3>뱀띠</h3>
+                    <p class="zodiac-info">사(巳) | 지혜와 신비</p>
+                </div>
+                <div class="zodiac-card horse" onclick="selectChineseZodiac(7)" onmouseenter="showMagnifier(this, 7)" onmouseleave="hideMagnifier(this)">
+                    <button class="magnifier-btn" onclick="event.stopPropagation(); showZodiacModal(7)">🔍</button>
+                    <span class="zodiac-emoji">🐎</span>
+                    <h3>말띠</h3>
+                    <p class="zodiac-info">오(午) | 자유와 활력</p>
+                </div>
+                <div class="zodiac-card goat" onclick="selectChineseZodiac(8)" onmouseenter="showMagnifier(this, 8)" onmouseleave="hideMagnifier(this)">
+                    <button class="magnifier-btn" onclick="event.stopPropagation(); showZodiacModal(8)">🔍</button>
+                    <span class="zodiac-emoji">🐑</span>
+                    <h3>양띠</h3>
+                    <p class="zodiac-info">미(未) | 온순함과 예술</p>
+                </div>
+                <div class="zodiac-card monkey" onclick="selectChineseZodiac(9)" onmouseenter="showMagnifier(this, 9)" onmouseleave="hideMagnifier(this)">
+                    <button class="magnifier-btn" onclick="event.stopPropagation(); showZodiacModal(9)">🔍</button>
+                    <span class="zodiac-emoji">🐵</span>
+                    <h3>원숭이띠</h3>
+                    <p class="zodiac-info">신(申) | 재치와 유머</p>
+                </div>
+                <div class="zodiac-card rooster" onclick="selectChineseZodiac(10)" onmouseenter="showMagnifier(this, 10)" onmouseleave="hideMagnifier(this)">
+                    <button class="magnifier-btn" onclick="event.stopPropagation(); showZodiacModal(10)">🔍</button>
+                    <span class="zodiac-emoji">🐓</span>
+                    <h3>닭띠</h3>
+                    <p class="zodiac-info">유(酉) | 성실함과 정직</p>
+                </div>
+                <div class="zodiac-card dog" onclick="selectChineseZodiac(11)" onmouseenter="showMagnifier(this, 11)" onmouseleave="hideMagnifier(this)">
+                    <button class="magnifier-btn" onclick="event.stopPropagation(); showZodiacModal(11)">🔍</button>
+                    <span class="zodiac-emoji">🐕</span>
+                    <h3>개띠</h3>
+                    <p class="zodiac-info">술(戌) | 충성과 신뢰</p>
+                </div>
+                <div class="zodiac-card pig" onclick="selectChineseZodiac(12)" onmouseenter="showMagnifier(this, 12)" onmouseleave="hideMagnifier(this)">
+                    <button class="magnifier-btn" onclick="event.stopPropagation(); showZodiacModal(12)">🔍</button>
+                    <span class="zodiac-emoji">🐷</span>
+                    <h3>돼지띠</h3>
+                    <p class="zodiac-info">해(亥) | 풍요와 관대함</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 운세 디스플레이 -->
+        <section class="fortune-display" id="fortuneDisplay" style="display: none;">
+            <!-- 탭 메뉴와 간지 정보 통합 -->
+            <div class="tab-menu-wrapper">
+                <button class="back-btn" onclick="showIntroPage()" title="12간지 이야기로 돌아가기">←</button>
+                <div class="zodiac-info-compact">
+                    <button class="magnifier-btn" onclick="event.stopPropagation(); showZodiacModal(currentZodiacId)">🔍</button>
+                    <span class="zodiac-icon" id="zodiacIcon"></span>
+                    <div>
+                        <span class="zodiac-title" id="zodiacTitle"></span>
+                        <span class="zodiac-period" id="zodiacPeriod"></span>
+                    </div>
+                </div>
+                <div class="tab-menu">
+                    <button class="tab-btn active" onclick="showTab('today')">오늘</button>
+                    <button class="tab-btn" onclick="showTab('week')">주간</button>
+                    <button class="tab-btn" onclick="showTab('month')">월간</button>
+                    <button class="tab-btn" onclick="showTab('year')">연간</button>
+                    <button class="tab-btn" onclick="showTab('compatibility')">궁합</button>
+                </div>
+                <button class="share-btn" onclick="shareResult()" title="공유하기">📤</button>
+                <button class="compat-toggle-btn" onclick="toggleCompatibilityInput()" title="궁합 테스트">❤</button>
+            </div>
+
+            <!-- 탭 컨텐츠 -->
+            <div class="tab-content">
+                <!-- 오늘 운세 -->
+                <div id="today" class="tab-panel active">
+                    <div class="fortune-summary">
+                        <p id="todayOverall" class="overall-fortune"></p>
+                    </div>
+
+                    <div class="fortune-combined">
+                        <div class="fortune-item">
+                            <div class="fortune-header">
+                                <span class="score-icon">💕</span>
+                                <span class="score-label">애정운</span>
+                                <span class="score-value" id="loveScore"></span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress" id="loveProgress"></div>
+                            </div>
+                            <p class="fortune-text" id="loveFortune"></p>
+                        </div>
+                        <div class="fortune-item">
+                            <div class="fortune-header">
+                                <span class="score-icon">💰</span>
+                                <span class="score-label">금전운</span>
+                                <span class="score-value" id="moneyScore"></span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress" id="moneyProgress"></div>
+                            </div>
+                            <p class="fortune-text" id="moneyFortune"></p>
+                        </div>
+                        <div class="fortune-item">
+                            <div class="fortune-header">
+                                <span class="score-icon">💼</span>
+                                <span class="score-label">직장운</span>
+                                <span class="score-value" id="workScore"></span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress" id="workProgress"></div>
+                            </div>
+                            <p class="fortune-text" id="workFortune"></p>
+                        </div>
+                        <div class="fortune-item">
+                            <div class="fortune-header">
+                                <span class="score-icon">🏃</span>
+                                <span class="score-label">건강운</span>
+                                <span class="score-value" id="healthScore"></span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress" id="healthProgress"></div>
+                            </div>
+                            <p class="fortune-text" id="healthFortune"></p>
+                        </div>
+                    </div>
+
+                    <div class="lucky-items-row">
+                        <div class="lucky-item">
+                            <span>행운의 색</span>
+                            <div class="lucky-color" id="luckyColor"></div>
+                        </div>
+                        <div class="lucky-item">
+                            <span>행운의 숫자</span>
+                            <div class="lucky-number" id="luckyNumber"></div>
+                        </div>
+                        <div class="lucky-item">
+                            <span>행운의 방향</span>
+                            <div class="lucky-direction" id="luckyDirection"></div>
+                        </div>
+                        <div class="lucky-item">
+                            <span>행운의 시간</span>
+                            <div class="lucky-time" id="luckyTime"></div>
+                        </div>
+                        <div class="advice-box-compact">
+                            <span>💡 오늘의 조언</span>
+                            <p id="todayAdvice"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 주간 운세 -->
+                <div id="week" class="tab-panel">
+                    <div class="period-header">
+                        <span id="weekPeriod" class="period-title"></span>
+                        <span class="separator">|</span>
+                        <span id="weekTheme" class="period-theme"></span>
+                        <span class="separator">|</span>
+                        <span class="key-label">주요 날짜:</span>
+                        <span id="weekKeyDays" class="key-value"></span>
+                    </div>
+                    <div class="fortune-overview">
+                        <p id="weekOverall"></p>
+                    </div>
+                    <div class="fortune-combined">
+                        <div class="fortune-item">
+                            <div class="fortune-header">
+                                <span class="score-icon">💕</span>
+                                <span class="score-label">애정운</span>
+                            </div>
+                            <p class="fortune-text" id="weekLove"></p>
+                        </div>
+                        <div class="fortune-item">
+                            <div class="fortune-header">
+                                <span class="score-icon">💰</span>
+                                <span class="score-label">금전운</span>
+                            </div>
+                            <p class="fortune-text" id="weekMoney"></p>
+                        </div>
+                        <div class="fortune-item">
+                            <div class="fortune-header">
+                                <span class="score-icon">💼</span>
+                                <span class="score-label">직장운</span>
+                            </div>
+                            <p class="fortune-text" id="weekWork"></p>
+                        </div>
+                        <div class="fortune-item">
+                            <div class="fortune-header">
+                                <span class="score-icon">🏃</span>
+                                <span class="score-label">건강운</span>
+                            </div>
+                            <p class="fortune-text" id="weekHealth"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 월간 운세 -->
+                <div id="month" class="tab-panel">
+                    <div class="period-header">
+                        <span id="monthPeriod" class="period-title"></span>
+                        <span class="separator">|</span>
+                        <span id="monthTheme" class="period-theme"></span>
+                        <span class="separator">|</span>
+                        <span class="key-label">주요 날짜:</span>
+                        <span id="monthKeyDates" class="key-value"></span>
+                    </div>
+                    <div class="fortune-overview">
+                        <p id="monthOverall"></p>
+                    </div>
+                    <div class="fortune-combined">
+                        <div class="fortune-item">
+                            <div class="fortune-header">
+                                <span class="score-icon">💕</span>
+                                <span class="score-label">애정운</span>
+                            </div>
+                            <p class="fortune-text" id="monthLove"></p>
+                        </div>
+                        <div class="fortune-item">
+                            <div class="fortune-header">
+                                <span class="score-icon">💰</span>
+                                <span class="score-label">금전운</span>
+                            </div>
+                            <p class="fortune-text" id="monthMoney"></p>
+                        </div>
+                        <div class="fortune-item">
+                            <div class="fortune-header">
+                                <span class="score-icon">💼</span>
+                                <span class="score-label">직장운</span>
+                            </div>
+                            <p class="fortune-text" id="monthWork"></p>
+                        </div>
+                        <div class="fortune-item">
+                            <div class="fortune-header">
+                                <span class="score-icon">🏃</span>
+                                <span class="score-label">건강운</span>
+                            </div>
+                            <p class="fortune-text" id="monthHealth"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 연간 운세 -->
+                <div id="year" class="tab-panel">
+                    <div class="period-header">
+                        <span id="yearPeriod" class="period-title"></span>
+                        <span class="separator">|</span>
+                        <span id="yearTheme" class="period-theme"></span>
+                        <span class="separator">|</span>
+                        <span class="key-label">최고:</span>
+                        <span id="yearBestMonths" class="key-value"></span>
+                        <span class="separator">|</span>
+                        <span class="key-label">주의:</span>
+                        <span id="yearChallengingMonths" class="key-value"></span>
+                    </div>
+                    <div class="fortune-overview">
+                        <p id="yearOverall"></p>
+                    </div>
+                    <div class="fortune-combined">
+                        <div class="fortune-item">
+                            <div class="fortune-header">
+                                <span class="score-icon">💕</span>
+                                <span class="score-label">애정운</span>
+                            </div>
+                            <p class="fortune-text" id="yearLove"></p>
+                        </div>
+                        <div class="fortune-item">
+                            <div class="fortune-header">
+                                <span class="score-icon">💰</span>
+                                <span class="score-label">금전운</span>
+                            </div>
+                            <p class="fortune-text" id="yearMoney"></p>
+                        </div>
+                        <div class="fortune-item">
+                            <div class="fortune-header">
+                                <span class="score-icon">💼</span>
+                                <span class="score-label">직장운</span>
+                            </div>
+                            <p class="fortune-text" id="yearWork"></p>
+                        </div>
+                        <div class="fortune-item">
+                            <div class="fortune-header">
+                                <span class="score-icon">🏃</span>
+                                <span class="score-label">건강운</span>
+                            </div>
+                            <p class="fortune-text" id="yearHealth"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 궁합 -->
+                <div id="compatibility" class="tab-panel">
+                    <div class="compat-input-bar">
+                        <span class="compat-label">상대방 띠</span>
+                        <select id="partnerZodiacTab" class="compat-select">
+                            <option value="">띠 선택</option>
+                            <option value="1">쥐띠 (자)</option>
+                            <option value="2">소띠 (축)</option>
+                            <option value="3">범띠 (인)</option>
+                            <option value="4">토끼띠 (묘)</option>
+                            <option value="5">용띠 (진)</option>
+                            <option value="6">뱀띠 (사)</option>
+                            <option value="7">말띠 (오)</option>
+                            <option value="8">양띠 (미)</option>
+                            <option value="9">원숭이띠 (신)</option>
+                            <option value="10">닭띠 (유)</option>
+                            <option value="11">개띠 (술)</option>
+                            <option value="12">돼지띠 (해)</option>
+                        </select>
+                        <button class="compat-check-btn" onclick="checkCompatibility()">궁합 보기</button>
+                    </div>
+
+                    <div class="compatibility-result compact" id="compatibilityResult" style="display: none;">
+                        <div class="compat-score-header">
+                            <div class="score-display">
+                                <span class="score-title">총 궁합</span>
+                                <span class="score-number" id="compatScore"></span>
+                            </div>
+                            <span class="separator">|</span>
+                            <div class="sub-score">
+                                <span class="compat-icon">💕</span>
+                                <span class="sub-label">애정</span>
+                                <span class="sub-value" id="compatLoveScore"></span>
+                            </div>
+                            <span class="separator">|</span>
+                            <div class="sub-score">
+                                <span class="compat-icon">🤝</span>
+                                <span class="sub-label">우정</span>
+                                <span class="sub-value" id="compatFriendScore"></span>
+                            </div>
+                            <span class="separator">|</span>
+                            <div class="sub-score">
+                                <span class="compat-icon">💼</span>
+                                <span class="sub-label">업무</span>
+                                <span class="sub-value" id="compatWorkScore"></span>
+                            </div>
+                        </div>
+
+                        <div class="compat-description" id="compatDescription">
+                            <!-- 궁합 설명이 여기에 표시됩니다 -->
+                        </div>
+
+                        <div class="compat-advice-bar">
+                            <span class="advice-icon">💡</span>
+                            <span class="advice-label">조언</span>
+                            <span class="advice-content" id="compatAdvice"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- 간지 설명 모달 -->
+    <div id="zodiacModal" class="zodiac-modal" onclick="closeModalOnOutside(event)">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeZodiacModal()">×</button>
+            <h2 id="modalTitle" class="modal-title"></h2>
+            <div id="modalBody" class="modal-body"></div>
+        </div>
+    </div>
+
+    <script src="../api/chinese-zodiac-api.js"></script>
+    <script src="chinese-zodiac.js"></script>
+</body>
+</html>

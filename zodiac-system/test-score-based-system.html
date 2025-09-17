@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>점수 기반 인물 선택 시스템 테스트</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            color: #2d3748;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #718096;
+            font-size: 1.1em;
+        }
+        
+        .test-controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            min-width: 150px;
+        }
+        
+        .control-group label {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #4a5568;
+        }
+        
+        .control-group select, 
+        .control-group input {
+            padding: 8px 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        
+        .test-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            align-self: flex-end;
+        }
+        
+        .test-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .results-container {
+            margin-top: 30px;
+        }
+        
+        .score-info {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .score-info h3 {
+            margin: 0 0 10px 0;
+            font-size: 1.2em;
+        }
+        
+        .score-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .score-item {
+            background: rgba(255,255,255,0.2);
+            padding: 10px;
+            border-radius: 6px;
+            text-align: center;
+        }
+        
+        .fortune-category {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .fortune-category:hover {
+            border-color: #667eea;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
+        }
+        
+        .category-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .category-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #2d3748;
+        }
+        
+        .selected-figure {
+            font-size: 0.9em;
+            color: #667eea;
+            font-weight: 500;
+        }
+        
+        .fortune-text {
+            font-size: 1.05em;
+            line-height: 1.6;
+            color: #4a5568;
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .debug-info {
+            margin-top: 30px;
+            background: #1a202c;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            overflow-x: auto;
+        }
+        
+        .debug-info pre {
+            margin: 0;
+            white-space: pre-wrap;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #718096;
+        }
+        
+        .error {
+            background: #fed7d7;
+            color: #c53030;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #c53030;
+        }
+        
+        .zodiac-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .zodiac-btn {
+            background: white;
+            border: 2px solid #e2e8f0;
+            padding: 15px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+        
+        .zodiac-btn:hover {
+            border-color: #667eea;
+            background: #f7fafc;
+        }
+        
+        .zodiac-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+        
+        .score-range-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .range-card {
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .range-card.high {
+            background: linear-gradient(135deg, #48bb78 0%, #68d391 100%);
+            color: white;
+        }
+        
+        .range-card.medium {
+            background: linear-gradient(135deg, #4299e1 0%, #63b3ed 100%);
+            color: white;
+        }
+        
+        .range-card.low {
+            background: linear-gradient(135deg, #ed8936 0%, #f6ad55 100%);
+            color: white;
+        }
+        
+        .comparison-section {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f7fafc;
+            border-radius: 10px;
+        }
+        
+        .comparison-controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .comparison-results {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .comparison-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px solid #e2e8f0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 점수 기반 인물 선택 시스템 테스트</h1>
+            <p>카테고리 점수 평균에 따라 해당 그룹의 인물만 선택하여 메시지 톤 일관성을 확인합니다</p>
+        </div>
+
+        <div class="score-range-info">
+            <div class="range-card high">
+                <h3>고득점 그룹 (85점 이상)</h3>
+                <p>성공적/긍정적 인물 88명</p>
+                <small>나폴레옹, 레오나르도 다빈치, 아인슈타인, 베토벤 등</small>
+            </div>
+            <div class="range-card medium">
+                <h3>중간점 그룹 (70-84점)</h3>
+                <p>균형적/안정적 인물 112명</p>
+                <small>간디, 톨스토이, 프로이드, 공자 등</small>
+            </div>
+            <div class="range-card low">
+                <h3>저득점 그룹 (69점 이하)</h3>
+                <p>도전적/극복형 인물 40명</p>
+                <small>반 고흐, 체 게바라, 마틴 루터 킹, 넬슨 만델라 등</small>
+            </div>
+        </div>
+
+        <div class="test-controls">
+            <div class="control-group">
+                <label>별자리 선택:</label>
+                <select id="zodiacSelect">
+                    <option value="1">양자리 (♈)</option>
+                    <option value="2">황소자리 (♉)</option>
+                    <option value="3">쌍둥이자리 (♊)</option>
+                    <option value="4">게자리 (♋)</option>
+                    <option value="5">사자자리 (♌)</option>
+                    <option value="6">처녀자리 (♍)</option>
+                    <option value="7">천칭자리 (♎)</option>
+                    <option value="8">전갈자리 (♏)</option>
+                    <option value="9">사수자리 (♐)</option>
+                    <option value="10">염소자리 (♑)</option>
+                    <option value="11">물병자리 (♒)</option>
+                    <option value="12">물고기자리 (♓)</option>
+                </select>
+            </div>
+            
+            <div class="control-group">
+                <label>시뮬레이션 점수:</label>
+                <select id="scoreSimulation">
+                    <option value="auto">자동 (실제 점수 사용)</option>
+                    <option value="90">90점 (고득점 그룹)</option>
+                    <option value="80">80점 (중간점 그룹)</option>
+                    <option value="65">65점 (저득점 그룹)</option>
+                </select>
+            </div>
+
+            <button class="test-button" onclick="testScoreBasedSystem()">테스트 실행</button>
+            <button class="test-button" onclick="runComparison()">그룹별 비교</button>
+        </div>
+
+        <div id="results" class="results-container" style="display: none;">
+            <!-- 결과가 여기에 표시됩니다 -->
+        </div>
+
+        <div class="comparison-section">
+            <h3>🔍 점수 그룹별 메시지 톤 비교</h3>
+            <div class="comparison-controls">
+                <button class="test-button" onclick="compareMessageTones()">메시지 톤 비교 실행</button>
+            </div>
+            <div id="comparisonResults" class="comparison-results">
+                <!-- 비교 결과가 여기에 표시됩니다 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- API 스크립트 로드 -->
+    <script src="api/zodiac-api-final.js"></script>
+    
+    <script>
+        // 전역 변수
+        let currentTestResults = null;
+
+        // 점수 기반 시스템 테스트 함수
+        async function testScoreBasedSystem() {
+            const zodiacId = parseInt(document.getElementById('zodiacSelect').value);
+            const scoreMode = document.getElementById('scoreSimulation').value;
+            
+            console.log(`🎯 점수 기반 시스템 테스트 시작: 별자리 ${zodiacId}, 점수 모드: ${scoreMode}`);
+            
+            // 로딩 표시
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.style.display = 'block';
+            resultsDiv.innerHTML = '<div class="loading">데이터 로딩 중...</div>';
+
+            try {
+                // API 호출
+                let fortune = await zodiacAPI.getDailyFortune(zodiacId);
+                
+                // 점수 시뮬레이션
+                if (scoreMode !== 'auto') {
+                    const simulatedScore = parseInt(scoreMode);
+                    fortune.scores = {
+                        love: simulatedScore,
+                        money: simulatedScore,
+                        work: simulatedScore,
+                        health: simulatedScore
+                    };
+                    fortune.averageScore = simulatedScore;
+                    fortune.scoreGroup = simulatedScore >= 85 ? 'high' : simulatedScore >= 70 ? 'medium' : 'low';
+                    fortune.scoreGroupLabel = 
+                        simulatedScore >= 85 ? '고득점 그룹 (성공적/긍정적)' :
+                        simulatedScore >= 70 ? '중간점 그룹 (균형적/안정적)' : '저득점 그룹 (도전적/극복형)';
+                    console.log(`📊 점수 시뮬레이션: ${simulatedScore}점 → ${fortune.scoreGroup} 그룹`);
+                }
+
+                currentTestResults = fortune;
+                displayResults(fortune);
+                
+            } catch (error) {
+                console.error('❌ 테스트 실패:', error);
+                resultsDiv.innerHTML = `<div class="error">테스트 실행 중 오류가 발생했습니다: ${error.message}</div>`;
+            }
+        }
+
+        // 결과 표시 함수
+        function displayResults(fortune) {
+            const resultsDiv = document.getElementById('results');
+            const zodiacName = getZodiacName(fortune.zodiacId);
+            
+            let html = `
+                <div class="score-info">
+                    <h3>${zodiacName} 점수 기반 운세 결과</h3>
+                    <p><strong>평균 점수:</strong> ${fortune.averageScore}점</p>
+                    <p><strong>선택된 그룹:</strong> ${fortune.scoreGroupLabel}</p>
+                    <div class="score-details">
+                        <div class="score-item">
+                            <strong>애정운</strong><br>${fortune.scores.love}점
+                        </div>
+                        <div class="score-item">
+                            <strong>금전운</strong><br>${fortune.scores.money}점
+                        </div>
+                        <div class="score-item">
+                            <strong>직장운</strong><br>${fortune.scores.work}점
+                        </div>
+                        <div class="score-item">
+                            <strong>건강운</strong><br>${fortune.scores.health}점
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="fortune-category">
+                    <div class="category-header">
+                        <div class="category-title">📋 전체운</div>
+                        <div class="selected-figure">${fortune.selectedFigures?.overall || 'N/A'}</div>
+                    </div>
+                    <div class="fortune-text">${fortune.overall}</div>
+                </div>
+            `;
+
+            // 카테고리별 운세 표시
+            if (fortune.fortunes) {
+                const categoryIcons = {
+                    love: '❤️', money: '💰', work: '💼', health: '🏥'
+                };
+                const categoryNames = {
+                    love: '애정운', money: '금전운', work: '직장운', health: '건강운'
+                };
+
+                Object.entries(fortune.fortunes).forEach(([category, message]) => {
+                    const icon = categoryIcons[category] || '⭐';
+                    const name = categoryNames[category] || category;
+                    const figure = fortune.selectedFigures?.[category] || 'N/A';
+                    
+                    html += `
+                        <div class="fortune-category">
+                            <div class="category-header">
+                                <div class="category-title">${icon} ${name}</div>
+                                <div class="selected-figure">${figure}</div>
+                            </div>
+                            <div class="fortune-text">${message}</div>
+                        </div>
+                    `;
+                });
+            }
+
+            // 조언 표시
+            html += `
+                <div class="fortune-category">
+                    <div class="category-header">
+                        <div class="category-title">💡 조언</div>
+                        <div class="selected-figure">${fortune.selectedFigures?.advice || 'N/A'}</div>
+                    </div>
+                    <div class="fortune-text">${fortune.advice}</div>
+                </div>
+            `;
+
+            // 디버그 정보 표시
+            html += `
+                <div class="debug-info">
+                    <h4>🔧 디버그 정보</h4>
+                    <pre>${JSON.stringify(fortune, null, 2)}</pre>
+                </div>
+            `;
+
+            resultsDiv.innerHTML = html;
+        }
+
+        // 그룹별 비교 테스트
+        async function runComparison() {
+            const zodiacId = parseInt(document.getElementById('zodiacSelect').value);
+            console.log('🔄 그룹별 비교 테스트 시작...');
+            
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.style.display = 'block';
+            resultsDiv.innerHTML = '<div class="loading">그룹별 비교 테스트 실행 중...</div>';
+
+            try {
+                const testScores = [
+                    { score: 90, group: 'high', label: '고득점 그룹' },
+                    { score: 75, group: 'medium', label: '중간점 그룹' },
+                    { score: 65, group: 'low', label: '저득점 그룹' }
+                ];
+
+                let comparisonHtml = `
+                    <h2>📊 ${getZodiacName(zodiacId)} 그룹별 메시지 톤 비교</h2>
+                    <div class="comparison-results">
+                `;
+
+                for (const test of testScores) {
+                    // 각 그룹별 테스트 실행
+                    const fortune = await zodiacAPI.getDailyFortune(zodiacId);
+                    
+                    // 점수 시뮬레이션
+                    fortune.scores = { love: test.score, money: test.score, work: test.score, health: test.score };
+                    fortune.averageScore = test.score;
+                    fortune.scoreGroup = test.group;
+                    fortune.scoreGroupLabel = test.label;
+
+                    comparisonHtml += `
+                        <div class="comparison-card">
+                            <h3>${test.label} (${test.score}점)</h3>
+                            <div style="margin-bottom: 15px;">
+                                <strong>전체운:</strong><br>
+                                <em>${fortune.selectedFigures?.overall || 'N/A'}</em><br>
+                                ${fortune.overall.substring(0, 100)}...
+                            </div>
+                            <div style="margin-bottom: 15px;">
+                                <strong>애정운:</strong><br>
+                                <em>${fortune.selectedFigures?.love || 'N/A'}</em><br>
+                                ${fortune.fortunes?.love?.substring(0, 100) || 'N/A'}...
+                            </div>
+                            <div>
+                                <strong>조언:</strong><br>
+                                <em>${fortune.selectedFigures?.advice || 'N/A'}</em><br>
+                                ${fortune.advice.substring(0, 100)}...
+                            </div>
+                        </div>
+                    `;
+                }
+
+                comparisonHtml += '</div>';
+                resultsDiv.innerHTML = comparisonHtml;
+
+            } catch (error) {
+                console.error('❌ 비교 테스트 실패:', error);
+                resultsDiv.innerHTML = `<div class="error">비교 테스트 중 오류가 발생했습니다: ${error.message}</div>`;
+            }
+        }
+
+        // 메시지 톤 비교 함수
+        async function compareMessageTones() {
+            const comparisonDiv = document.getElementById('comparisonResults');
+            comparisonDiv.innerHTML = '<div class="loading">메시지 톤 분석 중...</div>';
+
+            try {
+                const zodiacId = 1; // 양자리로 테스트
+                const testGroups = [
+                    { score: 90, group: 'high', color: '#48bb78' },
+                    { score: 75, group: 'medium', color: '#4299e1' },
+                    { score: 65, group: 'low', color: '#ed8936' }
+                ];
+
+                let html = '';
+                
+                for (const test of testGroups) {
+                    const fortune = await zodiacAPI.getDailyFortune(zodiacId);
+                    
+                    html += `
+                        <div class="comparison-card" style="border-left: 4px solid ${test.color};">
+                            <h4>${test.group.toUpperCase()} 그룹 (${test.score}점)</h4>
+                            <div style="margin-bottom: 10px;">
+                                <strong>선택된 인물:</strong> ${fortune.selectedFigures?.overall || 'N/A'}
+                            </div>
+                            <div style="background: #f8fafc; padding: 10px; border-radius: 6px;">
+                                ${fortune.overall}
+                            </div>
+                        </div>
+                    `;
+                }
+
+                comparisonDiv.innerHTML = html;
+
+            } catch (error) {
+                console.error('❌ 메시지 톤 비교 실패:', error);
+                comparisonDiv.innerHTML = `<div class="error">메시지 톤 비교 중 오류가 발생했습니다: ${error.message}</div>`;
+            }
+        }
+
+        // 유틸리티 함수들
+        function getZodiacName(zodiacId) {
+            const names = {
+                1: '양자리', 2: '황소자리', 3: '쌍둥이자리', 4: '게자리',
+                5: '사자자리', 6: '처녀자리', 7: '천칭자리', 8: '전갈자리',
+                9: '사수자리', 10: '염소자리', 11: '물병자리', 12: '물고기자리'
+            };
+            return names[zodiacId] || `별자리 ${zodiacId}`;
+        }
+
+        // 페이지 로드 시 초기화
+        window.addEventListener('load', function() {
+            console.log('🚀 점수 기반 인물 선택 시스템 테스트 페이지 로드 완료');
+            
+            // API 로드 상태 확인
+            if (typeof zodiacAPI !== 'undefined') {
+                console.log('✅ ZodiacAPI 로드 완료');
+            } else {
+                console.error('❌ ZodiacAPI 로드 실패');
+            }
+        });
+    </script>
+</body>
+</html>

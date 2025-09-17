@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>궁합 텍스트 최적화 테스트</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #1a1a1a;
+            color: #fff;
+        }
+        .test-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #444;
+            border-radius: 8px;
+            background-color: #2a2a2a;
+        }
+        .test-result {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #333;
+            border-radius: 5px;
+            white-space: pre-wrap;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .text-length {
+            color: #ffeb3b;
+            font-weight: bold;
+        }
+        .source-info {
+            color: #81c784;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔧 별자리 궁합 텍스트 최적화 테스트</h1>
+
+    <div class="test-section">
+        <h3>📊 테스트 대상</h3>
+        <p>1. compatibility-data.json의 compat_message 우선 사용</p>
+        <p>2. zodiacDescriptions 폴백 시 특정 부분만 추출 (300-500자)</p>
+        <p>3. HTML 태그 제거 및 텍스트 정리</p>
+    </div>
+
+    <div class="test-section">
+        <h3>🧪 테스트 케이스</h3>
+        <button onclick="testCompatibility(1, 5)">양자리 ↔ 사자자리</button>
+        <button onclick="testCompatibility(3, 7)">쌍둥이자리 ↔ 천칭자리</button>
+        <button onclick="testCompatibility(4, 8)">게자리 ↔ 전갈자리</button>
+        <button onclick="testCompatibility(2, 6)">황소자리 ↔ 처녀자리</button>
+        <button onclick="testCompatibility(9, 11)">사수자리 ↔ 물병자리</button>
+
+        <div id="testResult" class="test-result" style="display: none;"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>📝 zodiacDescriptions 로드 확인</h3>
+        <button onclick="checkZodiacDescriptions()">데이터 구조 확인</button>
+        <div id="dataCheck" class="test-result" style="display: none;"></div>
+    </div>
+
+    <!-- API 스크립트 로드 -->
+    <script src="zodiac-api-real.js"></script>
+
+    <!-- Mock zodiacDescriptions for testing -->
+    <script>
+        // zodiacDescriptions 테스트 데이터 (실제 데이터의 축약 버전)
+        window.zodiacDescriptions = {
+            1: {
+                name: '양자리',
+                compatibility: `
+                <div class="compat-section">
+                  <h4>⭐ 최고의 궁합 ⭐</h4>
+
+                  <div class="compat-item">
+                    <strong>🦁 사자자리:</strong>
+                    <p>불의 형제들! 양자리와 사자자리는 마치 액션 영화의 주인공 듀오 같습니다. 둘 다 "일단 저질러!"를 외치며 모험을 떠나고, 서로의 열정에 더욱 불타오릅니다. 데이트할 때도 "오늘 뭐 할까?"라는 질문에 동시에 "새로운 곳!"이라고 답하는 찰떡궁합입니다.</p>
+                  </div>
+
+                  <div class="compat-item">
+                    <strong>🏹 사수자리:</strong>
+                    <p>모험의 파트너! 양자리의 용기와 사수자리의 자유로운 영혼이 만나 끝없는 모험을 떠나는 관계입니다.</p>
+                  </div>
+                </div>`
+            },
+            3: {
+                name: '쌍둥이자리',
+                compatibility: `⭐ <b>최고의 궁합</b> ⭐
+
+                ⚖️ <strong>천칭자리</strong>: 공기의 수다쟁이 듀오! 쌍둥이자리와 천칭자리가 만나면 카페에서 3시간을 앉아있어도 할 말이 끝나지 않습니다. "그런데 말이야..."로 시작해서 온갖 주제로 날아다니는 대화의 달인들이에요.`
+            }
+        };
+
+        // 테스트 함수들
+        async function testCompatibility(zodiac1, zodiac2) {
+            const resultDiv = document.getElementById('testResult');
+            resultDiv.style.display = 'block';
+            resultDiv.textContent = `🔄 ${zodiacAPI.zodiacSigns[zodiac1-1].name} ↔ ${zodiacAPI.zodiacSigns[zodiac2-1].name} 궁합 확인 중...`;
+
+            try {
+                console.log(`=== ${zodiacAPI.zodiacSigns[zodiac1-1].name} ↔ ${zodiacAPI.zodiacSigns[zodiac2-1].name} 테스트 시작 ===`);
+
+                const compatibility = await zodiacAPI.getCompatibility(zodiac1, zodiac2);
+
+                const result = `
+✨ 테스트 결과: ${zodiacAPI.zodiacSigns[zodiac1-1].name} ↔ ${zodiacAPI.zodiacSigns[zodiac2-1].name}
+
+📊 점수 정보:
+- 총점: ${compatibility.totalScore}점
+- 애정: ${compatibility.scores?.love || 'N/A'}점
+- 우정: ${compatibility.scores?.friendship || 'N/A'}점
+- 업무: ${compatibility.scores?.work || 'N/A'}점
+
+📝 설명 (길이: ${compatibility.description ? compatibility.description.length : 0}자):
+${compatibility.description || '설명 없음'}
+
+💡 조언:
+${compatibility.advice || '조언 없음'}
+
+🔍 데이터 소스: ${compatibility.source || '알 수 없음'}
+                `;
+
+                resultDiv.textContent = result;
+
+                console.log('✅ 테스트 완료:', compatibility);
+
+            } catch (error) {
+                console.error('❌ 테스트 실패:', error);
+                resultDiv.textContent = `❌ 오류 발생: ${error.message}`;
+            }
+        }
+
+        function checkZodiacDescriptions() {
+            const checkDiv = document.getElementById('dataCheck');
+            checkDiv.style.display = 'block';
+
+            if (window.zodiacDescriptions) {
+                const keys = Object.keys(window.zodiacDescriptions);
+                let info = `✅ zodiacDescriptions 로드됨\n\n`;
+                info += `📊 포함된 별자리: ${keys.length}개\n`;
+
+                keys.forEach(key => {
+                    const data = window.zodiacDescriptions[key];
+                    const compatLength = data.compatibility ? data.compatibility.length : 0;
+                    info += `- ${key}번 (${data.name}): 궁합 텍스트 ${compatLength}자\n`;
+                });
+
+                // extractCompatibilityText 함수 테스트
+                info += `\n🧪 텍스트 추출 테스트:\n`;
+                const extracted = zodiacAPI.extractCompatibilityText(window.zodiacDescriptions, 1, 5);
+                info += `양자리→사자자리: ${extracted ? extracted.length + '자 추출됨' : '추출 실패'}\n`;
+                if (extracted) {
+                    info += `추출된 텍스트 미리보기: "${extracted.substring(0, 100)}..."\n`;
+                }
+
+                checkDiv.textContent = info;
+            } else {
+                checkDiv.textContent = '❌ zodiacDescriptions 없음';
+            }
+        }
+
+        // 페이지 로드 시 자동 체크
+        window.addEventListener('load', () => {
+            console.log('🚀 테스트 페이지 로드 완료');
+            console.log('📦 zodiacAPI 상태:', typeof zodiacAPI);
+            console.log('📋 zodiacDescriptions 상태:', typeof window.zodiacDescriptions);
+
+            setTimeout(() => {
+                checkZodiacDescriptions();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

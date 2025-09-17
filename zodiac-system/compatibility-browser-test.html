@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>궁합 브라우저 테스트</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; max-width: 800px; margin: 0 auto; }
+        .test-section { margin: 20px 0; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
+        .test-controls { margin: 10px 0; }
+        .result-display { margin: 15px 0; padding: 15px; background: #f8f9fa; border-radius: 5px; }
+        select, button { padding: 8px 12px; margin: 5px; font-size: 14px; }
+        button { background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        .score { font-weight: bold; color: #28a745; }
+        .description { margin: 10px 0; line-height: 1.6; }
+        .log { font-family: monospace; font-size: 12px; margin: 5px 0; padding: 5px; background: #f1f3f4; }
+    </style>
+</head>
+<body>
+    <h1>별자리 궁합 브라우저 테스트</h1>
+
+    <div class="test-section">
+        <h2>수동 테스트</h2>
+        <div class="test-controls">
+            <label>내 별자리:
+                <select id="myZodiac">
+                    <option value="">선택하세요</option>
+                    <option value="1">양자리</option>
+                    <option value="2">황소자리</option>
+                    <option value="3">쌍둥이자리</option>
+                    <option value="4">게자리</option>
+                    <option value="5">사자자리</option>
+                    <option value="6">처녀자리</option>
+                    <option value="7">천칭자리</option>
+                    <option value="8">전갈자리</option>
+                    <option value="9">사수자리</option>
+                    <option value="10">염소자리</option>
+                    <option value="11">물병자리</option>
+                    <option value="12">물고기자리</option>
+                </select>
+            </label>
+
+            <label>상대방 별자리:
+                <select id="partnerZodiac">
+                    <option value="">선택하세요</option>
+                    <option value="1">양자리</option>
+                    <option value="2">황소자리</option>
+                    <option value="3">쌍둥이자리</option>
+                    <option value="4">게자리</option>
+                    <option value="5">사자자리</option>
+                    <option value="6">처녀자리</option>
+                    <option value="7">천칭자리</option>
+                    <option value="8">전갈자리</option>
+                    <option value="9">사수자리</option>
+                    <option value="10">염소자리</option>
+                    <option value="11">물병자리</option>
+                    <option value="12">물고기자리</option>
+                </select>
+            </label>
+
+            <button onclick="testCompatibility()">궁합 확인</button>
+        </div>
+
+        <div id="manualResult" class="result-display" style="display: none;">
+            <!-- 결과가 여기에 표시됩니다 -->
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>자동 테스트 케이스</h2>
+        <button onclick="runAutoTests()">모든 테스트 실행</button>
+        <div id="autoTestResults"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>상세 로그</h2>
+        <button onclick="clearLogs()">로그 지우기</button>
+        <div id="logs"></div>
+    </div>
+
+    <script src="api/zodiac-api-real.js"></script>
+    <script>
+        let originalConsoleLog = console.log;
+
+        // 로그 캐처
+        console.log = function(...args) {
+            originalConsoleLog.apply(console, args);
+            const logDiv = document.createElement('div');
+            logDiv.className = 'log';
+            logDiv.textContent = args.join(' ');
+            document.getElementById('logs').appendChild(logDiv);
+        };
+
+        function clearLogs() {
+            document.getElementById('logs').innerHTML = '';
+        }
+
+        async function testCompatibility() {
+            const myZodiacId = parseInt(document.getElementById('myZodiac').value);
+            const partnerZodiacId = parseInt(document.getElementById('partnerZodiac').value);
+
+            if (!myZodiacId || !partnerZodiacId) {
+                alert('두 별자리를 모두 선택해주세요.');
+                return;
+            }
+
+            console.log(`🧪 수동 테스트: ${myZodiacId} vs ${partnerZodiacId}`);
+
+            try {
+                const result = await zodiacAPI.getCompatibility(myZodiacId, partnerZodiacId);
+                displayResult('manualResult', result, `${getZodiacName(myZodiacId)} vs ${getZodiacName(partnerZodiacId)}`);
+            } catch (error) {
+                console.error('❌ 궁합 조회 실패:', error);
+                document.getElementById('manualResult').innerHTML = `<p style="color: red;">오류: ${error.message}</p>`;
+                document.getElementById('manualResult').style.display = 'block';
+            }
+        }
+
+        async function runAutoTests() {
+            const testCases = [
+                { z1: 1, z2: 4, name: '양자리-게자리 (문제였던 조합)' },
+                { z1: 11, z2: 5, name: '물병자리-사자자리' },
+                { z1: 5, z2: 12, name: '사자자리-물고기자리' },
+                { z1: 1, z2: 1, name: '양자리-양자리 (같은 별자리)' }
+            ];
+
+            const resultsContainer = document.getElementById('autoTestResults');
+            resultsContainer.innerHTML = '';
+
+            for (const testCase of testCases) {
+                console.log(`\n🧪 자동 테스트: ${testCase.name}`);
+
+                try {
+                    const result = await zodiacAPI.getCompatibility(testCase.z1, testCase.z2);
+
+                    const testDiv = document.createElement('div');
+                    testDiv.className = 'result-display';
+                    testDiv.innerHTML = `<h3>${testCase.name}</h3>`;
+
+                    displayResult(testDiv, result, testCase.name);
+                    resultsContainer.appendChild(testDiv);
+
+                } catch (error) {
+                    console.error(`❌ ${testCase.name} 테스트 실패:`, error);
+                    const errorDiv = document.createElement('div');
+                    errorDiv.className = 'result-display';
+                    errorDiv.innerHTML = `<h3>${testCase.name}</h3><p style="color: red;">오류: ${error.message}</p>`;
+                    resultsContainer.appendChild(errorDiv);
+                }
+            }
+        }
+
+        function displayResult(container, result, title) {
+            const containerElement = typeof container === 'string' ?
+                document.getElementById(container) : container;
+
+            const html = `
+                <h3>${title}</h3>
+                <div class="score">총점: ${result.totalScore}점</div>
+                <div style="margin: 10px 0;">
+                    <span>💖 애정: ${result.scores?.love || 'N/A'}점</span> |
+                    <span>🤝 우정: ${result.scores?.friendship || 'N/A'}점</span> |
+                    <span>💼 업무: ${result.scores?.work || 'N/A'}점</span>
+                </div>
+                <div class="description">
+                    <strong>설명:</strong><br>
+                    ${result.description || '설명이 없습니다.'}
+                </div>
+                <div style="margin-top: 10px;">
+                    <strong>조언:</strong> ${result.advice || '조언이 없습니다.'}
+                </div>
+                <div style="margin-top: 10px; font-size: 12px; color: #666;">
+                    <strong>데이터 소스:</strong> ${result.source || 'unknown'}
+                </div>
+            `;
+
+            if (typeof container === 'string') {
+                containerElement.innerHTML = html;
+                containerElement.style.display = 'block';
+            } else {
+                containerElement.innerHTML += html;
+            }
+        }
+
+        function getZodiacName(id) {
+            const names = {
+                1: '양자리', 2: '황소자리', 3: '쌍둥이자리', 4: '게자리',
+                5: '사자자리', 6: '처녀자리', 7: '천칭자리', 8: '전갈자리',
+                9: '사수자리', 10: '염소자리', 11: '물병자리', 12: '물고기자리'
+            };
+            return names[id] || `별자리${id}`;
+        }
+
+        // 페이지 로드 후 자동으로 한 번 테스트 실행
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                console.log('🎯 페이지 로드 완료, API 준비 상태 확인');
+                console.log('zodiacAPI 존재:', !!window.zodiacAPI);
+                console.log('getCompatibility 메서드 존재:', !!(window.zodiacAPI && window.zodiacAPI.getCompatibility));
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

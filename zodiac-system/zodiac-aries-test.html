@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>양자리 구체적 조언 테스트</title>
+    <style>
+        body {
+            font-family: 'Malgun Gothic', sans-serif;
+            background: linear-gradient(135deg, #0a0a0a, #1e1e2e);
+            color: #e0e0e0;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(30, 30, 46, 0.8);
+            border-radius: 15px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .title {
+            text-align: center;
+            color: #ff6b6b;
+            font-size: 2em;
+            margin-bottom: 30px;
+            text-shadow: 0 0 20px rgba(255, 107, 107, 0.3);
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            border-left: 4px solid #ff6b6b;
+        }
+        .result-box {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-size: 0.9em;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .enhanced-message {
+            color: #4ecdc4;
+            font-weight: bold;
+        }
+        .normal-message {
+            color: #95a5a6;
+        }
+        button {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.1em;
+            margin: 10px 5px;
+            transition: all 0.3s ease;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+        }
+        .log {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            font-family: 'Consolas', monospace;
+            font-size: 0.8em;
+            border-radius: 5px;
+            max-height: 200px;
+            overflow-y: auto;
+            color: #bdc3c7;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">♈ 양자리 구체적 조언 테스트</h1>
+        
+        <div class="test-section">
+            <h3>테스트 시나리오</h3>
+            <p>양자리(ID: 1)는 구체적 업적 기반 메시지를, 다른 별자리는 기존 메시지를 받습니다.</p>
+            
+            <button onclick="testAries()">양자리 테스트 (구체적 조언)</button>
+            <button onclick="testTaurus()">황소자리 테스트 (기존 방식)</button>
+            <button onclick="clearResults()">결과 초기화</button>
+        </div>
+        
+        <div class="test-section">
+            <h3>테스트 결과</h3>
+            <div id="results"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>콘솔 로그</h3>
+            <div id="console" class="log"></div>
+        </div>
+    </div>
+
+    <script src="api/zodiac-api-real.js"></script>
+    <script>
+        let originalConsoleLog = console.log;
+        console.log = function(...args) {
+            originalConsoleLog.apply(console, args);
+            const logDiv = document.getElementById('console');
+            logDiv.innerHTML += args.join(' ') + '<br>';
+            logDiv.scrollTop = logDiv.scrollHeight;
+        };
+
+        async function testAries() {
+            console.log('=== 양자리 테스트 시작 ===');
+            try {
+                const result = await zodiacAPI.getDailyFortune(1);
+                displayResult('양자리 (ID: 1)', result, true);
+                console.log('양자리 테스트 완료:', result.source);
+            } catch (error) {
+                console.error('양자리 테스트 실패:', error);
+            }
+        }
+
+        async function testTaurus() {
+            console.log('=== 황소자리 테스트 시작 ===');
+            try {
+                const result = await zodiacAPI.getDailyFortune(2);
+                displayResult('황소자리 (ID: 2)', result, false);
+                console.log('황소자리 테스트 완료:', result.source);
+            } catch (error) {
+                console.error('황소자리 테스트 실패:', error);
+            }
+        }
+
+        function displayResult(zodiacName, result, isEnhanced) {
+            const resultsDiv = document.getElementById('results');
+            const messageClass = isEnhanced ? 'enhanced-message' : 'normal-message';
+            
+            const resultHtml = `
+                <div class="result-box">
+                    <h4>${zodiacName} - ${result.source}</h4>
+                    <p><strong>전체 운세:</strong> <span class="${messageClass}">${result.overall}</span></p>
+                    <p><strong>조언:</strong> <span class="${messageClass}">${result.advice}</span></p>
+                    <p><strong>연애운:</strong> <span class="${messageClass}">${result.fortunes?.love || 'N/A'}</span></p>
+                    <p><strong>금전운:</strong> <span class="${messageClass}">${result.fortunes?.money || 'N/A'}</span></p>
+                    <p><strong>선택된 인물:</strong> ${result.historicalFigure?.name || 'N/A'}</p>
+                    <p><strong>대표 업적:</strong> ${result.historicalFigure?.achievement || 'N/A'}</p>
+                </div>
+            `;
+            
+            resultsDiv.innerHTML += resultHtml;
+        }
+
+        function clearResults() {
+            document.getElementById('results').innerHTML = '';
+            document.getElementById('console').innerHTML = '';
+            console.log('결과 초기화됨');
+        }
+
+        // 초기화
+        window.addEventListener('load', () => {
+            console.log('양자리 구체적 조언 테스트 페이지 로드됨');
+            console.log('API 인스턴스:', typeof zodiacAPI);
+        });
+    </script>
+</body>
+</html>

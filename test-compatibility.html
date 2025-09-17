@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>별자리 궁합 테스트</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #1a1a1a;
+            color: #fff;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #2a2a2a;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .test-title {
+            color: #ffd700;
+            border-bottom: 2px solid #ffd700;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .test-case {
+            border: 1px solid #444;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            background: #333;
+        }
+        .test-case h3 {
+            color: #87ceeb;
+            margin-top: 0;
+        }
+        .result {
+            background: #444;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .score {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #90ee90;
+        }
+        .message {
+            margin: 10px 0;
+            padding: 10px;
+            background: #555;
+            border-radius: 5px;
+        }
+        .error {
+            color: #ff6b6b;
+            background: #4a1a1a;
+        }
+        .success {
+            color: #90ee90;
+            background: #1a4a1a;
+        }
+        .warning {
+            color: #ffa500;
+            background: #4a3a1a;
+        }
+        button {
+            background: #ffd700;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            font-weight: bold;
+        }
+        button:hover {
+            background: #ffed4e;
+        }
+        .log {
+            background: #1a1a1a;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 0.9em;
+            max-height: 200px;
+            overflow-y: auto;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1 class="test-title">별자리 궁합 시스템 통합 테스트</h1>
+
+        <div class="test-case">
+            <h3>테스트 케이스 1: 양자리-게자리 (문제 조합)</h3>
+            <button onclick="testCompatibility(1, 4, 'case1')">테스트 실행</button>
+            <div id="case1-result" class="result" style="display:none;"></div>
+        </div>
+
+        <div class="test-case">
+            <h3>테스트 케이스 2: 물병자리-물고기자리 (정상 조합)</h3>
+            <button onclick="testCompatibility(11, 12, 'case2')">테스트 실행</button>
+            <div id="case2-result" class="result" style="display:none;"></div>
+        </div>
+
+        <div class="test-case">
+            <h3>테스트 케이스 3: 사자자리-쌍둥이자리 (긴 텍스트 조합)</h3>
+            <button onclick="testCompatibility(5, 3, 'case3')">테스트 실행</button>
+            <div id="case3-result" class="result" style="display:none;"></div>
+        </div>
+
+        <div class="test-case">
+            <h3>전체 테스트 실행</h3>
+            <button onclick="runAllTests()">모든 테스트 실행</button>
+            <button onclick="clearResults()">결과 지우기</button>
+        </div>
+
+        <div class="test-case">
+            <h3>시스템 상태 확인</h3>
+            <button onclick="checkSystemStatus()">시스템 상태 확인</button>
+            <div id="system-status" class="result" style="display:none;"></div>
+        </div>
+
+        <div class="test-case">
+            <h3>콘솔 로그</h3>
+            <div id="console-log" class="log"></div>
+        </div>
+    </div>
+
+    <!-- 원본 API 스크립트 사용 -->
+    <script src="zodiac-system/api/zodiac-api-real.js"></script>
+
+    <script>
+        // 콘솔 로그 캡처
+        const originalConsoleLog = console.log;
+        const originalConsoleError = console.error;
+        const logContainer = document.getElementById('console-log');
+
+        function addLog(message, type = 'log') {
+            const logElement = document.createElement('div');
+            logElement.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            logElement.style.color = type === 'error' ? '#ff6b6b' : type === 'warn' ? '#ffa500' : '#90ee90';
+            logContainer.appendChild(logElement);
+            logContainer.scrollTop = logContainer.scrollHeight;
+        }
+
+        console.log = function(...args) {
+            originalConsoleLog.apply(console, args);
+            addLog(args.join(' '), 'log');
+        };
+
+        console.error = function(...args) {
+            originalConsoleError.apply(console, args);
+            addLog(args.join(' '), 'error');
+        };
+
+        // 별자리 이름 매핑
+        const zodiacNames = {
+            1: '양자리', 2: '황소자리', 3: '쌍둥이자리', 4: '게자리',
+            5: '사자자리', 6: '처녀자리', 7: '천칭자리', 8: '전갈자리',
+            9: '사수자리', 10: '염소자리', 11: '물병자리', 12: '물고기자리'
+        };
+
+        // 테스트 함수
+        async function testCompatibility(sign1, sign2, caseId) {
+            const resultDiv = document.getElementById(`${caseId}-result`);
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = '<div class="message">테스트 진행 중...</div>';
+
+            try {
+                console.log(`테스트 시작: ${zodiacNames[sign1]} - ${zodiacNames[sign2]}`);
+
+                // 시스템 상태 확인
+                if (!window.zodiacAPI) {
+                    throw new Error('zodiacAPI가 로드되지 않았습니다');
+                }
+
+                // 궁합 데이터 조회
+                const compatData = await zodiacAPI.getCompatibility(sign1, sign2);
+                console.log('조회된 궁합 데이터:', compatData);
+
+                let html = `
+                    <h4>${zodiacNames[sign1]} ❤️ ${zodiacNames[sign2]} 궁합 결과</h4>
+                `;
+
+                if (compatData) {
+                    // 데이터 소스 확인
+                    const hasCompatMessage = compatData.compat_message && compatData.compat_message.trim();
+                    const hasZodiacDesc = compatData.zodiacDescriptions && compatData.zodiacDescriptions.trim();
+
+                    html += `
+                        <div class="message ${hasCompatMessage ? 'success' : 'warning'}">
+                            <strong>compat_message 존재:</strong> ${hasCompatMessage ? '✓' : '✗'}
+                        </div>
+                        <div class="message ${!hasZodiacDesc ? 'success' : 'error'}">
+                            <strong>zodiacDescriptions 없음:</strong> ${!hasZodiacDesc ? '✓' : '✗ (문제: 여전히 존재함)'}
+                        </div>
+                    `;
+
+                    if (compatData.love_score !== undefined) {
+                        html += `<div class="score">궁합 점수: ${compatData.love_score}점</div>`;
+                    }
+
+                    if (hasCompatMessage) {
+                        const messageLength = compatData.compat_message.length;
+                        html += `
+                            <div class="message">
+                                <strong>궁합 메시지 (${messageLength}자):</strong><br>
+                                ${compatData.compat_message}
+                            </div>
+                        `;
+                    }
+
+                    if (hasZodiacDesc) {
+                        html += `
+                            <div class="message error">
+                                <strong>⚠️ zodiacDescriptions (제거되어야 함):</strong><br>
+                                ${compatData.zodiacDescriptions.substring(0, 200)}...
+                            </div>
+                        `;
+                    }
+
+                    // 추가 필드 확인
+                    const otherFields = Object.keys(compatData).filter(key =>
+                        !['compat_message', 'zodiacDescriptions', 'love_score'].includes(key)
+                    );
+
+                    if (otherFields.length > 0) {
+                        html += `
+                            <div class="message">
+                                <strong>기타 필드:</strong> ${otherFields.join(', ')}
+                            </div>
+                        `;
+                    }
+                } else {
+                    html += '<div class="message error">궁합 데이터를 찾을 수 없습니다</div>';
+                }
+
+                resultDiv.innerHTML = html;
+                console.log(`테스트 완료: ${zodiacNames[sign1]} - ${zodiacNames[sign2]}`);
+
+            } catch (error) {
+                console.error('테스트 오류:', error);
+                resultDiv.innerHTML = `
+                    <div class="message error">
+                        <strong>오류 발생:</strong> ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        // 전체 테스트 실행
+        async function runAllTests() {
+            console.log('=== 전체 테스트 시작 ===');
+            await testCompatibility(1, 4, 'case1');
+            await new Promise(resolve => setTimeout(resolve, 500));
+            await testCompatibility(11, 12, 'case2');
+            await new Promise(resolve => setTimeout(resolve, 500));
+            await testCompatibility(5, 3, 'case3');
+            console.log('=== 전체 테스트 완료 ===');
+        }
+
+        // 결과 지우기
+        function clearResults() {
+            ['case1-result', 'case2-result', 'case3-result', 'system-status'].forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.style.display = 'none';
+                    element.innerHTML = '';
+                }
+            });
+            logContainer.innerHTML = '';
+            console.log('결과가 지워졌습니다');
+        }
+
+        // 시스템 상태 확인
+        async function checkSystemStatus() {
+            const statusDiv = document.getElementById('system-status');
+            statusDiv.style.display = 'block';
+
+            let html = '<h4>시스템 상태</h4>';
+
+            // API 로드 상태
+            html += `
+                <div class="message ${window.zodiacAPI ? 'success' : 'error'}">
+                    <strong>zodiacAPI 로드:</strong> ${window.zodiacAPI ? '✓' : '✗'}
+                </div>
+            `;
+
+            if (window.zodiacAPI) {
+                try {
+                    // 궁합 데이터 통계
+                    const testCompat = await zodiacAPI.getCompatibility(1, 2);
+                    html += `
+                        <div class="message success">
+                            <strong>API 호출 테스트:</strong> ✓ (양자리-황소자리)
+                        </div>
+                    `;
+
+                    // 데이터 구조 확인
+                    if (testCompat) {
+                        const fields = Object.keys(testCompat);
+                        html += `
+                            <div class="message">
+                                <strong>데이터 필드:</strong> ${fields.join(', ')}
+                            </div>
+                        `;
+                    }
+                } catch (error) {
+                    html += `
+                        <div class="message error">
+                            <strong>API 호출 오류:</strong> ${error.message}
+                        </div>
+                    `;
+                }
+            }
+
+            statusDiv.innerHTML = html;
+        }
+
+        // 페이지 로드 시 시스템 상태 확인
+        window.addEventListener('load', () => {
+            console.log('테스트 페이지가 로드되었습니다');
+            setTimeout(() => {
+                if (window.zodiacAPI) {
+                    console.log('zodiacAPI가 성공적으로 로드되었습니다');
+                } else {
+                    console.error('zodiacAPI 로드 실패');
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

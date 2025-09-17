@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>별자리 궁합 직접 테스트</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 20px;
+            background-color: #1a1a2e;
+            color: #fff;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #16213e;
+            border-radius: 10px;
+        }
+        .test-result {
+            background-color: #0f3460;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid #e94560;
+        }
+        .success { border-left-color: #4CAF50; }
+        .warning { border-left-color: #FF9800; }
+        .error { border-left-color: #f44336; }
+        .zodiac-names {
+            font-weight: bold;
+            color: #e94560;
+            font-size: 1.2em;
+        }
+        .message-text {
+            background-color: #0a1e2e;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            font-style: italic;
+            line-height: 1.6;
+        }
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+            flex-wrap: wrap;
+        }
+        .stat {
+            background-color: #0a1e2e;
+            padding: 8px 12px;
+            border-radius: 5px;
+            margin: 2px;
+        }
+        button {
+            background-color: #e94560;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 14px;
+        }
+        button:hover {
+            background-color: #d73c56;
+        }
+        .log {
+            background-color: #000;
+            color: #0f0;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .summary {
+            background-color: #2c1810;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid #ff9800;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌟 별자리 궁합 직접 테스트 - 최종 검증</h1>
+
+        <div>
+            <h2>🔍 테스트 실행</h2>
+            <button onclick="runAllTests()">전체 테스트 실행</button>
+            <button onclick="testSpecificPairs()">특정 조합 테스트</button>
+            <button onclick="clearResults()">결과 초기화</button>
+        </div>
+
+        <div id="summary"></div>
+        <div id="results"></div>
+        <div id="console-log" class="log"></div>
+    </div>
+
+    <script>
+        // 콘솔 로그 캡처
+        const originalLog = console.log;
+        const originalError = console.error;
+        const logDiv = document.getElementById('console-log');
+
+        function captureLog(message, type = 'log') {
+            const timestamp = new Date().toLocaleTimeString();
+            const color = type === 'error' ? '#f44336' : '#4CAF50';
+            logDiv.innerHTML += `<div style="color: ${color}">[${timestamp}] ${message}</div>`;
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            captureLog(args.join(' '));
+        };
+
+        console.error = function(...args) {
+            originalError.apply(console, args);
+            captureLog(args.join(' '), 'error');
+        };
+
+        const resultsDiv = document.getElementById('results');
+        const summaryDiv = document.getElementById('summary');
+
+        function addResult(title, content, type = 'success') {
+            const div = document.createElement('div');
+            div.className = `test-result ${type}`;
+            div.innerHTML = `<h3>${title}</h3>${content}`;
+            resultsDiv.appendChild(div);
+        }
+
+        function addSummary(content) {
+            summaryDiv.innerHTML = `<div class="summary"><h3>📊 테스트 요약</h3>${content}</div>`;
+        }
+
+        function clearResults() {
+            resultsDiv.innerHTML = '';
+            logDiv.innerHTML = '';
+            summaryDiv.innerHTML = '';
+        }
+
+        // 별자리 이름 매핑
+        const zodiacNames = {
+            1: '양자리', 2: '황소자리', 3: '쌍둥이자리', 4: '게자리',
+            5: '사자자리', 6: '처녀자리', 7: '천칭자리', 8: '전갈자리',
+            9: '사수자리', 10: '염소자리', 11: '물병자리', 12: '물고기자리'
+        };
+
+        // compatibility-data.json 데이터 직접 로드
+        async function loadCompatibilityData() {
+            try {
+                // 경로 수정 - 현재 테스트 파일이 루트에 있으므로
+                console.log('JSON 파일 로드 시도...');
+                const response = await fetch('./zodiac-system/api/compatibility-data.json');
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                console.log(`✅ JSON 로드 성공: ${Object.keys(data).length}개 항목`);
+                return data;
+            } catch (error) {
+                console.error('❌ JSON 로드 실패:', error.message);
+                return null;
+            }
+        }
+
+        // 궁합 테스트 함수
+        async function testCompatibility(z1, z2, compatData) {
+            const minId = Math.min(z1, z2);
+            const maxId = Math.max(z1, z2);
+            const key = `${minId}-${maxId}`;
+
+            console.log(`🎯 테스트: ${zodiacNames[z1]} × ${zodiacNames[z2]} (${key})`);
+
+            if (compatData && compatData[key]) {
+                const item = compatData[key];
+
+                return {
+                    zodiac1: zodiacNames[z1],
+                    zodiac2: zodiacNames[z2],
+                    key: key,
+                    totalScore: item.overall_score,
+                    scores: {
+                        love: item.love_score,
+                        friendship: item.friendship_score,
+                        work: item.work_score
+                    },
+                    message: item.compat_message,
+                    messageLength: item.compat_message ? item.compat_message.length : 0,
+                    advice: item.advice,
+                    source: 'compatibility-data.json'
+                };
+            } else {
+                console.log(`❌ 데이터 없음: ${key}`);
+                return {
+                    zodiac1: zodiacNames[z1],
+                    zodiac2: zodiacNames[z2],
+                    key: key,
+                    error: 'No data found',
+                    source: 'error'
+                };
+            }
+        }
+
+        // 특정 조합 테스트
+        async function testSpecificPairs() {
+            console.log('🎯 특정 조합 테스트 시작...');
+
+            const compatData = await loadCompatibilityData();
+            if (!compatData) {
+                addResult('❌ 데이터 로드 실패', 'compatibility-data.json을 로드할 수 없습니다.', 'error');
+                return;
+            }
+
+            const testCases = [
+                {name: '양자리 - 게자리 (문제 조합)', z1: 1, z2: 4},
+                {name: '사자자리 - 사자자리 (동일 별자리)', z1: 5, z2: 5},
+                {name: '양자리 - 황소자리 (일반 조합)', z1: 1, z2: 2},
+                {name: '물고기자리 - 양자리 (역순)', z1: 12, z2: 1},
+                {name: '천칭자리 - 전갈자리', z1: 7, z2: 8}
+            ];
+
+            for (const testCase of testCases) {
+                const result = await testCompatibility(testCase.z1, testCase.z2, compatData);
+
+                if (result.error) {
+                    addResult(`❌ ${testCase.name}`, `데이터를 찾을 수 없습니다: ${result.key}`, 'error');
+                } else {
+                    const lengthStatus = (result.messageLength >= 150 && result.messageLength <= 500) ? 'success' : 'warning';
+
+                    addResult(`${testCase.name}`, `
+                        <div class="zodiac-names">${result.zodiac1} × ${result.zodiac2}</div>
+                        <div class="stats">
+                            <span class="stat">전체: ${result.totalScore}점</span>
+                            <span class="stat">애정: ${result.scores.love}점</span>
+                            <span class="stat">우정: ${result.scores.friendship}점</span>
+                            <span class="stat">업무: ${result.scores.work}점</span>
+                            <span class="stat">길이: ${result.messageLength}자</span>
+                        </div>
+                        <div class="message-text">${result.message}</div>
+                        <div style="margin-top: 10px; font-size: 0.9em; color: #888;">
+                            <strong>조언:</strong> ${result.advice}
+                        </div>
+                    `, lengthStatus);
+                }
+            }
+        }
+
+        // 전체 테스트 실행
+        async function runAllTests() {
+            console.log('🌟 전체 테스트 시작...');
+
+            const compatData = await loadCompatibilityData();
+            if (!compatData) {
+                addResult('❌ 전체 테스트 실패', 'compatibility-data.json을 로드할 수 없습니다.', 'error');
+                return;
+            }
+
+            // 통계 변수
+            let totalTests = 0;
+            let successTests = 0;
+            let appropriateLength = 0;
+            let tooShort = 0;
+            let tooLong = 0;
+            const lengths = [];
+
+            // 모든 조합 테스트 (샘플링)
+            const testPairs = [
+                [1,1], [1,4], [1,8], [2,5], [3,7],
+                [4,9], [5,11], [6,12], [7,2], [8,10],
+                [9,6], [10,3], [11,1], [12,8]
+            ];
+
+            for (const [z1, z2] of testPairs) {
+                totalTests++;
+                const result = await testCompatibility(z1, z2, compatData);
+
+                if (!result.error) {
+                    successTests++;
+                    lengths.push(result.messageLength);
+
+                    if (result.messageLength < 150) tooShort++;
+                    else if (result.messageLength > 500) tooLong++;
+                    else appropriateLength++;
+                }
+            }
+
+            // 요약 정보 생성
+            const avgLength = lengths.length > 0 ? Math.round(lengths.reduce((a,b) => a+b, 0) / lengths.length) : 0;
+            const minLength = lengths.length > 0 ? Math.min(...lengths) : 0;
+            const maxLength = lengths.length > 0 ? Math.max(...lengths) : 0;
+
+            addSummary(`
+                <div class="stats">
+                    <span class="stat">총 테스트: ${totalTests}개</span>
+                    <span class="stat">성공: ${successTests}개</span>
+                    <span class="stat">실패: ${totalTests - successTests}개</span>
+                </div>
+                <div class="stats">
+                    <span class="stat">적절한 길이: ${appropriateLength}개</span>
+                    <span class="stat">너무 짧음: ${tooShort}개</span>
+                    <span class="stat">너무 긺: ${tooLong}개</span>
+                </div>
+                <div class="stats">
+                    <span class="stat">최소 길이: ${minLength}자</span>
+                    <span class="stat">평균 길이: ${avgLength}자</span>
+                    <span class="stat">최대 길이: ${maxLength}자</span>
+                </div>
+                <p><strong>목표 달성도:</strong> ${Math.round(appropriateLength / successTests * 100)}% (150-500자 범위)</p>
+            `);
+
+            console.log(`📊 테스트 완료 - 성공률: ${Math.round(successTests / totalTests * 100)}%`);
+        }
+
+        // 초기 메시지
+        console.log('🌟 별자리 궁합 직접 테스트 시스템 준비 완료');
+        addResult('🌟 테스트 준비 완료', `
+            <p>이 페이지는 compatibility-data.json 파일을 직접 로드하여 테스트합니다.</p>
+            <p><strong>검증 목표:</strong></p>
+            <ul>
+                <li>compat_message 필드가 제대로 표시되는지 확인</li>
+                <li>텍스트 길이가 150-500자 범위에 있는지 확인</li>
+                <li>모든 별자리 조합이 정상 작동하는지 확인</li>
+            </ul>
+            <p>위의 버튼을 클릭하여 테스트를 시작하세요.</p>
+        `);
+
+    </script>
+</body>
+</html>

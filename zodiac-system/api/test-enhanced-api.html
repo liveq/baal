@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>별자리 API 향상 버전 테스트</title>
+    <style>
+        body {
+            font-family: 'Malgun Gothic', sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #fff;
+        }
+        .test-section {
+            margin: 30px 0;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .test-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        select, button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        select {
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+        }
+        button {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+        }
+        .result-box {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            min-height: 100px;
+            font-family: 'Consolas', monospace;
+            white-space: pre-wrap;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        .figure-info {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+            border-left: 4px solid #ffd700;
+        }
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .comparison-item {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+        }
+        .comparison-item h4 {
+            margin: 0 0 10px 0;
+            color: #ffd700;
+        }
+        .status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            margin: 5px 0;
+        }
+        .status.loading {
+            background: #f39c12;
+        }
+        .status.success {
+            background: #27ae60;
+        }
+        .status.error {
+            background: #e74c3c;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌟 별자리 API 향상 버전 테스트</h1>
+        
+        <!-- 기본 API vs 향상된 API 비교 -->
+        <div class="test-section">
+            <h2>📊 기본 API vs 향상된 API 비교 테스트</h2>
+            <div class="test-controls">
+                <select id="zodiacSelect">
+                    <option value="1">양자리 ♈</option>
+                    <option value="2">황소자리 ♉</option>
+                    <option value="3">쌍둥이자리 ♊</option>
+                    <option value="4">게자리 ♋</option>
+                    <option value="5">사자자리 ♌</option>
+                    <option value="6">처녀자리 ♍</option>
+                    <option value="7">천칭자리 ♎</option>
+                    <option value="8">전갈자리 ♏</option>
+                    <option value="9">사수자리 ♐</option>
+                    <option value="10">염소자리 ♑</option>
+                    <option value="11">물병자리 ♒</option>
+                    <option value="12">물고기자리 ♓</option>
+                </select>
+                <button onclick="compareAPIs()">비교 테스트 실행</button>
+                <button onclick="testMultipleZodiacs()">전체 별자리 테스트</button>
+            </div>
+            
+            <div id="comparisonResult"></div>
+        </div>
+
+        <!-- 인물 선택 테스트 -->
+        <div class="test-section">
+            <h2>👑 역사적 인물 선택 로직 테스트</h2>
+            <div class="test-controls">
+                <button onclick="testFigureRotation()">인물 로테이션 테스트 (7일)</button>
+                <button onclick="testAllZodiacFigures()">모든 별자리 인물 확인</button>
+            </div>
+            <div id="figureTestResult" class="result-box"></div>
+        </div>
+
+        <!-- 메시지 생성 테스트 -->
+        <div class="test-section">
+            <h2>💬 메시지 생성 품질 테스트</h2>
+            <div class="test-controls">
+                <button onclick="testMessageVariety()">메시지 다양성 테스트</button>
+                <button onclick="testCategoryMessages()">카테고리별 메시지 테스트</button>
+            </div>
+            <div id="messageTestResult" class="result-box"></div>
+        </div>
+
+        <!-- API 상태 확인 -->
+        <div class="test-section">
+            <h2>🔧 API 상태 및 로딩 확인</h2>
+            <div class="test-controls">
+                <button onclick="checkAPIStatus()">API 상태 확인</button>
+                <button onclick="testFallback()">폴백 시스템 테스트</button>
+            </div>
+            <div id="statusResult" class="result-box"></div>
+        </div>
+    </div>
+
+    <!-- API 스크립트 로드 -->
+    <script src="zodiac-api-real.js"></script>
+    <script src="zodiac-api-enhanced-fixed.js"></script>
+    
+    <script>
+        let testResults = {};
+
+        function showStatus(elementId, message, type = 'loading') {
+            const element = document.getElementById(elementId);
+            element.innerHTML = `<span class="status ${type}">${type === 'loading' ? '⏳' : type === 'success' ? '✅' : '❌'} ${message}</span>\n`;
+        }
+
+        function appendResult(elementId, content) {
+            const element = document.getElementById(elementId);
+            element.innerHTML += content + '\n';
+        }
+
+        // 기본 API vs 향상된 API 비교
+        async function compareAPIs() {
+            const zodiacId = document.getElementById('zodiacSelect').value;
+            const resultDiv = document.getElementById('comparisonResult');
+            
+            showStatus('comparisonResult', `별자리 ${zodiacId}번 비교 테스트 시작...`);
+            
+            try {
+                // 기본 API (zodiacAPI)
+                const basicResult = await zodiacAPI.getDailyFortune(zodiacId);
+                
+                // 향상된 API (zodiacAPIEnhanced)
+                const enhancedResult = await zodiacAPIEnhanced.getDailyFortuneEnhanced(zodiacId);
+                
+                resultDiv.innerHTML = `
+                    <div class="comparison">
+                        <div class="comparison-item">
+                            <h4>🔄 기본 API 결과</h4>
+                            <p><strong>Overall:</strong> ${basicResult.overall}</p>
+                            <p><strong>Advice:</strong> ${basicResult.advice}</p>
+                            <p><strong>Source:</strong> ${basicResult.source || 'basic'}</p>
+                        </div>
+                        <div class="comparison-item">
+                            <h4>✨ 향상된 API 결과</h4>
+                            <p><strong>Overall:</strong> ${enhancedResult.overall}</p>
+                            <p><strong>Advice:</strong> ${enhancedResult.advice}</p>
+                            <p><strong>Source:</strong> ${enhancedResult.source}</p>
+                            ${enhancedResult.historicalFigure ? `
+                                <div class="figure-info">
+                                    <p><strong>👑 선택된 인물:</strong> ${enhancedResult.historicalFigure.name} (${enhancedResult.historicalFigure.period})</p>
+                                    <p><strong>🌍 국가:</strong> ${enhancedResult.historicalFigure.country}</p>
+                                    <p><strong>💭 명언:</strong> "${enhancedResult.historicalFigure.quote}"</p>
+                                </div>
+                            ` : '<p>⚠️ 역사적 인물 데이터 없음</p>'}
+                        </div>
+                    </div>
+                `;
+                
+                testResults[`zodiac_${zodiacId}`] = { basic: basicResult, enhanced: enhancedResult };
+                
+            } catch (error) {
+                resultDiv.innerHTML = `<span class="status error">테스트 실패: ${error.message}</span>`;
+            }
+        }
+
+        // 인물 로테이션 테스트 (7일간)
+        async function testFigureRotation() {
+            const zodiacId = 1; // 양자리로 테스트
+            showStatus('figureTestResult', '7일간 인물 로테이션 테스트 시작...');
+            
+            let results = '📅 양자리 - 7일간 선택되는 인물들:\n\n';
+            
+            for (let i = 0; i < 7; i++) {
+                const testDate = new Date();
+                testDate.setDate(testDate.getDate() + i);
+                
+                const figure = zodiacAPIEnhanced.selectHistoricalFigure(zodiacId, testDate);
+                
+                if (figure) {
+                    results += `Day ${i + 1} (${testDate.toLocaleDateString()}): ${figure.name} (${figure.period})\n`;
+                    results += `  - 핵심 특성: ${figure.coreTraits.join(', ')}\n`;
+                    results += `  - 명언: "${figure.famousQuote}"\n\n`;
+                } else {
+                    results += `Day ${i + 1}: ❌ 인물 데이터 없음\n\n`;
+                }
+            }
+            
+            document.getElementById('figureTestResult').innerHTML = results;
+        }
+
+        // 모든 별자리 인물 확인
+        async function testAllZodiacFigures() {
+            showStatus('figureTestResult', '모든 별자리 인물 데이터 확인 중...');
+            
+            let results = '🌟 각 별자리별 대표 인물들:\n\n';
+            
+            for (let zodiacId = 1; zodiacId <= 12; zodiacId++) {
+                const figure = zodiacAPIEnhanced.selectHistoricalFigure(zodiacId);
+                const zodiacName = zodiacAPIEnhanced.zodiacSigns[zodiacId - 1].name;
+                
+                if (figure) {
+                    results += `${zodiacName} (${zodiacId}): ${figure.name}\n`;
+                    results += `  - 시대: ${figure.period} (${figure.country})\n`;
+                    results += `  - 주요 업적: ${figure.achievements[0].split(' - ')[0]}\n\n`;
+                } else {
+                    results += `${zodiacName} (${zodiacId}): ❌ 데이터 없음\n\n`;
+                }
+            }
+            
+            document.getElementById('figureTestResult').innerHTML = results;
+        }
+
+        // 메시지 다양성 테스트
+        async function testMessageVariety() {
+            const zodiacId = 8; // 전갈자리로 테스트
+            showStatus('messageTestResult', '메시지 다양성 테스트 시작...');
+            
+            let results = '🎯 전갈자리 - 5번 연속 생성 결과:\n\n';
+            
+            for (let i = 1; i <= 5; i++) {
+                try {
+                    const result = await zodiacAPIEnhanced.getDailyFortuneEnhanced(zodiacId);
+                    results += `생성 ${i}:\n`;
+                    results += `  Overall: ${result.overall}\n`;
+                    results += `  Work: ${result.fortunes?.work || 'N/A'}\n`;
+                    results += `  Love: ${result.fortunes?.love || 'N/A'}\n\n`;
+                } catch (error) {
+                    results += `생성 ${i}: ❌ 오류 - ${error.message}\n\n`;
+                }
+            }
+            
+            document.getElementById('messageTestResult').innerHTML = results;
+        }
+
+        // 카테고리별 메시지 테스트
+        async function testCategoryMessages() {
+            showStatus('messageTestResult', '카테고리별 메시지 생성 테스트...');
+            
+            const zodiacId = 5; // 사자자리
+            const figure = zodiacAPIEnhanced.selectHistoricalFigure(zodiacId);
+            
+            let results = `🦁 사자자리 - 선택된 인물: ${figure ? figure.name : '없음'}\n\n`;
+            
+            if (figure) {
+                const categories = ['work', 'love', 'money', 'health'];
+                
+                results += '📝 카테고리별 메시지 생성:\n\n';
+                
+                for (const category of categories) {
+                    for (let i = 1; i <= 3; i++) {
+                        const message = zodiacAPIEnhanced.generateEnhancedMessage(category, figure, zodiacId);
+                        results += `${category.toUpperCase()} ${i}: ${message || 'N/A'}\n`;
+                    }
+                    results += '\n';
+                }
+            } else {
+                results += '❌ 인물 데이터가 없어 메시지 생성 불가\n';
+            }
+            
+            document.getElementById('messageTestResult').innerHTML = results;
+        }
+
+        // API 상태 확인
+        async function checkAPIStatus() {
+            showStatus('statusResult', 'API 상태 확인 중...');
+            
+            let results = '🔍 API 상태 점검 결과:\n\n';
+            
+            // 1. 데이터 로딩 상태
+            results += `기본 운세 데이터: ${zodiacAPIEnhanced.fortuneData ? '✅ 로드됨' : '❌ 없음'}\n`;
+            results += `역사적 인물 데이터: ${zodiacAPIEnhanced.historicalFigures ? '✅ 로드됨' : '❌ 없음'}\n\n`;
+            
+            // 2. 데이터 크기 정보
+            if (zodiacAPIEnhanced.fortuneData) {
+                const dailyCount = Object.keys(zodiacAPIEnhanced.fortuneData.daily || {}).length;
+                results += `일일 운세 데이터: ${dailyCount}일\n`;
+            }
+            
+            if (zodiacAPIEnhanced.historicalFigures) {
+                const figuresData = zodiacAPIEnhanced.historicalFigures.zodiacFigures;
+                const totalFigures = Object.values(figuresData).reduce((sum, zodiac) => sum + (zodiac.figures?.length || 0), 0);
+                results += `역사적 인물: ${totalFigures}명\n`;
+                results += `별자리별 인물 분포:\n`;
+                
+                Object.entries(figuresData).forEach(([key, data]) => {
+                    results += `  - ${data.name}: ${data.figures?.length || 0}명\n`;
+                });
+            }
+            
+            results += '\n';
+            
+            // 3. 메서드 접근성 테스트
+            const methods = ['getZodiacId', 'getZodiacByDate', 'getDailyFortune', 'getDailyFortuneEnhanced'];
+            results += '🔧 메서드 접근성:\n';
+            
+            methods.forEach(method => {
+                results += `  - ${method}: ${typeof zodiacAPIEnhanced[method] === 'function' ? '✅' : '❌'}\n`;
+            });
+            
+            document.getElementById('statusResult').innerHTML = results;
+        }
+
+        // 폴백 시스템 테스트
+        async function testFallback() {
+            showStatus('statusResult', '폴백 시스템 테스트 중...');
+            
+            let results = '🛡️ 폴백 시스템 테스트:\n\n';
+            
+            // 1. 존재하지 않는 별자리 ID 테스트
+            try {
+                const invalidResult = await zodiacAPIEnhanced.getDailyFortune(999);
+                results += `잘못된 별자리 ID (999): ${invalidResult ? '✅ 폴백 동작' : '❌ 실패'}\n`;
+            } catch (error) {
+                results += `잘못된 별자리 ID (999): ❌ 예외 발생 - ${error.message}\n`;
+            }
+            
+            // 2. 데이터 없는 상황 시뮬레이션
+            const originalData = zodiacAPIEnhanced.historicalFigures;
+            zodiacAPIEnhanced.historicalFigures = null;
+            
+            try {
+                const fallbackResult = await zodiacAPIEnhanced.getDailyFortuneEnhanced(1);
+                results += `인물 데이터 없음: ${fallbackResult.source === 'base-fallback' ? '✅' : '⚠️'} (${fallbackResult.source})\n`;
+            } catch (error) {
+                results += `인물 데이터 없음: ❌ 예외 발생 - ${error.message}\n`;
+            }
+            
+            // 원복
+            zodiacAPIEnhanced.historicalFigures = originalData;
+            
+            results += '\n✅ 폴백 시스템 테스트 완료';
+            
+            document.getElementById('statusResult').innerHTML = results;
+        }
+
+        // 전체 별자리 테스트
+        async function testMultipleZodiacs() {
+            showStatus('comparisonResult', '전체 별자리 테스트 실행 중...');
+            
+            let results = '🌟 전체 별자리 향상된 API 테스트:\n\n';
+            
+            for (let zodiacId = 1; zodiacId <= 12; zodiacId++) {
+                try {
+                    const result = await zodiacAPIEnhanced.getDailyFortuneEnhanced(zodiacId);
+                    const zodiacName = zodiacAPIEnhanced.zodiacSigns[zodiacId - 1].name;
+                    
+                    results += `${zodiacName} (${zodiacId}):\n`;
+                    results += `  - Source: ${result.source}\n`;
+                    results += `  - 인물: ${result.historicalFigure ? result.historicalFigure.name : '없음'}\n`;
+                    results += `  - Overall: ${result.overall.substring(0, 50)}...\n\n`;
+                } catch (error) {
+                    results += `별자리 ${zodiacId}: ❌ 오류 - ${error.message}\n\n`;
+                }
+            }
+            
+            document.getElementById('comparisonResult').innerHTML = `<div class="result-box">${results}</div>`;
+        }
+
+        // 페이지 로드 시 API 상태 확인
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                console.log('🔄 페이지 로드 완료 - API 확인');
+                console.log('Basic API:', typeof zodiacAPI);
+                console.log('Enhanced API:', typeof zodiacAPIEnhanced);
+                
+                if (typeof zodiacAPIEnhanced === 'undefined') {
+                    document.body.innerHTML = '<div style="text-align:center; padding:50px; color:red;"><h1>❌ Enhanced API 로드 실패</h1><p>zodiac-api-enhanced.js 파일을 확인해주세요.</p></div>';
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

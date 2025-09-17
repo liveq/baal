@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>별자리 궁합 HTML 제거 테스트</title>
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #1a1a2e;
+            color: #eee;
+        }
+        .test-case {
+            background: #16213e;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid #0f3460;
+        }
+        .test-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #4fbdba;
+            margin-bottom: 10px;
+        }
+        .result {
+            background: #0f3460;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .score {
+            color: #7ec8e3;
+            font-weight: bold;
+        }
+        .description {
+            margin: 10px 0;
+            line-height: 1.6;
+        }
+        .advice {
+            color: #aaa;
+            font-style: italic;
+        }
+        .source {
+            color: #666;
+            font-size: 12px;
+        }
+        button {
+            background: #4fbdba;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #7ec8e3;
+        }
+        .error {
+            color: #ff6b6b;
+        }
+        .success {
+            color: #51cf66;
+        }
+    </style>
+</head>
+<body>
+    <h1>🌟 별자리 궁합 HTML 제거 테스트</h1>
+
+    <div class="test-case">
+        <div class="test-title">📍 문제 테스트: 양자리(1) - 사수자리(9)</div>
+        <button onclick="testCompatibility(1, 9, 'result1')">테스트 실행</button>
+        <div id="result1" class="result"></div>
+    </div>
+
+    <div class="test-case">
+        <div class="test-title">📍 확인 테스트: 양자리(1) - 게자리(4)</div>
+        <button onclick="testCompatibility(1, 4, 'result2')">테스트 실행</button>
+        <div id="result2" class="result"></div>
+    </div>
+
+    <div class="test-case">
+        <div class="test-title">📍 일반 테스트: 물병자리(11) - 물고기자리(12)</div>
+        <button onclick="testCompatibility(11, 12, 'result3')">테스트 실행</button>
+        <div id="result3" class="result"></div>
+    </div>
+
+    <script src="zodiac-system/api/zodiac-api-real.js"></script>
+    <script>
+        // API 초기화 대기
+        setTimeout(() => {
+            console.log('✅ API 로드 완료:', window.zodiacAPI ? '성공' : '실패');
+        }, 1000);
+
+        async function testCompatibility(zodiac1, zodiac2, resultId) {
+            const resultDiv = document.getElementById(resultId);
+            resultDiv.innerHTML = '⏳ 테스트 중...';
+
+            try {
+                const result = await zodiacAPI.getCompatibility(zodiac1, zodiac2);
+
+                // HTML 태그 확인
+                const hasHtmlTags = /<[^>]+>/.test(result.description);
+                const htmlStatus = hasHtmlTags ?
+                    '<span class="error">❌ HTML 태그 발견!</span>' :
+                    '<span class="success">✅ HTML 태그 없음</span>';
+
+                resultDiv.innerHTML = `
+                    <div><strong>데이터 소스:</strong> <span class="source">${result.source}</span></div>
+                    <div><strong>HTML 체크:</strong> ${htmlStatus}</div>
+                    <div class="score">
+                        총점: ${result.totalScore}점 |
+                        애정: ${result.scores?.love || 0}점 |
+                        우정: ${result.scores?.friendship || 0}점 |
+                        업무: ${result.scores?.work || 0}점
+                    </div>
+                    <div class="description">
+                        <strong>설명:</strong><br>
+                        ${result.description}
+                    </div>
+                    <div class="advice">
+                        <strong>조언:</strong> ${result.advice}
+                    </div>
+                    <div style="margin-top: 10px; padding: 10px; background: #0a0a0a; border-radius: 5px;">
+                        <strong>설명 길이:</strong> ${result.description.length}자<br>
+                        <strong>원본 텍스트 (처음 200자):</strong><br>
+                        <code style="font-size: 11px; color: #888;">${result.description.substring(0, 200)}...</code>
+                    </div>
+                `;
+
+                console.log(`✅ 테스트 완료 (${zodiac1}-${zodiac2}):`, result);
+            } catch (error) {
+                resultDiv.innerHTML = `<span class="error">❌ 오류: ${error.message}</span>`;
+                console.error('테스트 실패:', error);
+            }
+        }
+
+        // 전체 테스트
+        async function testAll() {
+            await testCompatibility(1, 9, 'result1');
+            await testCompatibility(1, 4, 'result2');
+            await testCompatibility(11, 12, 'result3');
+        }
+    </script>
+</body>
+</html>

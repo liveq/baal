@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modal Test - RHEIGHT</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #222;
+            color: white;
+        }
+        
+        .test-button {
+            background: #4a5568;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        .test-button:hover {
+            background: #2d3748;
+        }
+        
+        .zodiac-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+        }
+        
+        .modal-content {
+            background-color: #2d3748;
+            margin: 5% auto;
+            padding: 20px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 600px;
+            max-height: 80%;
+            overflow-y: auto;
+            position: relative;
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 30px;
+            cursor: pointer;
+        }
+        
+        .modal-title {
+            color: #fff;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        
+        .modal-body {
+            color: #e2e8f0;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <h1>Modal Function Test</h1>
+    
+    <div>
+        <button class="test-button" onclick="testModal(1)">Test 양자리 Modal</button>
+        <button class="test-button" onclick="testModal(4)">Test 게자리 Modal</button>
+        <button class="test-button" onclick="testModal(12)">Test 물고기자리 Modal</button>
+    </div>
+    
+    <div>
+        <button class="test-button" onclick="testZodiacDescriptions()">Test zodiacDescriptions Data</button>
+        <button class="test-button" onclick="openConsole()">Open Browser Console</button>
+    </div>
+    
+    <div id="testResults" style="margin-top: 20px; background: #1a202c; padding: 15px; border-radius: 5px;">
+        <h3>Test Results:</h3>
+        <div id="results"></div>
+    </div>
+    
+    <!-- Modal -->
+    <div id="zodiacModal" class="zodiac-modal" onclick="closeModalOnOutside(event)">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeZodiacModal()">×</button>
+            <h2 id="modalTitle" class="modal-title"></h2>
+            <div id="modalBody" class="modal-body"></div>
+        </div>
+    </div>
+
+    <script src="zodiac.js"></script>
+    <script>
+        function testModal(zodiacId) {
+            addResult(`Testing modal for zodiac ${zodiacId}...`);
+            
+            if (typeof window.showZodiacModal === 'function') {
+                const result = window.showZodiacModal(zodiacId);
+                addResult(`Modal function called. Result: ${result}`);
+            } else {
+                addResult('❌ showZodiacModal function not found');
+            }
+        }
+        
+        function testZodiacDescriptions() {
+            addResult('Testing zodiacDescriptions data...');
+            
+            if (window.zodiacDescriptions) {
+                const keys = Object.keys(window.zodiacDescriptions);
+                addResult(`✅ zodiacDescriptions found with ${keys.length} entries`);
+                addResult(`Keys: ${keys.join(', ')}`);
+                
+                // Test a specific entry
+                if (window.zodiacDescriptions[1]) {
+                    const info = window.zodiacDescriptions[1];
+                    addResult(`✅ Sample data (양자리): ${info.name}`);
+                } else {
+                    addResult('❌ No data for zodiac ID 1');
+                }
+            } else {
+                addResult('❌ zodiacDescriptions not found');
+            }
+        }
+        
+        function openConsole() {
+            addResult('Open browser console (F12) to see detailed logs');
+            console.log('=== ZODIAC MODAL TEST ===');
+            console.log('zodiacDescriptions:', window.zodiacDescriptions);
+            console.log('showZodiacModal function:', window.showZodiacModal);
+            console.log('Available functions:', Object.keys(window).filter(key => typeof window[key] === 'function' && key.includes('zodiac')));
+        }
+        
+        function addResult(message) {
+            const results = document.getElementById('results');
+            const div = document.createElement('div');
+            div.innerHTML = `<span style="color: #718096;">[${new Date().toLocaleTimeString()}]</span> ${message}`;
+            results.appendChild(div);
+            results.scrollTop = results.scrollHeight;
+        }
+        
+        // Log initial state
+        window.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                addResult('Page loaded. Testing initial state...');
+                testZodiacDescriptions();
+            }, 500);
+        });
+    </script>
+</body>
+</html>

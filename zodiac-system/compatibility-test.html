@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>궁합 데이터 연동 테스트</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-result { margin: 10px 0; padding: 10px; border: 1px solid #ccc; border-radius: 5px; }
+        .success { background-color: #d4edda; border-color: #c3e6cb; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; }
+        .loading { background-color: #e2e3e5; border-color: #d6d8db; }
+        .log { font-family: monospace; font-size: 12px; margin: 5px 0; padding: 5px; background-color: #f8f9fa; }
+    </style>
+</head>
+<body>
+    <h1>별자리 궁합 데이터 연동 검증</h1>
+
+    <h2>테스트 케이스</h2>
+    <div id="testResults"></div>
+
+    <h2>상세 로그</h2>
+    <div id="detailLogs"></div>
+
+    <script src="api/zodiac-api-real.js"></script>
+    <script>
+        async function runCompatibilityTests() {
+            const resultsDiv = document.getElementById('testResults');
+            const logsDiv = document.getElementById('detailLogs');
+
+            const testCases = [
+                { z1: 1, z2: 4, name: '양자리-게자리 (문제 조합)' },
+                { z1: 11, z2: 5, name: '물병자리-사자자리 (정상 조합)' },
+                { z1: 5, z2: 12, name: '사자자리-물고기자리 (긴 텍스트)' },
+                { z1: 1, z2: 1, name: '양자리-양자리 (같은 별자리)' }
+            ];
+
+            // 로그 캐치를 위한 console override
+            const originalLog = console.log;
+            console.log = function(...args) {
+                originalLog.apply(console, args);
+                const logDiv = document.createElement('div');
+                logDiv.className = 'log';
+                logDiv.textContent = args.join(' ');
+                logsDiv.appendChild(logDiv);
+            };
+
+            for (const testCase of testCases) {
+                const resultDiv = document.createElement('div');
+                resultDiv.className = 'test-result loading';
+                resultDiv.innerHTML = `<h3>${testCase.name}</h3><p>테스트 진행 중...</p>`;
+                resultsDiv.appendChild(resultDiv);
+
+                try {
+                    console.log(`\n🧪 테스트 시작: ${testCase.name}`);
+                    const compatibility = await zodiacAPI.getCompatibility(testCase.z1, testCase.z2);
+
+                    let success = true;
+                    let errors = [];
+
+                    // 1. 기본 필드 검증
+                    if (!compatibility.description) {
+                        errors.push('description 필드가 없습니다');
+                        success = false;
+                    }
+
+                    // 2. 점수 검증
+                    if (!compatibility.totalScore) {
+                        errors.push('totalScore가 없습니다');
+                        success = false;
+                    }
+
+                    // 3. source 검증 (database-compat-message 우선)
+                    if (compatibility.source !== 'database-compat-message') {
+                        console.log(`⚠️ 데이터베이스 메시지가 아닌 ${compatibility.source} 사용됨`);
+                    }
+
+                    // 4. compat_message 내용 확인
+                    if (compatibility.description && compatibility.description.length < 50) {
+                        errors.push('description이 너무 짧습니다 (50자 미만)');
+                        success = false;
+                    }
+
+                    // 결과 표시
+                    resultDiv.className = success ? 'test-result success' : 'test-result error';
+                    resultDiv.innerHTML = `
+                        <h3>${testCase.name}</h3>
+                        <p><strong>상태:</strong> ${success ? '✅ 성공' : '❌ 실패'}</p>
+                        <p><strong>총점:</strong> ${compatibility.totalScore || 'N/A'}</p>
+                        <p><strong>데이터 소스:</strong> ${compatibility.source || 'N/A'}</p>
+                        <p><strong>설명 길이:</strong> ${compatibility.description ? compatibility.description.length : 0}자</p>
+                        <p><strong>설명 내용:</strong> ${compatibility.description ? compatibility.description.substring(0, 100) + '...' : 'N/A'}</p>
+                        ${errors.length > 0 ? `<p><strong>오류:</strong> ${errors.join(', ')}</p>` : ''}
+                    `;
+
+                    console.log(`✅ ${testCase.name} 테스트 완료`);
+                    console.log(`   - 총점: ${compatibility.totalScore}`);
+                    console.log(`   - 소스: ${compatibility.source}`);
+                    console.log(`   - 설명: ${compatibility.description ? compatibility.description.substring(0, 100) + '...' : 'N/A'}`);
+
+                } catch (error) {
+                    resultDiv.className = 'test-result error';
+                    resultDiv.innerHTML = `
+                        <h3>${testCase.name}</h3>
+                        <p><strong>상태:</strong> ❌ 에러 발생</p>
+                        <p><strong>에러:</strong> ${error.message}</p>
+                    `;
+                    console.log(`❌ ${testCase.name} 테스트 실패:`, error);
+                }
+            }
+
+            console.log('\n🏁 모든 테스트 완료');
+        }
+
+        // API가 로드된 후 테스트 실행
+        window.addEventListener('load', () => {
+            setTimeout(runCompatibilityTests, 1000);
+        });
+    </script>
+</body>
+</html>

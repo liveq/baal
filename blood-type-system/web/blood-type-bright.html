@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RHEIGHT - 혈액형 테스트</title>
+    <link rel="stylesheet" href="blood-type-bright.css">
+</head>
+<body>
+    <header class="blood-header-nav">
+        <div class="blood-nav-container">
+            <div class="blood-logo">
+                <button onclick="location.href='../../'" title="메인으로">🏠</button>
+                <h1>혈액형 테스트</h1>
+            </div>
+            
+            <div class="blood-type-selector-nav">
+                <button class="blood-type-btn-nav" onclick="window.selectBloodType('A')" data-blood="A">A형</button>
+                <button class="blood-type-btn-nav" onclick="window.selectBloodType('B')" data-blood="B">B형</button>
+                <button class="blood-type-btn-nav" onclick="window.selectBloodType('O')" data-blood="O">O형</button>
+                <button class="blood-type-btn-nav" onclick="window.selectBloodType('AB')" data-blood="AB">AB형</button>
+            </div>
+            
+            <div class="blood-gender-selector">
+                <button class="blood-gender-btn active" id="gender-male" onclick="window.selectGender('male')">남성</button>
+                <button class="blood-gender-btn" id="gender-female" onclick="window.selectGender('female')">여성</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="blood-main-container">
+        <section class="blood-hero-section">
+            <h2 class="blood-hero-title">당신의 혈액형 이야기</h2>
+            <p class="blood-hero-subtitle">역사 속 위대한 인물들과 함께 알아보는 나의 성격과 운명</p>
+        </section>
+
+        <section class="blood-content-grid">
+            <div class="blood-card blood-card-a" onclick="window.selectBloodType('A')">
+                <div class="blood-card-header">
+                    <span class="blood-card-type">A</span>
+                </div>
+                <h3 class="blood-card-title">완벽을 추구하는 장인</h3>
+                <p class="blood-card-subtitle">신중하고 섬세한 당신</p>
+                <p class="blood-card-content">
+                    고요한 호수처럼 깊이 있는 내면을 가진 A형. 봄의 새벽처럼 조심스럽게 세상과 만납니다.
+                </p>
+                <div class="blood-card-figures">
+                    <span class="blood-figure-tag">스티브 잡스</span>
+                    <span class="blood-figure-tag">세종대왕</span>
+                    <span class="blood-figure-tag">워렌 버핏</span>
+                </div>
+            </div>
+
+            <div class="blood-card blood-card-b" onclick="window.selectBloodType('B')">
+                <div class="blood-card-header">
+                    <span class="blood-card-type">B</span>
+                </div>
+                <h3 class="blood-card-title">자유로운 예술가</h3>
+                <p class="blood-card-subtitle">창의적이고 독립적인 당신</p>
+                <p class="blood-card-content">
+                    자유로운 구름처럼 틀에 얽매이지 않는 B형. 여름 정오의 바람처럼 상쾌한 에너지를 발산합니다.
+                </p>
+                <div class="blood-card-figures">
+                    <span class="blood-figure-tag">레오나르도 다빈치</span>
+                    <span class="blood-figure-tag">피카소</span>
+                    <span class="blood-figure-tag">잭 마</span>
+                </div>
+            </div>
+
+            <div class="blood-card blood-card-o" onclick="window.selectBloodType('O')">
+                <div class="blood-card-header">
+                    <span class="blood-card-type">O</span>
+                </div>
+                <h3 class="blood-card-title">타고난 리더</h3>
+                <p class="blood-card-subtitle">열정적이고 추진력 있는 당신</p>
+                <p class="blood-card-content">
+                    타오르는 태양처럼 열정적인 O형. 가을 저녁의 불꽃처럼 주변을 밝히는 리더십을 발휘합니다.
+                </p>
+                <div class="blood-card-figures">
+                    <span class="blood-figure-tag">나폴레옹</span>
+                    <span class="blood-figure-tag">이순신</span>
+                    <span class="blood-figure-tag">엘론 머스크</span>
+                </div>
+            </div>
+
+            <div class="blood-card blood-card-ab" onclick="window.selectBloodType('AB')">
+                <div class="blood-card-header">
+                    <span class="blood-card-type">AB</span>
+                </div>
+                <h3 class="blood-card-title">신비로운 천재</h3>
+                <p class="blood-card-subtitle">독특하고 천재적인 당신</p>
+                <p class="blood-card-content">
+                    신비로운 오로라처럼 독특한 AB형. 겨울 한밤중의 별처럼 남다른 빛을 발합니다.
+                </p>
+                <div class="blood-card-figures">
+                    <span class="blood-figure-tag">아인슈타인</span>
+                    <span class="blood-figure-tag">오바마</span>
+                    <span class="blood-figure-tag">반 고흐</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="blood-tabs-container">
+            <div class="blood-tabs-nav">
+                <button class="blood-tab-btn active" onclick="window.showTab('basic')">기본 성향</button>
+                <button class="blood-tab-btn" onclick="window.showTab('love')">애정운</button>
+                <button class="blood-tab-btn" onclick="window.showTab('health')">건강운</button>
+                <button class="blood-tab-btn" onclick="window.showTab('wealth')">재물운</button>
+                <button class="blood-tab-btn" onclick="window.showTab('daily')">오늘의 운세</button>
+                <button class="blood-tab-btn" onclick="window.showTab('figures')">역사적 인물</button>
+            </div>
+            
+            <div class="blood-tab-content">
+                <div class="blood-tab-panel active" id="basic-panel">
+                    <div class="blood-welcome">
+                        <h3>혈액형을 선택해주세요</h3>
+                        <p>상단이나 카드를 클릭하면 상세한 분석을 확인할 수 있습니다.</p>
+                    </div>
+                </div>
+                <div class="blood-tab-panel" id="love-panel"></div>
+                <div class="blood-tab-panel" id="health-panel"></div>
+                <div class="blood-tab-panel" id="wealth-panel"></div>
+                <div class="blood-tab-panel" id="daily-panel"></div>
+                <div class="blood-tab-panel" id="figures-panel"></div>
+            </div>
+        </section>
+
+        <section class="blood-compatibility-section">
+            <h3 style="text-align: center; margin-bottom: 30px;">혈액형 궁합 테스트</h3>
+            <div class="blood-compatibility-selector">
+                <div class="blood-select-group">
+                    <label class="blood-select-label">나의 혈액형</label>
+                    <select class="blood-select" id="myBloodType" onchange="window.calculateCompatibility()">
+                        <option value="">선택</option>
+                        <option value="A">A형</option>
+                        <option value="B">B형</option>
+                        <option value="O">O형</option>
+                        <option value="AB">AB형</option>
+                    </select>
+                </div>
+                
+                <div class="blood-heart-icon">❤️</div>
+                
+                <div class="blood-select-group">
+                    <label class="blood-select-label">상대방 혈액형</label>
+                    <select class="blood-select" id="partnerBloodType" onchange="window.calculateCompatibility()">
+                        <option value="">선택</option>
+                        <option value="A">A형</option>
+                        <option value="B">B형</option>
+                        <option value="O">O형</option>
+                        <option value="AB">AB형</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div id="compatibilityResult"></div>
+        </section>
+    </main>
+
+    <footer class="blood-footer">
+        <p>[!] 이 테스트는 재미와 영감을 위한 것이며, 과학적 근거는 없습니다.</p>
+        <p>© 2025 RHEIGHT. 모든 권리 보유.</p>
+    </footer>
+
+    <div class="blood-modal" id="bloodModal">
+        <div class="blood-modal-content">
+            <span class="blood-modal-close" onclick="window.closeModal()">&times;</span>
+            <h2 id="modal-title"></h2>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+
+    <script src="../api/blood-api-enhanced.js"></script>
+    <script src="blood-type-bright.js"></script>
+</body>
+</html>

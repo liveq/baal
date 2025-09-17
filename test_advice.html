@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Test Advice Loading</title>
+</head>
+<body>
+    <h1>Fortune Data Test</h1>
+    <div id="result"></div>
+    
+    <script>
+        fetch('zodiac-system/api/fortune-data.json')
+            .then(response => response.json())
+            .then(data => {
+                const sept8 = data.daily['2025-09-08'];
+                const zodiac1 = sept8['1'];
+                
+                document.getElementById('result').innerHTML = `
+                    <h2>2025-09-08 Zodiac 1 Data:</h2>
+                    <p><strong>Overall:</strong> ${zodiac1.overall}</p>
+                    <p><strong>Advice:</strong> ${zodiac1.advice}</p>
+                    <p><strong>Love Fortune:</strong> ${zodiac1.fortunes.love}</p>
+                    <p><strong>Lucky Color:</strong> ${zodiac1.lucky.color}</p>
+                `;
+            })
+            .catch(error => {
+                document.getElementById('result').textContent = 'Error: ' + error;
+            });
+    </script>
+</body>
+</html>

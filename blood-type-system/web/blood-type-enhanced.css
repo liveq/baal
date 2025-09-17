@@ -1,0 +1,614 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --blood-bg-primary: #0a0e27;
+    --blood-bg-secondary: #1a1f3a;
+    --blood-bg-card: rgba(255, 255, 255, 0.05);
+    --blood-text-primary: #ffffff;
+    --blood-text-secondary: #9ca3af;
+    --blood-border-color: rgba(255, 255, 255, 0.1);
+    --blood-accent-color: #ef4444;
+    --blood-accent-secondary: #f87171;
+    --blood-accent-bg: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    --blood-nav-width: 260px;
+    --blood-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body {
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, var(--blood-bg-primary) 0%, var(--blood-bg-secondary) 100%);
+    min-height: 100vh;
+    color: var(--blood-text-primary);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+.blood-nav-toggle {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1001;
+    background: var(--blood-bg-card);
+    border: 1px solid var(--blood-border-color);
+    color: var(--blood-text-primary);
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: var(--blood-transition);
+    font-size: 20px;
+}
+
+.blood-nav-toggle:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(1.05);
+}
+
+.blood-nav {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: var(--blood-nav-width);
+    height: 100vh;
+    background: rgba(10, 14, 39, 0.95);
+    backdrop-filter: blur(10px);
+    border-right: 1px solid var(--blood-border-color);
+    z-index: 1000;
+    transition: var(--blood-transition);
+    overflow-y: auto;
+}
+
+.blood-nav-collapsed {
+    transform: translateX(-100%);
+}
+
+.blood-nav-header {
+    padding: 20px;
+    border-bottom: 1px solid var(--blood-border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.blood-nav-header h3 {
+    font-size: 1.2rem;
+    color: var(--blood-text-primary);
+}
+
+.blood-main-btn, .blood-close-btn {
+    background: var(--blood-bg-card);
+    border: 1px solid var(--blood-border-color);
+    color: var(--blood-text-primary);
+    width: 35px;
+    height: 35px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: var(--blood-transition);
+    font-size: 16px;
+}
+
+.blood-main-btn:hover, .blood-close-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(1.1);
+}
+
+.blood-nav-items {
+    padding: 20px 10px;
+}
+
+.blood-nav-item {
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 10px;
+    background: var(--blood-bg-card);
+    border: 1px solid var(--blood-border-color);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: var(--blood-transition);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.blood-nav-item:hover {
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateX(5px);
+}
+
+.blood-nav-item.active {
+    background: var(--blood-accent-bg);
+    border-color: var(--blood-accent-color);
+}
+
+.blood-nav-symbol {
+    font-size: 2rem;
+    font-weight: 700;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+}
+
+.blood-nav-info {
+    flex: 1;
+}
+
+.blood-nav-name {
+    display: block;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.blood-nav-trait {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--blood-text-secondary);
+}
+
+.blood-gender-section {
+    padding: 20px;
+    border-top: 1px solid var(--blood-border-color);
+}
+
+.blood-gender-section h4 {
+    margin-bottom: 15px;
+    font-size: 0.95rem;
+    color: var(--blood-text-secondary);
+}
+
+.blood-gender-toggle {
+    display: flex;
+    gap: 10px;
+}
+
+.blood-gender-btn {
+    flex: 1;
+    padding: 10px;
+    background: var(--blood-bg-card);
+    border: 1px solid var(--blood-border-color);
+    border-radius: 8px;
+    color: var(--blood-text-secondary);
+    cursor: pointer;
+    transition: var(--blood-transition);
+}
+
+.blood-gender-btn.active {
+    background: var(--blood-accent-color);
+    color: var(--blood-text-primary);
+    border-color: var(--blood-accent-color);
+}
+
+.blood-nav-footer {
+    padding: 20px;
+    border-top: 1px solid var(--blood-border-color);
+}
+
+.blood-history-btn {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+    border: none;
+    border-radius: 10px;
+    color: white;
+    cursor: pointer;
+    transition: var(--blood-transition);
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.blood-history-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(139, 92, 246, 0.3);
+}
+
+.blood-container {
+    margin-left: var(--blood-nav-width);
+    padding: 20px;
+    transition: var(--blood-transition);
+}
+
+.blood-nav-collapsed ~ .blood-container {
+    margin-left: 0;
+}
+
+.blood-header {
+    text-align: center;
+    padding: 40px 20px;
+    margin-bottom: 30px;
+}
+
+.blood-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    background: var(--blood-accent-bg);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 10px;
+    animation: bloodPulse 2s ease-in-out infinite;
+}
+
+@keyframes bloodPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+}
+
+.blood-subtitle {
+    color: var(--blood-text-secondary);
+    font-size: 1.1rem;
+}
+
+.blood-story-quote {
+    margin-top: 30px;
+    padding: 20px;
+    background: var(--blood-bg-card);
+    border-left: 4px solid var(--blood-accent-color);
+    border-radius: 8px;
+    animation: fadeIn 0.8s ease;
+}
+
+.blood-quote-text {
+    font-style: italic;
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+}
+
+.blood-quote-author {
+    display: block;
+    text-align: right;
+    color: var(--blood-accent-color);
+    font-size: 0.9rem;
+}
+
+.blood-content-area {
+    background: var(--blood-bg-card);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 30px;
+    border: 1px solid var(--blood-border-color);
+}
+
+.blood-tab-navigation {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.blood-tab-btn {
+    padding: 10px 20px;
+    background: transparent;
+    border: 1px solid var(--blood-border-color);
+    border-radius: 10px;
+    color: var(--blood-text-secondary);
+    cursor: pointer;
+    transition: var(--blood-transition);
+    font-size: 0.95rem;
+}
+
+.blood-tab-btn:hover {
+    background: rgba(255, 255, 255, 0.05);
+    transform: translateY(-2px);
+}
+
+.blood-tab-btn.active {
+    background: var(--blood-accent-bg);
+    color: var(--blood-text-primary);
+    border-color: var(--blood-accent-color);
+}
+
+.blood-tab-panel {
+    display: none;
+    animation: fadeIn 0.5s ease;
+}
+
+.blood-tab-panel.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.blood-story-container {
+    text-align: center;
+    padding: 20px;
+}
+
+.blood-story-title {
+    font-size: 2rem;
+    margin-bottom: 15px;
+}
+
+.blood-story-intro {
+    color: var(--blood-text-secondary);
+    margin-bottom: 40px;
+}
+
+.blood-type-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.blood-card {
+    position: relative;
+    background: var(--blood-bg-card);
+    border: 2px solid var(--blood-border-color);
+    border-radius: 15px;
+    padding: 30px;
+    cursor: pointer;
+    transition: var(--blood-transition);
+    overflow: hidden;
+}
+
+.blood-card-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0.1;
+    transition: var(--blood-transition);
+}
+
+.blood-card-a .blood-card-bg { background: linear-gradient(135deg, #3b82f6, #1e40af); }
+.blood-card-b .blood-card-bg { background: linear-gradient(135deg, #f59e0b, #d97706); }
+.blood-card-o .blood-card-bg { background: linear-gradient(135deg, #ef4444, #dc2626); }
+.blood-card-ab .blood-card-bg { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+
+.blood-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.blood-card:hover .blood-card-bg {
+    opacity: 0.2;
+}
+
+.blood-card-type {
+    display: block;
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 10px;
+}
+
+.blood-card-title {
+    display: block;
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: var(--blood-accent-color);
+}
+
+.blood-card-desc {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-bottom: 15px;
+    color: var(--blood-text-secondary);
+}
+
+.blood-card-meta {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--blood-text-secondary);
+    padding-top: 15px;
+    border-top: 1px solid var(--blood-border-color);
+}
+
+.blood-trait-card, .blood-category-card, .blood-daily-card {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 15px;
+    padding: 25px;
+}
+
+.blood-metaphor-badge {
+    display: inline-block;
+    padding: 5px 15px;
+    background: var(--blood-accent-bg);
+    border-radius: 20px;
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+}
+
+.blood-score-display {
+    display: flex;
+    justify-content: center;
+    margin: 30px 0;
+}
+
+.blood-score-circle {
+    position: relative;
+    width: 150px;
+    height: 150px;
+}
+
+.blood-score-circle svg {
+    width: 100%;
+    height: 100%;
+}
+
+.blood-score-number {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2.5rem;
+    font-weight: 700;
+}
+
+.blood-figure-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.blood-mini-figure {
+    background: var(--blood-bg-card);
+    border: 1px solid var(--blood-border-color);
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+}
+
+.blood-figure-name {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.blood-figure-trait {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--blood-accent-color);
+}
+
+.blood-modal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    animation: fadeIn 0.3s ease;
+}
+
+.blood-modal-content {
+    position: relative;
+    background: var(--blood-bg-secondary);
+    margin: 5% auto;
+    padding: 30px;
+    width: 80%;
+    max-width: 800px;
+    border-radius: 20px;
+    border: 1px solid var(--blood-border-color);
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from { transform: translateY(-50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.blood-modal-close {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    font-size: 28px;
+    cursor: pointer;
+    color: var(--blood-text-secondary);
+    transition: var(--blood-transition);
+}
+
+.blood-modal-close:hover {
+    color: var(--blood-accent-color);
+    transform: rotate(90deg);
+}
+
+.blood-figures-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.blood-figure-card {
+    background: var(--blood-bg-card);
+    border: 1px solid var(--blood-border-color);
+    border-radius: 12px;
+    padding: 20px;
+    transition: var(--blood-transition);
+}
+
+.blood-figure-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--blood-accent-color);
+}
+
+.blood-figure-era {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--blood-text-secondary);
+    margin-bottom: 5px;
+}
+
+.blood-figure-field {
+    display: inline-block;
+    padding: 3px 10px;
+    background: var(--blood-accent-bg);
+    border-radius: 15px;
+    font-size: 0.8rem;
+    margin-bottom: 10px;
+}
+
+.blood-figure-story {
+    font-style: italic;
+    font-size: 0.9rem;
+    color: var(--blood-text-secondary);
+    margin-top: 10px;
+}
+
+.blood-toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: var(--blood-accent-bg);
+    color: white;
+    padding: 15px 30px;
+    border-radius: 10px;
+    opacity: 0;
+    transition: var(--blood-transition);
+    z-index: 3000;
+}
+
+.blood-toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+.blood-footer {
+    text-align: center;
+    margin-top: 50px;
+    padding: 20px;
+    color: var(--blood-text-secondary);
+    font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+    .blood-nav {
+        width: 100%;
+        transform: translateX(-100%);
+    }
+    
+    .blood-nav-collapsed {
+        transform: translateX(0);
+    }
+    
+    .blood-container {
+        margin-left: 0;
+    }
+    
+    .blood-type-cards {
+        grid-template-columns: 1fr;
+    }
+    
+    .blood-title {
+        font-size: 1.8rem;
+    }
+}

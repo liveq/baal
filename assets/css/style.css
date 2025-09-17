@@ -1,0 +1,899 @@
+/* RHEIGHT - 팔괘 포털 최종 수정 버전 */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    min-height: 100vh;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 헤더 - 좌측 정렬, 크기 축소 */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 30px;
+    position: relative;
+    z-index: 10;
+}
+
+.header-left {
+    text-align: left;
+}
+
+.header-left h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #2c3e50;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 2px;
+    letter-spacing: 3px;
+    cursor: pointer;
+    display: inline-block;
+    transition: color 0.3s ease;
+}
+
+.header-left h1:hover {
+    color: #3498db;
+}
+
+.header-left .subtitle {
+    font-size: 0.85rem;
+    color: #7f8c8d;
+    font-weight: 300;
+    letter-spacing: 0.3px;
+    line-height: 1.3;
+}
+
+/* 메인 컨테이너 - 플렉스 레이아웃 */
+/* 기존 코드 주석 처리
+.main-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex: 1;
+    padding: 5px 20px;
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+}
+*/
+
+/* 개선된 메인 컨테이너 - 팔괘 중앙 정렬 */
+.main-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+    padding: 5px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+    position: relative;
+}
+
+/* 좌측 테스트 패널 - 크기 축소 */
+/* 기존 코드 주석 처리
+.test-panel {
+    width: 220px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    backdrop-filter: blur(10px);
+    margin-top: 10px;
+}
+*/
+
+/* 개선된 테스트 패널 - 세로 배치 */
+.test-panel {
+    position: absolute;
+    left: 20px;
+    top: 10px;
+    width: auto;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 12px;
+    padding: 10px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    backdrop-filter: blur(10px);
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* 테스트 버튼 스타일 - 가로 배치 */
+/* 기존 코드 주석 처리
+.test-btn {
+    width: 100%;
+    padding: 8px 10px;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, #ffffff, #f8f9fa);
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+    font-family: 'Arial', sans-serif;
+}
+*/
+
+/* 개선된 테스트 버튼 - 아이콘 크기 최적화 */
+.test-btn {
+    width: 40px;
+    height: 40px;
+    padding: 8px;
+    margin: 3px;
+    background: linear-gradient(135deg, #ffffff, #f8f9fa);
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Arial', sans-serif;
+    position: relative;
+}
+
+/* 테스트 버튼별 툴팁 텍스트 설정 */
+.test-btn[onclick*="openMBTI"]::before {
+    content: "MBTI";
+}
+.test-btn[onclick*="hormone"]::before {
+    content: "호르몬";
+}
+.test-btn[onclick*="astrology"]::before {
+    content: "별자리";
+}
+.test-btn[onclick*="blood-type"]::before {
+    content: "혈액형";
+}
+.test-btn[onclick*="tarot"]::before {
+    content: "타로";
+}
+.test-btn[onclick*="saju"]::before {
+    content: "사주";
+}
+.test-btn[onclick*="zodiac"]::before {
+    content: "띠별운세";
+}
+.test-btn[onclick*="fortune-cookie"]::before {
+    content: "포춘쿠키";
+}
+.test-btn[onclick*="enneagram"]::before {
+    content: "에니어그램";
+}
+.test-btn[onclick*="palmistry"]::before {
+    content: "손금보기";
+}
+
+/* 테스트 버튼 호버시 툴팁 표시 (팔괘와 동일한 스타일) */
+/* 기존 코드 주석 처리 - 위쪽 툴팁
+.test-btn::before {
+    position: absolute;
+    top: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(44, 62, 80, 0.9);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    z-index: 10;
+}
+*/
+
+/* 최적화된 패널 툴팁 - 위쪽 표시 (팔괘와 일관성) */
+.test-panel .test-btn::before {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-bottom: 8px;
+    background: rgba(44, 62, 80, 0.95);
+    color: white;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    opacity: 0;
+    transition: all 0.3s ease;
+    pointer-events: none;
+    z-index: 1000;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+/* 툴팁 화살표 추가 */
+.test-panel .test-btn::after {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-bottom: 2px;
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid rgba(44, 62, 80, 0.95);
+    opacity: 0;
+    transition: all 0.3s ease;
+    pointer-events: none;
+    z-index: 1000;
+}
+
+.test-btn:hover::before,
+.test-btn:hover::after {
+    opacity: 1;
+}
+
+.test-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    color: white;
+    border-color: #2980b9;
+}
+
+/* MBTI 버튼 (전체 너비) */
+/* 기존 코드 주석 처리
+.test-btn-full {
+    height: 60px;
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+    border-color: #c0392b;
+    color: white;
+    margin-bottom: 10px;
+    flex-direction: column;
+    justify-content: center;
+}
+*/
+
+/* 개선된 MBTI 버튼 - 아이콘 크기 최적화 */
+.test-btn-full {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+    border-color: #c0392b;
+    color: white;
+    margin: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.test-btn-full:hover {
+    background: linear-gradient(135deg, #c0392b, #a93226);
+    transform: scale(1.02);
+}
+
+/* 버튼 텍스트 스타일 - 아이콘만 표시하도록 숨김 */
+.btn-title {
+    display: none;
+}
+
+.btn-subtitle {
+    display: none;
+}
+
+/* 테스트 그리드 (4행 2열) */
+/* 기존 코드 주석 처리
+.test-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+*/
+
+/* 개선된 테스트 그리드 - 5행 2열 배치 */
+.test-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px;
+    margin-top: 8px;
+}
+
+/* 그리드 내 버튼 스타일 - 아이콘 크기 유지 */
+.test-grid .test-btn {
+    width: 40px;
+    height: 40px;
+    margin: 3px;
+}
+
+/* 아이콘 및 텍스트 스타일 */
+.btn-icon {
+    font-size: 1.3rem;
+    flex-shrink: 0;
+}
+
+.btn-text {
+    display: none; /* 텍스트 숨김 */
+}
+
+/* 팔괘 섹션 - 상단 배치 */
+.bagua-section {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 0px;
+    margin-top: -50px;
+}
+
+/* 팔괘 포털 컨테이너 - 크기 20% 증가 */
+.bagua-portal {
+    position: relative;
+    width: min(85vh, 696px);  /* 높이 조정 */
+    height: min(85vh, 696px); /* 높이 조정 */
+    margin: 0 auto;
+}
+
+/* 중앙 팔각형 배경 */
+.bagua-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 35%;
+    height: 35%;
+    z-index: 1;
+}
+
+.bagua-center::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, #ffffff 0%, #f8f9fa 100%);
+    clip-path: polygon(
+        29.29% 0%, 
+        70.71% 0%, 
+        100% 29.29%, 
+        100% 70.71%, 
+        70.71% 100%, 
+        29.29% 100%, 
+        0% 70.71%, 
+        0% 29.29%
+    );
+    box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.1);
+}
+
+.bagua-center::after {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: -3px;
+    width: calc(100% + 6px);
+    height: calc(100% + 6px);
+    background: #3498db;
+    clip-path: polygon(
+        29.29% 0%, 
+        70.71% 0%, 
+        100% 29.29%, 
+        100% 70.71%, 
+        70.71% 100%, 
+        29.29% 100%, 
+        0% 70.71%, 
+        0% 29.29%
+    );
+    z-index: -1;
+    filter: blur(0.5px) drop-shadow(0 0 20px rgba(52, 152, 219, 0.3));
+}
+
+/* 태극 컨테이너 */
+.taiji-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 22.5%;  /* 15% * 1.5 */
+    height: 22.5%; /* 15% * 1.5 */
+    min-width: 120px; /* 80px * 1.5 */
+    min-height: 120px; /* 80px * 1.5 */
+    z-index: 5;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+/* 태극 (중앙) - 크기 1.5배 증가 */
+.taiji {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: linear-gradient(90deg, #2c3e50 50%, #ecf0f1 50%);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    border: 2px solid #34495e;
+    will-change: transform;
+    backface-visibility: hidden;
+    transform-style: preserve-3d;
+    transform: rotate(90deg);
+}
+
+/* 컨테이너 호버시 태극만 회전 (확대 없음) */
+.taiji-container:hover .taiji {
+    box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
+    animation: taiji-spin 2s linear infinite;
+}
+
+.taiji::before {
+    content: '';
+    position: absolute;
+    top: 25%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 25%;
+    height: 25%;
+    border-radius: 50%;
+    background: #ecf0f1;
+    border: 1px solid #2c3e50;
+}
+
+.taiji::after {
+    content: '';
+    position: absolute;
+    bottom: 25%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 25%;
+    height: 25%;
+    border-radius: 50%;
+    background: #2c3e50;
+    border: 1px solid #ecf0f1;
+}
+
+/* 태극 버튼 영역 */
+.taiji-button {
+    position: absolute;
+    width: 100%;
+    height: 50%;
+    cursor: pointer;
+    z-index: 6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+/* 위쪽 반원 버튼 */
+.taiji-button-top {
+    top: 0;
+    left: 0;
+    /* clip-path 제거 - 텍스트 가독성 향상 */
+}
+
+/* 아래쪽 반원 버튼 */
+.taiji-button-bottom {
+    bottom: 0;
+    left: 0;
+    /* clip-path 제거 - 텍스트 가독성 향상 */
+}
+
+/* 버튼 호버 효과 - 확대만 적용 (회전은 계속) */
+.taiji-button:hover {
+    opacity: 0.9;
+    transform: scale(1.1);
+    z-index: 7;
+}
+
+/* 태극 레이블 - 회전에 영향받지 않도록 설정 */
+.taiji-label {
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: #000000; /* 검정색 폰트 */
+    text-shadow: 
+        -2px -2px 0 #ffffff,
+        2px -2px 0 #ffffff,
+        -2px 2px 0 #ffffff,
+        2px 2px 0 #ffffff,
+        -1px -1px 0 #ffffff,
+        1px -1px 0 #ffffff,
+        -1px 1px 0 #ffffff,
+        1px 1px 0 #ffffff; /* 흰색 테두리 */
+    pointer-events: none;
+}
+
+/* 위쪽 버튼의 텍스트 위치 - 더 위로 이동 */
+.taiji-button-top .taiji-label {
+    position: relative;
+    top: -10%;
+}
+
+/* 아래쪽 버튼의 텍스트 위치 - 더 아래로 이동 */
+.taiji-button-bottom .taiji-label {
+    position: relative;
+    top: 10%;
+}
+
+@keyframes taiji-spin {
+    from { 
+        transform: rotate(90deg);
+    }
+    to { 
+        transform: rotate(450deg);
+    }
+}
+
+/* 태극 회전 시 레이블은 영향 받지 않음 - 애니메이션 제거 */
+
+/* 팔괘 아이템들 - 기본 스타일 */
+.bagua-item {
+    position: absolute;
+    width: 15%;
+    height: 15%;
+    background: rgba(255, 255, 255, 0.95);
+    border: 2px solid #bdc3c7;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    padding: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    backdrop-filter: blur(5px);
+}
+
+/* 개선된 팔괘 툴팁 - 테스트 패널과 일치하는 스타일 */
+.bagua-item::before {
+    content: attr(data-trigram);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-bottom: 8px;
+    background: rgba(44, 62, 80, 0.95);
+    color: white;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    opacity: 0;
+    transition: all 0.3s ease;
+    pointer-events: none;
+    z-index: 1000;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+/* 팔괘 툴팁 화살표 */
+.bagua-item::after {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-bottom: 2px;
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid rgba(44, 62, 80, 0.95);
+    opacity: 0;
+    transition: all 0.3s ease;
+    pointer-events: none;
+    z-index: 1000;
+}
+
+.bagua-item:hover::before,
+.bagua-item:hover::after {
+    opacity: 1;
+}
+
+.bagua-item:hover {
+    transform: scale(1.1);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    z-index: 10;
+}
+
+/* 테스트 이름 - 크고 굵게 */
+.bagua-test {
+    font-size: 1.1rem;
+    color: #2c3e50;
+    font-weight: 700;
+    line-height: 1.2;
+    text-shadow: 
+        1px 1px 2px rgba(255,255,255,0.8), 
+        -1px -1px 2px rgba(255,255,255,0.8),
+        1px -1px 2px rgba(255,255,255,0.8),
+        -1px 1px 2px rgba(255,255,255,0.8);
+}
+
+/* 개별 아이템 위치 (비율 기반) */
+.bagua-item-1 {
+    top: 7%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-color: #e74c3c;
+}
+
+.bagua-item-1:hover {
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+    color: white;
+    border-color: #c0392b;
+    transform: translateX(-50%) scale(1.1);
+}
+
+.bagua-item-2 {
+    top: 14%;
+    right: 14%;
+    border-color: #f39c12;
+}
+
+.bagua-item-2:hover {
+    background: linear-gradient(135deg, #f39c12, #d68910);
+    color: white;
+    border-color: #d68910;
+}
+
+.bagua-item-3 {
+    top: 50%;
+    right: 7%;
+    transform: translateY(-50%);
+    border-color: #e67e22;
+}
+
+.bagua-item-3:hover {
+    background: linear-gradient(135deg, #e67e22, #d35400);
+    color: white;
+    border-color: #d35400;
+    transform: translateY(-50%) scale(1.1);
+}
+
+.bagua-item-4 {
+    bottom: 14%;
+    right: 14%;
+    border-color: #27ae60;
+}
+
+.bagua-item-4:hover {
+    background: linear-gradient(135deg, #27ae60, #229954);
+    color: white;
+    border-color: #229954;
+}
+
+.bagua-item-5 {
+    bottom: 7%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-color: #16a085;
+}
+
+.bagua-item-5:hover {
+    background: linear-gradient(135deg, #16a085, #138d75);
+    color: white;
+    border-color: #138d75;
+    transform: translateX(-50%) scale(1.1);
+}
+
+.bagua-item-6 {
+    bottom: 14%;
+    left: 14%;
+    border-color: #3498db;
+}
+
+.bagua-item-6:hover {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    color: white;
+    border-color: #2980b9;
+}
+
+.bagua-item-7 {
+    top: 50%;
+    left: 7%;
+    transform: translateY(-50%);
+    border-color: #9b59b6;
+}
+
+.bagua-item-7:hover {
+    background: linear-gradient(135deg, #9b59b6, #8e44ad);
+    color: white;
+    border-color: #8e44ad;
+    transform: translateY(-50%) scale(1.1);
+}
+
+.bagua-item-8 {
+    top: 14%;
+    left: 14%;
+    border-color: #34495e;
+}
+
+.bagua-item-8:hover {
+    background: linear-gradient(135deg, #34495e, #2c3e50);
+    color: white;
+    border-color: #2c3e50;
+}
+
+/* 호버시 텍스트 색상 유지 */
+.bagua-item:hover .bagua-test {
+    color: white;
+}
+
+/* 푸터 */
+.footer {
+    text-align: center;
+    padding: 10px 0;
+    color: #7f8c8d;
+    font-size: 0.85rem;
+    margin-top: auto;
+}
+
+.footer p {
+    margin-bottom: 0;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 1200px) {
+    .main-container {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .bagua-section {
+        width: 100%;
+        min-height: 60vh;
+    }
+    
+    .test-panel {
+        position: relative;
+        left: auto;
+        top: auto;
+        width: 100%;
+        max-width: 500px;
+        margin-bottom: 20px;
+        order: -1;
+        flex-direction: row;
+        justify-content: center;
+    }
+    
+    .test-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+    }
+    
+    /* 큰 화면에서는 툴팁을 아래쪽으로 변경 */
+    .test-panel .test-btn::before {
+        bottom: auto;
+        top: 100%;
+        margin-bottom: 0;
+        margin-top: 8px;
+    }
+    
+    .test-panel .test-btn::after {
+        bottom: auto;
+        top: 100%;
+        margin-bottom: 0;
+        margin-top: 2px;
+        border-top: none;
+        border-bottom: 5px solid rgba(44, 62, 80, 0.95);
+    }
+}
+
+@media (max-width: 768px) {
+    .header {
+        padding: 10px 20px;
+    }
+    
+    .header-left h1 {
+        font-size: 1.8rem;
+        letter-spacing: 2px;
+    }
+    
+    .header-left .subtitle {
+        font-size: 0.8rem;
+    }
+    
+    .bagua-portal {
+        width: min(84vh, 540px);  /* 70vh * 1.2, 450px * 1.2 */
+        height: min(84vh, 540px); /* 70vh * 1.2, 450px * 1.2 */
+    }
+    
+    .bagua-item {
+        width: 18%;
+        height: 18%;
+    }
+    
+    .bagua-test {
+        font-size: 0.95rem;
+    }
+    
+    .taiji {
+        width: 27%; /* 18% * 1.5 */
+        height: 27%; /* 18% * 1.5 */
+        min-width: 105px; /* 70px * 1.5 */
+        min-height: 105px; /* 70px * 1.5 */
+    }
+    
+    .taiji-label {
+        font-size: 1rem;
+    }
+    
+    .test-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .header-left h1 {
+        font-size: 1.5rem;
+        letter-spacing: 1px;
+    }
+    
+    .header-left .subtitle {
+        font-size: 0.75rem;
+    }
+    
+    .bagua-portal {
+        width: min(72vh, 384px);  /* 60vh * 1.2, 320px * 1.2 */
+        height: min(72vh, 384px); /* 60vh * 1.2, 320px * 1.2 */
+    }
+    
+    .bagua-item {
+        width: 20%;
+        height: 20%;
+        padding: 5px;
+    }
+    
+    .bagua-test {
+        font-size: 0.8rem;
+    }
+    
+    .taiji {
+        width: 30%; /* 20% * 1.5 */
+        height: 30%; /* 20% * 1.5 */
+        min-width: 90px; /* 60px * 1.5 */
+        min-height: 90px; /* 60px * 1.5 */
+    }
+    
+    .taiji-label {
+        font-size: 0.9rem;
+    }
+    
+    .test-panel {
+        padding: 20px 15px;
+    }
+    
+    .test-btn-full {
+        height: 60px;
+    }
+    
+    .btn-title {
+        font-size: 1.1rem;
+    }
+    
+    .test-grid .test-btn {
+        height: 55px;
+    }
+    
+    .btn-icon {
+        font-size: 1.2rem;
+    }
+    
+    .btn-text {
+        font-size: 0.75rem;
+    }
+}

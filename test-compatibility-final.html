@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>별자리 궁합 테스트 - 최종 검증</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 20px;
+            background-color: #1a1a2e;
+            color: #fff;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #16213e;
+            border-radius: 10px;
+        }
+        .test-result {
+            background-color: #0f3460;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid #e94560;
+        }
+        .success { border-left-color: #4CAF50; }
+        .warning { border-left-color: #FF9800; }
+        .error { border-left-color: #f44336; }
+        .zodiac-names {
+            font-weight: bold;
+            color: #e94560;
+        }
+        .message-text {
+            background-color: #0a1e2e;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            font-style: italic;
+        }
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+        }
+        .stat {
+            background-color: #0a1e2e;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #e94560;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #d73c56;
+        }
+        .log {
+            background-color: #000;
+            color: #0f0;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌟 별자리 궁합 테스트 - 최종 검증</h1>
+
+        <div>
+            <h2>🔍 테스트 항목</h2>
+            <button onclick="testCompatibilityDataAccess()">1. compatibility-data.json 접근 테스트</button>
+            <button onclick="testSpecificCombinations()">2. 특정 조합 테스트</button>
+            <button onclick="testTextLengths()">3. 텍스트 길이 검증</button>
+            <button onclick="testAllCombinations()">4. 전체 조합 테스트</button>
+            <button onclick="clearResults()">결과 초기화</button>
+        </div>
+
+        <div id="results"></div>
+        <div id="console-log" class="log"></div>
+    </div>
+
+    <!-- zodiac-api-real.js 로드 -->
+    <script src="zodiac-system/api/zodiac-api-real.js"></script>
+
+    <script>
+        // 콘솔 로그 캡처
+        const originalLog = console.log;
+        const originalError = console.error;
+        const logDiv = document.getElementById('console-log');
+
+        function captureLog(message, type = 'log') {
+            const timestamp = new Date().toLocaleTimeString();
+            const color = type === 'error' ? '#f44336' : '#4CAF50';
+            logDiv.innerHTML += `<div style="color: ${color}">[${timestamp}] ${message}</div>`;
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            captureLog(args.join(' '));
+        };
+
+        console.error = function(...args) {
+            originalError.apply(console, args);
+            captureLog(args.join(' '), 'error');
+        };
+
+        const resultsDiv = document.getElementById('results');
+
+        function addResult(title, content, type = 'success') {
+            const div = document.createElement('div');
+            div.className = `test-result ${type}`;
+            div.innerHTML = `<h3>${title}</h3>${content}`;
+            resultsDiv.appendChild(div);
+        }
+
+        function clearResults() {
+            resultsDiv.innerHTML = '';
+            logDiv.innerHTML = '';
+        }
+
+        // 별자리 이름 매핑
+        const zodiacNames = {
+            1: '양자리', 2: '황소자리', 3: '쌍둥이자리', 4: '게자리',
+            5: '사자자리', 6: '처녀자리', 7: '천칭자리', 8: '전갈자리',
+            9: '사수자리', 10: '염소자리', 11: '물병자리', 12: '물고기자리'
+        };
+
+        // 1. compatibility-data.json 접근 테스트
+        async function testCompatibilityDataAccess() {
+            console.log('🔍 compatibility-data.json 접근 테스트 시작...');
+
+            try {
+                const response = await fetch('zodiac-system/api/compatibility-data.json');
+                const status = response.ok ? 'success' : 'error';
+
+                if (response.ok) {
+                    const data = await response.json();
+                    const keys = Object.keys(data);
+
+                    addResult('✅ JSON 파일 접근', `
+                        <p><strong>상태:</strong> ${response.status} (${response.statusText})</p>
+                        <p><strong>데이터 개수:</strong> ${keys.length}개</p>
+                        <p><strong>첫 번째 키:</strong> ${keys[0]}</p>
+                        <p><strong>샘플 데이터:</strong></p>
+                        <div class="message-text">${JSON.stringify(data[keys[0]], null, 2).substring(0, 200)}...</div>
+                    `, status);
+                } else {
+                    addResult('❌ JSON 파일 접근 실패', `상태: ${response.status}`, 'error');
+                }
+            } catch (error) {
+                console.error('JSON 접근 오류:', error);
+                addResult('❌ JSON 파일 접근 오류', error.message, 'error');
+            }
+        }
+
+        // 2. 특정 조합 테스트
+        async function testSpecificCombinations() {
+            console.log('🎯 특정 조합 테스트 시작...');
+
+            const testCases = [
+                {name: '양자리 - 게자리', z1: 1, z2: 4, expected: '문제 조합'},
+                {name: '사자자리 - 사자자리', z1: 5, z2: 5, expected: '동일 별자리'},
+                {name: '양자리 - 황소자리', z1: 1, z2: 2, expected: '일반 조합'},
+                {name: '물고기자리 - 양자리', z1: 12, z2: 1, expected: '역순 조합'}
+            ];
+
+            for (const testCase of testCases) {
+                try {
+                    console.log(`테스트: ${testCase.name} (${testCase.z1}-${testCase.z2})`);
+
+                    const result = await zodiacAPI.getCompatibility(testCase.z1, testCase.z2);
+                    const messageLength = result.description ? result.description.length : 0;
+
+                    const status = (messageLength >= 150 && messageLength <= 500) ? 'success' : 'warning';
+
+                    addResult(`${testCase.name}`, `
+                        <div class="zodiac-names">${zodiacNames[testCase.z1]} × ${zodiacNames[testCase.z2]}</div>
+                        <div class="stats">
+                            <span class="stat">전체: ${result.totalScore || result.score}점</span>
+                            <span class="stat">길이: ${messageLength}자</span>
+                            <span class="stat">소스: ${result.source}</span>
+                        </div>
+                        <div class="message-text">${result.description || '메시지 없음'}</div>
+                    `, status);
+
+                } catch (error) {
+                    console.error(`${testCase.name} 테스트 오류:`, error);
+                    addResult(`❌ ${testCase.name} 실패`, error.message, 'error');
+                }
+            }
+        }
+
+        // 3. 텍스트 길이 검증
+        async function testTextLengths() {
+            console.log('📏 텍스트 길이 검증 시작...');
+
+            const testPairs = [
+                [1, 4], [5, 5], [1, 8], [3, 7], [2, 11]
+            ];
+
+            const lengths = [];
+            let tooShort = 0;
+            let tooLong = 0;
+            let appropriate = 0;
+
+            for (const [z1, z2] of testPairs) {
+                try {
+                    const result = await zodiacAPI.getCompatibility(z1, z2);
+                    const length = result.description ? result.description.length : 0;
+                    lengths.push(length);
+
+                    if (length < 150) tooShort++;
+                    else if (length > 500) tooLong++;
+                    else appropriate++;
+
+                } catch (error) {
+                    console.error(`길이 테스트 오류 (${z1}-${z2}):`, error);
+                }
+            }
+
+            const avgLength = lengths.length > 0 ? Math.round(lengths.reduce((a,b) => a+b, 0) / lengths.length) : 0;
+            const minLength = lengths.length > 0 ? Math.min(...lengths) : 0;
+            const maxLength = lengths.length > 0 ? Math.max(...lengths) : 0;
+
+            const status = (tooShort === 0 && tooLong === 0) ? 'success' : 'warning';
+
+            addResult('📏 텍스트 길이 분석', `
+                <div class="stats">
+                    <span class="stat">적절: ${appropriate}개</span>
+                    <span class="stat">너무 짧음: ${tooShort}개</span>
+                    <span class="stat">너무 긺: ${tooLong}개</span>
+                </div>
+                <div class="stats">
+                    <span class="stat">최소: ${minLength}자</span>
+                    <span class="stat">평균: ${avgLength}자</span>
+                    <span class="stat">최대: ${maxLength}자</span>
+                </div>
+                <p><strong>목표 범위:</strong> 150-500자</p>
+            `, status);
+        }
+
+        // 4. 전체 조합 테스트 (샘플링)
+        async function testAllCombinations() {
+            console.log('🔍 전체 조합 샘플 테스트 시작...');
+
+            const sampleCombinations = [
+                [1,1], [1,6], [2,8], [3,9], [4,10],
+                [5,11], [6,12], [7,2], [8,3], [9,4],
+                [10,5], [11,6], [12,7]
+            ];
+
+            let successCount = 0;
+            let errorCount = 0;
+            const errors = [];
+
+            for (const [z1, z2] of sampleCombinations) {
+                try {
+                    const result = await zodiacAPI.getCompatibility(z1, z2);
+
+                    if (result.description && result.description.length > 0) {
+                        successCount++;
+                    } else {
+                        errorCount++;
+                        errors.push(`${z1}-${z2}: 메시지 없음`);
+                    }
+
+                } catch (error) {
+                    errorCount++;
+                    errors.push(`${z1}-${z2}: ${error.message}`);
+                }
+            }
+
+            const status = errorCount === 0 ? 'success' : 'warning';
+
+            addResult('🔍 전체 조합 샘플 테스트', `
+                <div class="stats">
+                    <span class="stat">성공: ${successCount}개</span>
+                    <span class="stat">실패: ${errorCount}개</span>
+                    <span class="stat">테스트: ${sampleCombinations.length}개</span>
+                </div>
+                ${errors.length > 0 ? `<div class="message-text">오류: ${errors.join(', ')}</div>` : ''}
+            `, status);
+        }
+
+        // 초기 메시지
+        addResult('🌟 별자리 궁합 시스템 검증', `
+            <p>zodiac-api-real.js가 로드되었습니다.</p>
+            <p>위의 버튼들을 클릭하여 각 기능을 테스트하세요.</p>
+            <p><strong>목표:</strong> compatibility-data.json의 compat_message 필드 사용</p>
+            <p><strong>텍스트 길이:</strong> 150-500자 범위</p>
+        `);
+
+    </script>
+</body>
+</html>

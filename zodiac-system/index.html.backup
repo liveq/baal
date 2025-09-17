@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RHEIGHT - 리다이렉트 중...</title>
+    <meta http-equiv="refresh" content="0; url=web/zodiac.html">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .container {
+            text-align: center;
+        }
+        a {
+            color: white;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌟 RHEIGHT 별자리 운세</h1>
+        <p>잠시만 기다려주세요...</p>
+        <p>자동으로 이동되지 않으면 <a href="web/zodiac.html">여기를 클릭</a>하세요.</p>
+    </div>
+    <script>
+        // JavaScript 리다이렉트 백업
+        window.location.href = 'web/zodiac.html';
+    </script>
+</body>
+</html>
