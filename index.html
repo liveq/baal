@@ -23,6 +23,7 @@
             background: #fff; padding: 24px; border-radius: 12px; text-align: left;
             box-shadow: 0 10px 40px rgba(0,0,0,0.06); cursor: pointer;
             transition: all 0.3s; position: relative; overflow: hidden;
+            word-break: keep-all; word-wrap: break-word;
         }
         .service-card::before {
             content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
@@ -31,13 +32,23 @@
         }
         .service-card:hover { transform: translateY(-5px); }
         .service-card:hover::before { transform: scaleX(1); }
-        .service-title { font-size: 1.5em; font-weight: 600; margin-bottom: 8px; }
-        .service-subtitle { color: #6c757d; margin-bottom: 16px; }
-        .service-description { color: #4a4a4a; line-height: 1.6; margin-bottom: 16px; }
+        .service-title {
+            font-size: 1.5em; font-weight: 600; margin-bottom: 8px;
+            word-break: keep-all;
+        }
+        .service-subtitle {
+            color: #6c757d; margin-bottom: 16px;
+            word-break: keep-all;
+        }
+        .service-description {
+            color: #4a4a4a; line-height: 1.6; margin-bottom: 16px;
+            word-break: keep-all; word-wrap: break-word;
+        }
         .service-features { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
         .feature-tag {
             padding: 4px 12px; background: #f8f9fa; border-radius: 20px;
             font-size: 0.75em; color: #495057; border: 1px solid #e9ecef;
+            word-break: keep-all; white-space: nowrap;
         }
         .service-button {
             padding: 10px 20px; background: linear-gradient(-45deg, #d4af37, #DAA520);
@@ -63,6 +74,7 @@
             background: rgba(255,255,255,0.95); padding: 50px 40px;
             border-radius: 20px; max-width: 500px; width: 90%;
             position: relative; text-align: center;
+            word-break: keep-all;
         }
         .modal-close {
             position: absolute; top: 20px; right: 25px; font-size: 32px;
@@ -73,6 +85,7 @@
             background: linear-gradient(-45deg, #d4af37, #ffd700, #b8860b);
             background-size: 300% 300%; animation: flow 4s ease-in-out infinite;
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            word-break: keep-all;
         }
         .modal-subtitle { 
             color: rgba(255,255,255,0); 
@@ -80,6 +93,7 @@
             user-select: text;
             -webkit-user-select: text;
             -moz-user-select: text;
+            word-break: keep-all;
         }
         .modal-subtitle::selection {
             background: #333;
@@ -99,6 +113,18 @@
         }
         .contact-info { font-weight: 500; margin-bottom: 12px; }
         .contact-email { font-size: 0.85em; color: #6c757d; }
+        
+        /* 모바일 최적화 */
+        @media (max-width: 768px) {
+            body { padding: 15px; }
+            .container { padding: 30px 20px; }
+            .service-card { padding: 20px; }
+            .service-title { font-size: 1.3em; }
+            .modal-content { padding: 40px 25px; }
+            .modal-title { font-size: 1.5em; }
+            .floating-button { bottom: 20px; right: 20px; width: 50px; height: 50px; font-size: 1.5em; }
+        }
+
         @keyframes flow {
             0%, 100% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
