@@ -1,152 +1,156 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+    <title>BAAL - 가치 있는 자만이 가치를 얻는다</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BAAL</title>
-    <meta name="description" content="바알 - 끝이 시작되는 곳">
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="canonical" href="https://baal.co.kr">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&family=Inter:wght@400;600&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 50%, #f1f3f4 100%);
+            font-family: 'Inter', sans-serif; min-height: 100vh;
+            display: flex; align-items: center; justify-content: center; padding: 20px;
+        }
+        .container {
+            max-width: 600px; width: 100%; background: rgba(255,255,255,0.8);
+            backdrop-filter: blur(20px); border-radius: 20px; padding: 50px 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.06); text-align: center;
+        }
+        
+        .service-card {
+            background: #fff; padding: 24px; border-radius: 12px; text-align: left;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.06); cursor: pointer;
+            transition: all 0.3s; position: relative; overflow: hidden;
+        }
+        .service-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+            background: linear-gradient(to right, #d4af37, #DAA520);
+            transform: scaleX(0); transition: transform 0.3s;
+        }
+        .service-card:hover { transform: translateY(-5px); }
+        .service-card:hover::before { transform: scaleX(1); }
+        .service-title { font-size: 1.5em; font-weight: 600; margin-bottom: 8px; }
+        .service-subtitle { color: #6c757d; margin-bottom: 16px; }
+        .service-description { color: #4a4a4a; line-height: 1.6; margin-bottom: 16px; }
+        .service-features { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+        .feature-tag {
+            padding: 4px 12px; background: #f8f9fa; border-radius: 20px;
+            font-size: 0.75em; color: #495057; border: 1px solid #e9ecef;
+        }
+        .service-button {
+            padding: 10px 20px; background: linear-gradient(-45deg, #d4af37, #DAA520);
+            color: #fff; border: none; border-radius: 20px; cursor: pointer;
+            font-weight: 600; transition: all 0.3s;
+        }
+        .floating-button {
+            position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px;
+            background: linear-gradient(-45deg, #d4af37, #ffd700, #b8860b);
+            background-size: 300% 300%; animation: flow 4s ease-in-out infinite;
+            border: none; border-radius: 50%; font-size: 2em; color: #fff;
+            cursor: pointer; box-shadow: 0 10px 30px rgba(212,175,55,0.4);
+            transition: all 0.3s; z-index: 1000;
+        }
+        .floating-button:hover { transform: scale(1.1) rotate(90deg); }
+        .modal {
+            display: none; position: fixed; z-index: 2000; left: 0; top: 0;
+            width: 100%; height: 100%; background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(10px);
+        }
+        .modal.show { display: flex; justify-content: center; align-items: center; }
+        .modal-content {
+            background: rgba(255,255,255,0.95); padding: 50px 40px;
+            border-radius: 20px; max-width: 500px; width: 90%;
+            position: relative; text-align: center;
+        }
+        .modal-close {
+            position: absolute; top: 20px; right: 25px; font-size: 32px;
+            color: #9ca3af; background: none; border: none; cursor: pointer;
+        }
+        .modal-title {
+            font-family: 'Playfair Display', serif; font-size: 2em; margin-bottom: 25px;
+            background: linear-gradient(-45deg, #d4af37, #ffd700, #b8860b);
+            background-size: 300% 300%; animation: flow 4s ease-in-out infinite;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .modal-subtitle { 
+            color: rgba(255,255,255,0); 
+            margin-bottom: 35px; 
+            user-select: text;
+            -webkit-user-select: text;
+            -moz-user-select: text;
+        }
+        .modal-subtitle::selection {
+            background: #333;
+            color: #fff;
+        }
+        .modal-subtitle::-moz-selection {
+            background: #333;
+            color: #fff;
+        }
+        .section-title {
+            color: #4a4a4a; margin-bottom: 20px; letter-spacing: 0.25em;
+            animation: flash 10s infinite;
+        }
+        .qr-container {
+            background: #fff; padding: 25px; border-radius: 16px;
+            margin: 20px 0 35px; border: 1px solid #e9ecef;
+        }
+        .contact-info { font-weight: 500; margin-bottom: 12px; }
+        .contact-email { font-size: 0.85em; color: #6c757d; }
+        @keyframes flow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        @keyframes flash {
+            0%, 90% { color: #4a4a4a; }
+            91%, 100% { color: #8b4444; font-weight: 600; }
+        }
+    </style>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2886185075996969"
+     crossorigin="anonymous"></script>
 </head>
 <body>
-    <!-- 헤더 -->
-    <header class="header">
-        <div class="header-left">
-            <h1 onclick="showBrandInfo()">BAAL</h1>
-            <p class="subtitle">끝이 시작되는 곳</p>
-        </div>
-        <div class="header-right">
-            <!-- 향후 추가 메뉴 공간 -->
-        </div>
-    </header>
-
-    <!-- 메인 컨테이너 -->
-    <main class="main-container">
-        <!-- 좌측 테스트 패널 -->
-        <div class="test-panel">
-            <!-- 테스트 버튼 그리드 (5행 2열) -->
-            <div class="test-grid">
-                <!-- 1행: MBTI와 호르몬 -->
-                <button class="test-btn" onclick="openMBTI()">
-                    <span class="btn-icon">✨</span>
-                </button>
-                <button class="test-btn" onclick="openTest('hormone')">
-                    <span class="btn-icon">💊</span>
-                </button>
-                <!-- 2행: 별자리와 혈액형 -->
-                <button class="test-btn" onclick="openTest('astrology')">
-                    <span class="btn-icon">♈</span>
-                </button>
-                <button class="test-btn" onclick="window.open('./blood-type-system/web/blood-type-sidebar.html', '_blank')">
-                    <span class="btn-icon">🩸</span>
-                </button>
-                <!-- 3행: 타로와 사주 -->
-                <button class="test-btn" onclick="openTest('tarot')">
-                    <span class="btn-icon">🃏</span>
-                </button>
-                <button class="test-btn" onclick="openTest('saju')">
-                    <span class="btn-icon">☯</span>
-                </button>
-                <!-- 4행: 띠별운세와 포튼쿠키 -->
-                <button class="test-btn" onclick="openTest('zodiac')">
-                    <span class="btn-icon">🐉</span>
-                </button>
-                <button class="test-btn" onclick="openTest('fortune-cookie')">
-                    <span class="btn-icon">🥠</span>
-                </button>
-                <!-- 5행: 에니어그램과 손금보기 -->
-                <button class="test-btn" onclick="openTest('enneagram')">
-                    <span class="btn-icon">⬢</span>
-                </button>
-                <button class="test-btn" onclick="openTest('palmistry')">
-                    <span class="btn-icon">✋</span>
-                </button>
+    <div class="container">
+        
+        <div class="service-card" onclick="window.open('https://plan.baal.co.kr', '_blank')">
+            <h3 class="service-title">📐 도면 배치</h3>
+            <p class="service-subtitle">평면도 그리기 & 가구 배치 플래너</p>
+            <p class="service-description">무료 온라인 도면 배치 도구. 아파트, 매장, 사무실 등 모든 공간의 평면도를 자유롭게 그리고 가구를 배치할 수 있습니다.</p>
+            <div class="service-features">
+                <span class="feature-tag">🪑 가구 배치</span>
+                <span class="feature-tag">✏️ 평면도 그리기</span>
+                <span class="feature-tag">📏 거리 측정</span>
+                <span class="feature-tag">🎨 색상 변경</span>
+                <span class="feature-tag">💾 저장/불러오기</span>
+                <span class="feature-tag">📱 모바일 지원</span>
+                <span class="feature-tag">💰 100% 무료</span>
             </div>
+            <button class="service-button" onclick="event.stopPropagation(); window.open('https://plan.baal.co.kr', '_blank')">무료로 사용하기 →</button>
         </div>
+    </div>
 
-        <!-- 팔괘 포털 영역 -->
-        <div class="bagua-section">
-            <div class="bagua-portal">
-                <!-- 중앙 팔각형 배경 - SVG 방식 -->
-                <div class="bagua-center">
-                    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                        <defs>
-                            <linearGradient id="octagonGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
-                                <stop offset="100%" style="stop-color:#f8f9fa;stop-opacity:1" />
-                            </linearGradient>
-                        </defs>
-                        <polygon 
-                            points="30,0 70,0 100,30 100,70 70,100 30,100 0,70 0,30" 
-                            fill="url(#octagonGradient)" 
-                            stroke="#3498db" 
-                            stroke-width="1"
-                            style="filter: drop-shadow(0 0 5px rgba(255,255,255,0.5)) drop-shadow(inset 0 0 10px rgba(255,255,255,0.2));"
-                        />
-                    </svg>
-                </div>
-                
-                <!-- 중앙 태극 (MBTI) 복구 -->
-                <div class="taiji-container">
-                    <div class="taiji"></div>
-                    <!-- 위쪽 반원 버튼 (호르몬) -->
-                    <div class="taiji-button taiji-button-top" onclick="openTest('hormone')">
-                        <span class="taiji-label">호르몬</span>
-                    </div>
-                    <!-- 아래쪽 반원 버튼 (MBTI) -->
-                    <div class="taiji-button taiji-button-bottom" onclick="openMBTI()">
-                        <span class="taiji-label">MBTI</span>
-                    </div>
-                </div>
+    <button class="floating-button" onclick="openModal()">+</button>
 
-                <!-- 팔괘 아이템들 (외부 배치) -->
-                <!-- 건괘 - 12시 방향 -->
-                <div class="bagua-item bagua-item-1" onclick="openTest('astrology')" data-trigram="건괘 ☰">
-                    <div class="bagua-test">별자리</div>
-                </div>
-
-                <!-- 태괘 - 1시 30분 방향 -->
-                <div class="bagua-item bagua-item-2" onclick="window.open('./blood-type-system/web/blood-type-sidebar.html', '_blank')" data-trigram="태괘 ☱">
-                    <div class="bagua-test">혈액형</div>
-                </div>
-
-                <!-- 이괘 - 3시 방향 -->
-                <div class="bagua-item bagua-item-3" onclick="openTest('tarot')" data-trigram="이괘 ☲">
-                    <div class="bagua-test">타로</div>
-                </div>
-
-                <!-- 진괘 - 4시 30분 방향 -->
-                <div class="bagua-item bagua-item-4" onclick="openTest('saju')" data-trigram="진괘 ☳">
-                    <div class="bagua-test">사주</div>
-                </div>
-
-                <!-- 손괘 - 6시 방향 -->
-                <div class="bagua-item bagua-item-5" onclick="openTest('zodiac')" data-trigram="손괘 ☴">
-                    <div class="bagua-test">띠별<br>운세</div>
-                </div>
-
-                <!-- 감괘 - 7시 30분 방향 -->
-                <div class="bagua-item bagua-item-6" onclick="openTest('fortune-cookie')" data-trigram="감괘 ☵">
-                    <div class="bagua-test">포춘<br>쿠키</div>
-                </div>
-
-                <!-- 간괘 - 9시 방향 -->
-                <div class="bagua-item bagua-item-7" onclick="openTest('enneagram')" data-trigram="간괘 ☶">
-                    <div class="bagua-test">에니어<br>그램</div>
-                </div>
-
-                <!-- 곤괘 - 10시 30분 방향 -->
-                <div class="bagua-item bagua-item-8" onclick="openTest('palmistry')" data-trigram="곤괘 ☷">
-                    <div class="bagua-test">손금<br>보기</div>
-                </div>
+    <div id="baalModal" class="modal" onclick="if(event.target.id==='baalModal') closeModal()">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <h1 class="modal-title">가치 있는 자만이<br>가치를 얻는다</h1>
+            <div class="modal-subtitle">어디까지가 네 한계인지 스스로 결정하라</div>
+            <div class="section-title">Tribute to BAAL</div>
+            <div class="qr-container">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=bitcoin:12xHw6nKomS6cruzBoKFkoEF78NJfWKRgn&bgcolor=ffffff&color=333333" alt="BAAL Bitcoin QR" />
             </div>
+            <div class="contact-info">Development Support</div>
+            <div class="contact-email">baal.contract@gmail.com</div>
         </div>
-    </main>
+    </div>
 
-    <!-- 푸터 -->
-    <footer class="footer">
-        <p>&copy; 2025 BAAL. 팔괘의 지혜로 마음을 읽다.</p>
-    </footer>
-
-    <script src="assets/js/main.js"></script>
+    <script>
+        function openModal() { document.getElementById('baalModal').classList.add('show'); }
+        function closeModal() { document.getElementById('baalModal').classList.remove('show'); }
+        document.addEventListener('keydown', e => { if(e.key === 'Escape') closeModal(); });
+    </script>
 </body>
 </html>
