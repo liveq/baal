@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BAAL</title>
+    <meta name="description" content="바알 - 끝이 시작되는 곳">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <!-- 헤더 -->
+    <header class="header">
+        <div class="header-left">
+            <h1 onclick="showBrandInfo()">BAAL</h1>
+            <p class="subtitle">끝이 시작되는 곳</p>
+        </div>
+        <div class="header-right">
+            <!-- 향후 추가 메뉴 공간 -->
+        </div>
+    </header>
+
+    <!-- 메인 컨테이너 -->
+    <main class="main-container">
+        <!-- 좌측 테스트 패널 -->
+        <div class="test-panel">
+            <!-- 테스트 버튼 그리드 (5행 2열) -->
+            <div class="test-grid">
+                <!-- 1행: MBTI와 호르몬 -->
+                <button class="test-btn" onclick="openMBTI()">
+                    <span class="btn-icon">✨</span>
+                </button>
+                <button class="test-btn" onclick="openTest('hormone')">
+                    <span class="btn-icon">💊</span>
+                </button>
+                <!-- 2행: 별자리와 혈액형 -->
+                <button class="test-btn" onclick="openTest('astrology')">
+                    <span class="btn-icon">♈</span>
+                </button>
+                <button class="test-btn" onclick="window.open('./blood-type-system/web/blood-type-sidebar.html', '_blank')">
+                    <span class="btn-icon">🩸</span>
+                </button>
+                <!-- 3행: 타로와 사주 -->
+                <button class="test-btn" onclick="openTest('tarot')">
+                    <span class="btn-icon">🃏</span>
+                </button>
+                <button class="test-btn" onclick="openTest('saju')">
+                    <span class="btn-icon">☯</span>
+                </button>
+                <!-- 4행: 띠별운세와 포튼쿠키 -->
+                <button class="test-btn" onclick="openTest('zodiac')">
+                    <span class="btn-icon">🐉</span>
+                </button>
+                <button class="test-btn" onclick="openTest('fortune-cookie')">
+                    <span class="btn-icon">🥠</span>
+                </button>
+                <!-- 5행: 에니어그램과 손금보기 -->
+                <button class="test-btn" onclick="openTest('enneagram')">
+                    <span class="btn-icon">⬢</span>
+                </button>
+                <button class="test-btn" onclick="openTest('palmistry')">
+                    <span class="btn-icon">✋</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- 팔괘 포털 영역 -->
+        <div class="bagua-section">
+            <div class="bagua-portal">
+                <!-- 중앙 팔각형 배경 - SVG 방식 -->
+                <div class="bagua-center">
+                    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="octagonGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#f8f9fa;stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+                        <polygon 
+                            points="30,0 70,0 100,30 100,70 70,100 30,100 0,70 0,30" 
+                            fill="url(#octagonGradient)" 
+                            stroke="#3498db" 
+                            stroke-width="1"
+                            style="filter: drop-shadow(0 0 5px rgba(255,255,255,0.5)) drop-shadow(inset 0 0 10px rgba(255,255,255,0.2));"
+                        />
+                    </svg>
+                </div>
+                
+                <!-- 중앙 태극 (MBTI) 복구 -->
+                <div class="taiji-container">
+                    <div class="taiji"></div>
+                    <!-- 위쪽 반원 버튼 (호르몬) -->
+                    <div class="taiji-button taiji-button-top" onclick="openTest('hormone')">
+                        <span class="taiji-label">호르몬</span>
+                    </div>
+                    <!-- 아래쪽 반원 버튼 (MBTI) -->
+                    <div class="taiji-button taiji-button-bottom" onclick="openMBTI()">
+                        <span class="taiji-label">MBTI</span>
+                    </div>
+                </div>
+
+                <!-- 팔괘 아이템들 (외부 배치) -->
+                <!-- 건괘 - 12시 방향 -->
+                <div class="bagua-item bagua-item-1" onclick="openTest('astrology')" data-trigram="건괘 ☰">
+                    <div class="bagua-test">별자리</div>
+                </div>
+
+                <!-- 태괘 - 1시 30분 방향 -->
+                <div class="bagua-item bagua-item-2" onclick="window.open('./blood-type-system/web/blood-type-sidebar.html', '_blank')" data-trigram="태괘 ☱">
+                    <div class="bagua-test">혈액형</div>
+                </div>
+
+                <!-- 이괘 - 3시 방향 -->
+                <div class="bagua-item bagua-item-3" onclick="openTest('tarot')" data-trigram="이괘 ☲">
+                    <div class="bagua-test">타로</div>
+                </div>
+
+                <!-- 진괘 - 4시 30분 방향 -->
+                <div class="bagua-item bagua-item-4" onclick="openTest('saju')" data-trigram="진괘 ☳">
+                    <div class="bagua-test">사주</div>
+                </div>
+
+                <!-- 손괘 - 6시 방향 -->
+                <div class="bagua-item bagua-item-5" onclick="openTest('zodiac')" data-trigram="손괘 ☴">
+                    <div class="bagua-test">띠별<br>운세</div>
+                </div>
+
+                <!-- 감괘 - 7시 30분 방향 -->
+                <div class="bagua-item bagua-item-6" onclick="openTest('fortune-cookie')" data-trigram="감괘 ☵">
+                    <div class="bagua-test">포춘<br>쿠키</div>
+                </div>
+
+                <!-- 간괘 - 9시 방향 -->
+                <div class="bagua-item bagua-item-7" onclick="openTest('enneagram')" data-trigram="간괘 ☶">
+                    <div class="bagua-test">에니어<br>그램</div>
+                </div>
+
+                <!-- 곤괘 - 10시 30분 방향 -->
+                <div class="bagua-item bagua-item-8" onclick="openTest('palmistry')" data-trigram="곤괘 ☷">
+                    <div class="bagua-test">손금<br>보기</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 푸터 -->
+    <footer class="footer">
+        <p>&copy; 2025 BAAL. 팔괘의 지혜로 마음을 읽다.</p>
+    </footer>
+
+    <script src="assets/js/main.js"></script>
+</body>
+</html>

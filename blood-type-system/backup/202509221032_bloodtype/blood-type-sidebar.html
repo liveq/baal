@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>혈액형 테스트 - RHEIGHT</title>
+    <link rel="stylesheet" href="blood-type-sidebar.css">
+</head>
+<body>
+    <button class="nav-toggle" onclick="toggleNav()">☰</button>
+    
+    <nav class="blood-nav">
+        <div class="nav-header">
+            <button class="main-btn" onclick="location.href='../../../'" title="메인으로">홈</button>
+            <h3 onclick="resetToHome()" style="cursor: pointer;">혈액형 선택</h3>
+            <button class="close-btn" onclick="window.close()" title="닫기">X</button>
+        </div>
+        <div class="nav-items">
+            <div class="blood-type-item" data-blood="A">
+                <button class="nav-item-compact" onclick="selectBloodType('A')">
+                    <span class="nav-symbol">A</span>
+                    <div class="nav-info">
+                        <span class="nav-name">A형</span>
+                        <span class="nav-trait" data-blood="A" data-gender="male">세심함</span>
+                    </div>
+                </button>
+                <div class="gender-buttons-vertical">
+                    <button class="gender-btn-new male" onclick="selectBloodTypeAndGender('A', 'male')" data-blood="A" data-gender="male">남성</button>
+                    <button class="gender-btn-new female" onclick="selectBloodTypeAndGender('A', 'female')" data-blood="A" data-gender="female">여성</button>
+                </div>
+            </div>
+            
+            <div class="blood-type-item" data-blood="B">
+                <button class="nav-item-compact" onclick="selectBloodType('B')">
+                    <span class="nav-symbol">B</span>
+                    <div class="nav-info">
+                        <span class="nav-name">B형</span>
+                        <span class="nav-trait" data-blood="B" data-gender="male">창의적</span>
+                    </div>
+                </button>
+                <div class="gender-buttons-vertical">
+                    <button class="gender-btn-new male" onclick="selectBloodTypeAndGender('B', 'male')" data-blood="B" data-gender="male">남성</button>
+                    <button class="gender-btn-new female" onclick="selectBloodTypeAndGender('B', 'female')" data-blood="B" data-gender="female">여성</button>
+                </div>
+            </div>
+            
+            <div class="blood-type-item" data-blood="O">
+                <button class="nav-item-compact" onclick="selectBloodType('O')">
+                    <span class="nav-symbol">O</span>
+                    <div class="nav-info">
+                        <span class="nav-name">O형</span>
+                        <span class="nav-trait" data-blood="O" data-gender="male">추진력</span>
+                    </div>
+                </button>
+                <div class="gender-buttons-vertical">
+                    <button class="gender-btn-new male" onclick="selectBloodTypeAndGender('O', 'male')" data-blood="O" data-gender="male">남성</button>
+                    <button class="gender-btn-new female" onclick="selectBloodTypeAndGender('O', 'female')" data-blood="O" data-gender="female">여성</button>
+                </div>
+            </div>
+            
+            <div class="blood-type-item" data-blood="AB">
+                <button class="nav-item-compact" onclick="selectBloodType('AB')">
+                    <span class="nav-symbol">AB</span>
+                    <div class="nav-info">
+                        <span class="nav-name">AB형</span>
+                        <span class="nav-trait" data-blood="AB" data-gender="male">논리적</span>
+                    </div>
+                </button>
+                <div class="gender-buttons-vertical">
+                    <button class="gender-btn-new male" onclick="selectBloodTypeAndGender('AB', 'male')" data-blood="AB" data-gender="male">남성</button>
+                    <button class="gender-btn-new female" onclick="selectBloodTypeAndGender('AB', 'female')" data-blood="AB" data-gender="female">여성</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="gender-selector">
+            <h4>성별 선택</h4>
+            <button class="gender-btn active" id="gender-male" onclick="selectGender('male')">
+                <span>♂</span> 남성
+            </button>
+            <button class="gender-btn" id="gender-female" onclick="selectGender('female')">
+                <span>♀</span> 여성
+            </button>
+        </div>
+    </nav>
+
+    <div class="blood-container">
+        <header class="blood-header">
+            <h1 onclick="resetToHome()" style="cursor: pointer;">혈액형 성격 테스트</h1>
+            <p>당신의 혈액형에 숨겨진 이야기를 만나보세요</p>
+        </header>
+
+        <div class="blood-overview" id="overview-section">
+            <div class="blood-card" data-type="A" onclick="selectBloodType('A')">
+                <div class="card-header">
+                    <span class="blood-type-badge">A</span>
+                    <button class="magnifier-btn" onclick="event.stopPropagation(); showStoryModal('A')" title="흥미로운 이야기 보기">🔍</button>
+                </div>
+                <h3>완벽을 추구하는 장인</h3>
+                <p class="card-description">
+                    세심하고 신중한 A형은 마치 정교한 시계처럼 정확하고 계획적입니다. 
+                    스티브 잡스의 완벽주의와 워렌 버핏의 신중함을 닮은 당신.
+                </p>
+                <div class="card-traits">
+                    <span class="trait-tag">책임감</span>
+                    <span class="trait-tag">신뢰성</span>
+                    <span class="trait-tag">계획적</span>
+                </div>
+                <button class="card-action" onclick="event.stopPropagation(); selectBloodType('A')">자세히 보기 →</button>
+            </div>
+
+            <div class="blood-card" data-type="B" onclick="selectBloodType('B')">
+                <div class="card-header">
+                    <span class="blood-type-badge">B</span>
+                    <button class="magnifier-btn" onclick="event.stopPropagation(); showStoryModal('B')" title="흥미로운 이야기 보기">🔍</button>
+                </div>
+                <h3>자유로운 예술가</h3>
+                <p class="card-description">
+                    창의적이고 독립적인 B형은 자유로운 바람처럼 틀에 얽매이지 않습니다.
+                    레오나르도 다빈치의 창의성과 피카소의 독창성을 닮은 당신.
+                </p>
+                <div class="card-traits">
+                    <span class="trait-tag">창의성</span>
+                    <span class="trait-tag">유연함</span>
+                    <span class="trait-tag">독립적</span>
+                </div>
+                <button class="card-action" onclick="event.stopPropagation(); selectBloodType('B')">자세히 보기 →</button>
+            </div>
+
+            <div class="blood-card" data-type="O" onclick="selectBloodType('O')">
+                <div class="card-header">
+                    <span class="blood-type-badge">O</span>
+                    <button class="magnifier-btn" onclick="event.stopPropagation(); showStoryModal('O')" title="흥미로운 이야기 보기">🔍</button>
+                </div>
+                <h3>타고난 리더</h3>
+                <p class="card-description">
+                    열정적이고 추진력 있는 O형은 타오르는 태양처럼 주변을 밝힙니다.
+                    나폴레옹의 카리스마와 이순신의 리더십을 닮은 당신.
+                </p>
+                <div class="card-traits">
+                    <span class="trait-tag">리더십</span>
+                    <span class="trait-tag">열정</span>
+                    <span class="trait-tag">추진력</span>
+                </div>
+                <button class="card-action" onclick="event.stopPropagation(); selectBloodType('O')">자세히 보기 →</button>
+            </div>
+
+            <div class="blood-card" data-type="AB" onclick="selectBloodType('AB')">
+                <div class="card-header">
+                    <span class="blood-type-badge">AB</span>
+                    <button class="magnifier-btn" onclick="event.stopPropagation(); showStoryModal('AB')" title="흥미로운 이야기 보기">🔍</button>
+                </div>
+                <h3>신비로운 천재</h3>
+                <p class="card-description">
+                    독특하고 천재적인 AB형은 신비로운 오로라처럼 남다른 빛을 발합니다.
+                    아인슈타인의 천재성과 반 고흐의 예술혼을 닮은 당신.
+                </p>
+                <div class="card-traits">
+                    <span class="trait-tag">천재성</span>
+                    <span class="trait-tag">직관력</span>
+                    <span class="trait-tag">독창성</span>
+                </div>
+                <button class="card-action" onclick="event.stopPropagation(); selectBloodType('AB')">자세히 보기 →</button>
+            </div>
+        </div>
+
+        <div class="blood-detail" id="detail-section" style="display: none;">
+            <div class="detail-tabs">
+                <button class="back-button" onclick="resetToHome()" title="메인페이지 이동">
+                    <svg class="back-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M19 12H5M12 19l-7-7 7-7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span class="back-text">돌아가기</span>
+                    <span class="tooltip">메인페이지 이동</span>
+                </button>
+                <div class="gender-toggle-tabs">
+                    <button class="gender-tab-btn active" onclick="selectGenderTab('male')" title="남성">
+                        <span class="gender-symbol">♂</span>
+                    </button>
+                    <button class="gender-tab-btn" onclick="selectGenderTab('female')" title="여성">
+                        <span class="gender-symbol">♀</span>
+                    </button>
+                </div>
+                <button class="tab-btn active" onclick="showTab('basic')">기본 성향</button>
+                <button class="tab-btn" onclick="showTab('love')">애정운</button>
+                <button class="tab-btn" onclick="showTab('health')">건강운</button>
+                <button class="tab-btn" onclick="showTab('wealth')">재물운</button>
+                <button class="tab-btn" onclick="showTab('biorhythm')">바이오리듬</button>
+                <button class="tab-btn" onclick="showTab('compatibility')">궁합</button>
+            </div>
+            
+            <div class="tab-content">
+                <div class="tab-panel active" id="basic-panel"></div>
+                <div class="tab-panel" id="love-panel"></div>
+                <div class="tab-panel" id="health-panel"></div>
+                <div class="tab-panel" id="wealth-panel"></div>
+                <div class="tab-panel" id="biorhythm-panel">
+                    <div class="biorhythm-header">
+                        <h3>바이오리듬 운세</h3>
+                        <p>신체, 감정, 지성의 바이오리듬으로 오늘의 운세를 확인하세요</p>
+                    </div>
+                    
+                    <div class="biorhythm-charts">
+                        <div class="chart-container">
+                            <div class="chart-item">
+                                <h4>신체 리듬</h4>
+                                <div class="chart-circle" id="physical-chart">
+                                    <svg width="120" height="120" viewBox="0 0 120 120">
+                                        <circle cx="60" cy="60" r="50" stroke="#e0e0e0" stroke-width="8" fill="none"/>
+                                        <circle cx="60" cy="60" r="50" stroke="#dc3545" stroke-width="8" fill="none" 
+                                                stroke-dasharray="314.16" stroke-dashoffset="314.16" 
+                                                transform="rotate(-90 60 60)" id="physical-progress"/>
+                                        <text x="60" y="65" text-anchor="middle" font-size="18" font-weight="bold" fill="#333" id="physical-score">0</text>
+                                    </svg>
+                                </div>
+                                <p class="chart-description" id="physical-desc">체력과 활력 상태</p>
+                            </div>
+                            
+                            <div class="chart-item">
+                                <h4>감정 리듬</h4>
+                                <div class="chart-circle" id="emotional-chart">
+                                    <svg width="120" height="120" viewBox="0 0 120 120">
+                                        <circle cx="60" cy="60" r="50" stroke="#e0e0e0" stroke-width="8" fill="none"/>
+                                        <circle cx="60" cy="60" r="50" stroke="#ff9500" stroke-width="8" fill="none" 
+                                                stroke-dasharray="314.16" stroke-dashoffset="314.16" 
+                                                transform="rotate(-90 60 60)" id="emotional-progress"/>
+                                        <text x="60" y="65" text-anchor="middle" font-size="18" font-weight="bold" fill="#333" id="emotional-score">0</text>
+                                    </svg>
+                                </div>
+                                <p class="chart-description" id="emotional-desc">기분과 감정 상태</p>
+                            </div>
+                            
+                            <div class="chart-item">
+                                <h4>지성 리듬</h4>
+                                <div class="chart-circle" id="intellectual-chart">
+                                    <svg width="120" height="120" viewBox="0 0 120 120">
+                                        <circle cx="60" cy="60" r="50" stroke="#e0e0e0" stroke-width="8" fill="none"/>
+                                        <circle cx="60" cy="60" r="50" stroke="#0066cc" stroke-width="8" fill="none" 
+                                                stroke-dasharray="314.16" stroke-dashoffset="314.16" 
+                                                transform="rotate(-90 60 60)" id="intellectual-progress"/>
+                                        <text x="60" y="65" text-anchor="middle" font-size="18" font-weight="bold" fill="#333" id="intellectual-score">0</text>
+                                    </svg>
+                                </div>
+                                <p class="chart-description" id="intellectual-desc">집중력과 사고력 상태</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="biorhythm-details">
+                        <div class="fortune-section">
+                            <h4>오늘의 운세</h4>
+                            <p class="fortune-message" id="fortune-message">혈액형과 성별을 선택하여 바이오리듬을 확인하세요.</p>
+                        </div>
+                        
+                        <div class="advice-section">
+                            <h4>오늘의 조언</h4>
+                            <p class="advice-message" id="advice-message">당신만의 바이오리듬에 맞는 조언을 제공해드립니다.</p>
+                        </div>
+                        
+                        <div class="lucky-section">
+                            <div class="lucky-item">
+                                <span class="lucky-label">행운 색상:</span>
+                                <div class="lucky-color-display">
+                                    <div class="lucky-color-circle" id="lucky-color-circle"></div>
+                                    <span class="lucky-color-text" id="lucky-color">-</span>
+                                </div>
+                            </div>
+                            <div class="lucky-item">
+                                <span class="lucky-label">행운 숫자:</span>
+                                <span class="lucky-number" id="lucky-number">-</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-panel" id="compatibility-panel">
+                    <div class="compatibility-selector">
+                        <select id="myBloodType" onchange="calculateCompatibility()">
+                            <option value="">나의 혈액형</option>
+                            <option value="A">A형</option>
+                            <option value="B">B형</option>
+                            <option value="O">O형</option>
+                            <option value="AB">AB형</option>
+                        </select>
+                        <span class="heart-icon">♥</span>
+                        <select id="partnerBloodType" onchange="calculateCompatibility()">
+                            <option value="">상대방 혈액형</option>
+                            <option value="A">A형</option>
+                            <option value="B">B형</option>
+                            <option value="O">O형</option>
+                            <option value="AB">AB형</option>
+                        </select>
+                    </div>
+                    <div id="compatibilityResult"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="story-modal" id="storyModal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal()">&times;</span>
+            <h2 id="modal-title"></h2>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+
+    <script src="../api/blood-api-enhanced.js"></script>
+    <script src="../api/blood-biorhythm-api.js"></script>
+    <script src="blood-type-sidebar.js"></script>
+</body>
+</html>

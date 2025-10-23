@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>띠별 운세 - 2025년 을사년 운세</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 헤더 영역 -->
+    <header class="header">
+        <div class="header-content">
+            <h1 class="logo" onclick="location.href='../palgwae.html'" style="cursor: pointer;">BAAL</h1>
+            <div class="header-title" onclick="showMainPage()" style="cursor: pointer;" id="header-year-title">
+                띠별 운세
+                <span class="header-title-tooltip" id="header-tooltip"></span>
+            </div>
+            <div class="header-right">
+                <button class="header-zodiac-btn" onclick="showMyZodiacModal()">내띠</button>
+                <button class="header-compat-btn" onclick="showCompatibilityModalSimple()">궁합</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- 메인 컨테이너 -->
+    <div class="main-container">
+        <!-- 좌측 사이드바 -->
+        <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+        <aside class="sidebar" id="sidebar">
+            <button class="home-btn-sidebar" onclick="showMainPage()">🏠 띠별 운세</button>
+            <div class="sidebar-nav">
+                <button class="zodiac-btn" data-zodiac="rat">🐭 쥐띠</button>
+                <button class="zodiac-btn" data-zodiac="ox">🐮 소띠</button>
+                <button class="zodiac-btn" data-zodiac="tiger">🐯 호랑이</button>
+                <button class="zodiac-btn" data-zodiac="rabbit">🐰 토끼띠</button>
+                <button class="zodiac-btn" data-zodiac="dragon">🐲 용띠</button>
+                <button class="zodiac-btn" data-zodiac="snake">🐍 뱀띠</button>
+                <button class="zodiac-btn" data-zodiac="horse">🐴 말띠</button>
+                <button class="zodiac-btn" data-zodiac="sheep">🐑 양띠</button>
+                <button class="zodiac-btn" data-zodiac="monkey">🐵 원숭이</button>
+                <button class="zodiac-btn" data-zodiac="rooster">🐔 닭띠</button>
+                <button class="zodiac-btn" data-zodiac="dog">🐶 개띠</button>
+                <button class="zodiac-btn" data-zodiac="pig">🐷 돼지띠</button>
+            </div>
+            <button class="my-zodiac-btn" onclick="showMyZodiacModal()">🔮 내띠 보기</button>
+            <button class="compatibility-btn-sidebar" onclick="showCompatibilityModalSimple()">💑 궁합보기</button>
+        </aside>
+
+        <!-- 메인 콘텐츠 영역 -->
+        <main class="main-content">
+            <!-- 메인 페이지 -->
+            <section id="main-page" class="content-section active">
+                <div class="zodiac-grid" style="max-width: 1000px; margin: 0; margin-top: 0.5rem; margin-left: -0.5rem;">
+                    <div class="zodiac-card" data-zodiac="rat" onclick="showZodiacDetail('rat')" style="cursor: pointer;">
+                        <div class="card-icon">🐭</div>
+                        <h3>쥐띠</h3>
+                        <div class="year-buttons">
+                            <button class="year-btn" onclick="event.stopPropagation(); showZodiacWithYear('rat', 1996)">1996</button>
+                            <button class="year-btn" onclick="event.stopPropagation(); showZodiacWithYear('rat', 1984)">1984</button>
+                            <button class="year-btn" onclick="event.stopPropagation(); showZodiacWithYear('rat', 1972)">1972</button>
+                            <button class="year-btn" onclick="event.stopPropagation(); showZodiacWithYear('rat', 1960)">1960</button>
+                        </div>
+                        <div class="card-gender-buttons">
+                            <button class="card-gender-btn" data-zodiac="rat" data-gender="male" onclick="event.stopPropagation(); selectGender(this)">♂</button>
+                            <button class="card-gender-btn" data-zodiac="rat" data-gender="female" onclick="event.stopPropagation(); selectGender(this)">♀</button>
+                        </div>
+                        <button class="quick-view-btn" onclick="event.stopPropagation(); showLifetimeFortune('rat')">🔍</button>
+                    </div>
+                    
+                    <div class="zodiac-card" data-zodiac="ox" onclick="showZodiacDetail('ox')" style="cursor: pointer;">
+                        <div class="card-icon">🐮</div>
+                        <h3>소띠</h3>
+                        <div class="year-buttons">
+                            <button class="year-btn" onclick="event.stopPropagation(); showZodiacWithYear('ox', 1997)">1997</button>
+                            <button class="year-btn" onclick="event.stopPropagation(); showZodiacWithYear('ox', 1985)">1985</button>
+                            <button class="year-btn" onclick="event.stopPropagation(); showZodiacWithYear('ox', 1973)">1973</button>
+                            <button class="year-btn" onclick="event.stopPropagation(); showZodiacWithYear('ox', 1961)">1961</button>
+                        </div>
+                        <div class="card-gender-buttons">
+                            <button class="card-gender-btn" data-zodiac="ox" data-gender="male" onclick="event.stopPropagation(); selectGender(this)">♂</button>
+                            <button class="card-gender-btn" data-zodiac="ox" data-gender="female" onclick="event.stopPropagation(); selectGender(this)">♀</button>
+                        </div>
+                        <button class="quick-view-btn" onclick="event.stopPropagation(); showLifetimeFortune('ox')">🔍</button>
+                    </div>
+                    
+                    <div class="zodiac-card" data-zodiac="tiger" onclick="showZodiacDetail('tiger')" style="cursor: pointer;">
+                        <div class="card-icon">🐯</div>
+                        <h3>호랑이띠</h3>
+                        <div class="year-buttons">
+                            <button class="year-btn" onclick="event.stopPropagation(); showZodiacWithYear('tiger', 1998)">1998</button>
+                            <button class="year-btn" onclick="event.stopPropagation(); showZodiacWithYear('tiger', 1986)">1986</button>
+                            <button class="year-btn" onclick="event.stopPropagation(); showZodiacWithYear('tiger', 1974)">1974</button>
+                            <button class="year-btn" onclick="event.stopPropagation(); showZodiacWithYear('tiger', 1962)">1962</button>
+                        </div>
+                        <div class="card-gender-buttons">
+                            <button class="card-gender-btn" data-zodiac="tiger" data-gender="male" onclick="event.stopPropagation(); selectGender(this)">♂</button>
+                            <button class="card-gender-btn" data-zodiac="tiger" data-gender="female" onclick="event.stopPropagation(); selectGender(this)">♀</button>
+                        </div>
+                        <button class="quick-view-btn" onclick="event.stopPropagation(); showLifetimeFortune('tiger')">🔍</button>
+                    </div>
+                    
+                    <div class="zodiac-card" data-zodiac="rabbit" onclick="showZodiacDetail('rabbit')" style="cursor: pointer;">
+                        <div class="card-icon">🐰</div>
+                        <h3>토끼띠</h3>
+                        <div class="year-buttons">
+                            <button class="year-btn" onclick="event.stopPropagation(); showZodiacWithYear('rabbit', 1999)">1999</button>
+                            <button class="year-btn" onclick="event.stopPropagation(); showZodiacWithYear('rabbit', 1987)">1987</button>
+                            <button class="year-btn" onclick="event.stopPropagation(); showZodiacWithYear('rabbit', 1975)">1975</button>
+                            <button class="year-btn" onclick="event.stopPropagation(); showZodiacWithYear('rabbit', 1963)">1963</button>
+                        </div>
+                        <div class="card-gender-buttons">
+                            <button class="card-gender-btn" data-zodiac="rabbit" data-gender="male" onclick="event.stopPropagation(); selectGender(this)">♂</button>
+                            <button class="card-gender-btn" data-zodiac="rabbit" data-gender="female" onclick="event.stopPropagation(); selectGender(this)">♀</button>
+                        </div>
+                        <button class="quick-view-btn" onclick="event.stopPropagation(); showLifetimeFortune('rabbit')">🔍</button>
+                    </div>
+                    
+                    <div class="zodiac-card" data-zodiac="dragon" onclick="showZodiacDetail('dragon')" style="cursor: pointer;">
+                        <div class="card-icon">🐲</div>
+                        <h3>용띠</h3>
+                        <div class="year-buttons">
+                            <button class="year-btn" onclick="event.stopPropagation(); showZodiacWithYear('dragon', 2000)">2000</button>
+                            <button class="year-btn" onclick="event.stopPropagation(); showZodiacWithYear('dragon', 1988)">1988</button>
+                            <button class="year-btn" onclick="event.stopPropagation(); showZodiacWithYear('dragon', 1976)">1976</button>
+                            <button class="year-btn" onclick="event.stopPropagation(); showZodiacWithYear('dragon', 1964)">1964</button>
+                        </div>
+                        <div class="card-gender-buttons">
+                            <button class="card-gender-btn" data-zodiac="dragon" data-gender="male" onclick="event.stopPropagation(); selectGender(this)">♂</button>
+                            <button class="card-gender-btn" data-zodiac="dragon" data-gender="female" onclick="event.stopPropagation(); selectGender(this)">♀</button>
+                        </div>
+                        <button class="quick-view-btn" onclick="event.stopPropagation(); showLifetimeFortune('dragon')">🔍</button>
+                    </div>
+                    
+                    <div class="zodiac-card" data-zodiac="snake" onclick="showZodiacDetail('snake')" style="cursor: pointer;">
+                        <div class="card-icon">🐍</div>
+                        <h3>뱀띠</h3>
+                        <div class="year-buttons">
+                            <button class="year-btn" onclick="event.stopPropagation(); showZodiacWithYear('snake', 2001)">2001</button>
+                            <button class="year-btn" onclick="event.stopPropagation(); showZodiacWithYear('snake', 1989)">1989</button>
+                            <button class="year-btn" onclick="event.stopPropagation(); showZodiacWithYear('snake', 1977)">1977</button>
+                            <button class="year-btn" onclick="event.stopPropagation(); showZodiacWithYear('snake', 1965)">1965</button>
+                        </div>
+                        <div class="card-gender-buttons">
+                            <button class="card-gender-btn" data-zodiac="snake" data-gender="male" onclick="event.stopPropagation(); selectGender(this)">♂</button>
+                            <button class="card-gender-btn" data-zodiac="snake" data-gender="female" onclick="event.stopPropagation(); selectGender(this)">♀</button>
+                        </div>
+                        <button class="quick-view-btn" onclick="event.stopPropagation(); showLifetimeFortune('snake')">🔍</button>
+                    </div>
+                    
+                    <div class="zodiac-card" data-zodiac="horse" onclick="showZodiacDetail('horse')" style="cursor: pointer;">
+                        <div class="card-icon">🐴</div>
+                        <h3>말띠</h3>
+                        <div class="year-buttons">
+                            <button class="year-btn" onclick="event.stopPropagation(); showZodiacWithYear('horse', 2002)">2002</button>
+                            <button class="year-btn" onclick="event.stopPropagation(); showZodiacWithYear('horse', 1990)">1990</button>
+                            <button class="year-btn" onclick="event.stopPropagation(); showZodiacWithYear('horse', 1978)">1978</button>
+                            <button class="year-btn" onclick="event.stopPropagation(); showZodiacWithYear('horse', 1966)">1966</button>
+                        </div>
+                        <div class="card-gender-buttons">
+                            <button class="card-gender-btn" data-zodiac="horse" data-gender="male" onclick="event.stopPropagation(); selectGender(this)">♂</button>
+                            <button class="card-gender-btn" data-zodiac="horse" data-gender="female" onclick="event.stopPropagation(); selectGender(this)">♀</button>
+                        </div>
+                        <button class="quick-view-btn" onclick="event.stopPropagation(); showLifetimeFortune('horse')">🔍</button>
+                    </div>
+                    
+                    <div class="zodiac-card" data-zodiac="sheep" onclick="showZodiacDetail('sheep')" style="cursor: pointer;">
+                        <div class="card-icon">🐑</div>
+                        <h3>양띠</h3>
+                        <div class="year-buttons">
+                            <button class="year-btn" onclick="event.stopPropagation(); showZodiacWithYear('sheep', 2003)">2003</button>
+                            <button class="year-btn" onclick="event.stopPropagation(); showZodiacWithYear('sheep', 1991)">1991</button>
+                            <button class="year-btn" onclick="event.stopPropagation(); showZodiacWithYear('sheep', 1979)">1979</button>
+                            <button class="year-btn" onclick="event.stopPropagation(); showZodiacWithYear('sheep', 1967)">1967</button>
+                        </div>
+                        <div class="card-gender-buttons">
+                            <button class="card-gender-btn" data-zodiac="sheep" data-gender="male" onclick="event.stopPropagation(); selectGender(this)">♂</button>
+                            <button class="card-gender-btn" data-zodiac="sheep" data-gender="female" onclick="event.stopPropagation(); selectGender(this)">♀</button>
+                        </div>
+                        <button class="quick-view-btn" onclick="event.stopPropagation(); showLifetimeFortune('sheep')">🔍</button>
+                    </div>
+                    
+                    <div class="zodiac-card" data-zodiac="monkey" onclick="showZodiacDetail('monkey')" style="cursor: pointer;">
+                        <div class="card-icon">🐵</div>
+                        <h3>원숭이띠</h3>
+                        <div class="year-buttons">
+                            <button class="year-btn" onclick="event.stopPropagation(); showZodiacWithYear('monkey', 2004)">2004</button>
+                            <button class="year-btn" onclick="event.stopPropagation(); showZodiacWithYear('monkey', 1992)">1992</button>
+                            <button class="year-btn" onclick="event.stopPropagation(); showZodiacWithYear('monkey', 1980)">1980</button>
+                            <button class="year-btn" onclick="event.stopPropagation(); showZodiacWithYear('monkey', 1968)">1968</button>
+                        </div>
+                        <div class="card-gender-buttons">
+                            <button class="card-gender-btn" data-zodiac="monkey" data-gender="male" onclick="event.stopPropagation(); selectGender(this)">♂</button>
+                            <button class="card-gender-btn" data-zodiac="monkey" data-gender="female" onclick="event.stopPropagation(); selectGender(this)">♀</button>
+                        </div>
+                        <button class="quick-view-btn" onclick="event.stopPropagation(); showLifetimeFortune('monkey')">🔍</button>
+                    </div>
+                    
+                    <div class="zodiac-card" data-zodiac="rooster" onclick="showZodiacDetail('rooster')" style="cursor: pointer;">
+                        <div class="card-icon">🐔</div>
+                        <h3>닭띠</h3>
+                        <div class="year-buttons">
+                            <button class="year-btn" onclick="event.stopPropagation(); showZodiacWithYear('rooster', 2005)">2005</button>
+                            <button class="year-btn" onclick="event.stopPropagation(); showZodiacWithYear('rooster', 1993)">1993</button>
+                            <button class="year-btn" onclick="event.stopPropagation(); showZodiacWithYear('rooster', 1981)">1981</button>
+                            <button class="year-btn" onclick="event.stopPropagation(); showZodiacWithYear('rooster', 1969)">1969</button>
+                        </div>
+                        <div class="card-gender-buttons">
+                            <button class="card-gender-btn" data-zodiac="rooster" data-gender="male" onclick="event.stopPropagation(); selectGender(this)">♂</button>
+                            <button class="card-gender-btn" data-zodiac="rooster" data-gender="female" onclick="event.stopPropagation(); selectGender(this)">♀</button>
+                        </div>
+                        <button class="quick-view-btn" onclick="event.stopPropagation(); showLifetimeFortune('rooster')">🔍</button>
+                    </div>
+                    
+                    <div class="zodiac-card" data-zodiac="dog" onclick="showZodiacDetail('dog')" style="cursor: pointer;">
+                        <div class="card-icon">🐶</div>
+                        <h3>개띠</h3>
+                        <div class="year-buttons">
+                            <button class="year-btn" onclick="event.stopPropagation(); showZodiacWithYear('dog', 2006)">2006</button>
+                            <button class="year-btn" onclick="event.stopPropagation(); showZodiacWithYear('dog', 1994)">1994</button>
+                            <button class="year-btn" onclick="event.stopPropagation(); showZodiacWithYear('dog', 1982)">1982</button>
+                            <button class="year-btn" onclick="event.stopPropagation(); showZodiacWithYear('dog', 1970)">1970</button>
+                        </div>
+                        <div class="card-gender-buttons">
+                            <button class="card-gender-btn" data-zodiac="dog" data-gender="male" onclick="event.stopPropagation(); selectGender(this)">♂</button>
+                            <button class="card-gender-btn" data-zodiac="dog" data-gender="female" onclick="event.stopPropagation(); selectGender(this)">♀</button>
+                        </div>
+                        <button class="quick-view-btn" onclick="event.stopPropagation(); showLifetimeFortune('dog')">🔍</button>
+                    </div>
+                    
+                    <div class="zodiac-card" data-zodiac="pig" onclick="showZodiacDetail('pig')" style="cursor: pointer;">
+                        <div class="card-icon">🐷</div>
+                        <h3>돼지띠</h3>
+                        <div class="year-buttons">
+                            <button class="year-btn" onclick="event.stopPropagation(); showZodiacWithYear('pig', 2007)">2007</button>
+                            <button class="year-btn" onclick="event.stopPropagation(); showZodiacWithYear('pig', 1995)">1995</button>
+                            <button class="year-btn" onclick="event.stopPropagation(); showZodiacWithYear('pig', 1983)">1983</button>
+                            <button class="year-btn" onclick="event.stopPropagation(); showZodiacWithYear('pig', 1971)">1971</button>
+                        </div>
+                        <div class="card-gender-buttons">
+                            <button class="card-gender-btn" data-zodiac="pig" data-gender="male" onclick="event.stopPropagation(); selectGender(this)">♂</button>
+                            <button class="card-gender-btn" data-zodiac="pig" data-gender="female" onclick="event.stopPropagation(); selectGender(this)">♀</button>
+                        </div>
+                        <button class="quick-view-btn" onclick="event.stopPropagation(); showLifetimeFortune('pig')">🔍</button>
+                    </div>
+                </div>
+                
+                <!-- 4행: 내띠보기/궁합보기 버튼들 -->
+                <div class="action-buttons-row" style="display: flex; gap: 10px; margin-top: 15px; max-width: 1000px;">
+                    <button class="my-zodiac-btn" onclick="showMyZodiacModal()" style="padding: 0.75rem; width: 200px; background: #007AFF; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.95rem; font-weight: 600;">🔮 내띠 보기</button>
+                    <button class="compatibility-btn" onclick="showCompatibilityModalSimple()" style="padding: 0.75rem; width: 200px; background: #FF6B35; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.95rem; font-weight: 600;">💑 궁합 보기</button>
+                </div>
+            </section>
+
+            <!-- 띠별 상세 페이지 -->
+            <section id="detail-page" class="content-section">
+                <div class="detail-header">
+                    <button class="back-btn" onclick="showMainPage()">← 뒤로</button>
+                    <h2 id="zodiac-title">호랑이띠 운세</h2>
+                    <select id="zodiac-selector" onchange="changeZodiac(this.value)">
+                        <option value="">다른 띠 보기</option>
+                        <option value="rat">쥐띠</option>
+                        <option value="ox">소띠</option>
+                        <option value="tiger">호랑이띠</option>
+                        <option value="rabbit">토끼띠</option>
+                        <option value="dragon">용띠</option>
+                        <option value="snake">뱀띠</option>
+                        <option value="horse">말띠</option>
+                        <option value="sheep">양띠</option>
+                        <option value="monkey">원숭이띠</option>
+                        <option value="rooster">닭띠</option>
+                        <option value="dog">개띠</option>
+                        <option value="pig">돼지띠</option>
+                    </select>
+                </div>
+
+                <div class="fortune-tabs">
+                    <button class="tab-btn active" data-period="daily">오늘의 운세</button>
+                    <button class="tab-btn" data-period="weekly">주간 운세</button>
+                    <button class="tab-btn" data-period="monthly">월간 운세</button>
+                    <button class="tab-btn" data-period="yearly">2025년 운세</button>
+                    <button class="tab-btn" data-period="lifetime">평생 운세</button>
+                </div>
+
+                <div class="gender-tabs">
+                    <button class="gender-btn active" data-gender="male">♂</button>
+                    <button class="gender-btn" data-gender="female">♀</button>
+                    <div class="detail-year-buttons" id="detail-year-buttons">
+                        <!-- 년도 버튼들이 동적으로 추가됩니다 -->
+                    </div>
+                </div>
+
+                <div class="fortune-content" id="fortune-content">
+                    <!-- 운세 내용이 동적으로 들어갑니다 -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- 평생운세 모달 -->
+    <div id="lifetime-modal" class="modal" onclick="if(event.target === this) closeModal('lifetime-modal')">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('lifetime-modal')">&times;</span>
+            <h2 id="lifetime-title">평생 운세</h2>
+            <div id="lifetime-content"></div>
+        </div>
+    </div>
+
+    <!-- 내띠 찾기 모달 -->
+    <div id="my-zodiac-modal" class="modal" onclick="if(event.target === this) closeModal('my-zodiac-modal')">
+        <div class="modal-content my-zodiac-content">
+            <span class="close-btn" onclick="closeModal('my-zodiac-modal')">&times;</span>
+            <h2>🔮 내띠 보기</h2>
+            
+            <div class="my-zodiac-form">
+                <div class="birth-input-section">
+                    <label>출생년도를 입력하세요</label>
+                    <div class="birth-input-wrapper">
+                        <div class="birth-input-group-modal" style="justify-content: center;">
+                            <div class="input-with-picker">
+                                <input type="text" id="modal-year" placeholder="" maxlength="4" class="birth-input-modal year-only" inputmode="numeric" lang="en" autocomplete="off">
+                                <button class="individual-picker-btn" onclick="showIndividualPicker('year')" title="년도 선택" tabindex="-1">🔍</button>
+                            </div>
+                            <span class="date-separator">년생</span>
+                        </div>
+                        
+                        <!-- 개별 선택 드롭다운 -->
+                        <div id="individual-picker-dropdown" class="individual-picker-dropdown">
+                            <div id="picker-content"></div>
+                            <button class="picker-close" onclick="closeIndividualPicker()">닫기</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="gender-select-section">
+                    <label>성별을 선택하세요</label>
+                    <div class="gender-select-group">
+                        <button class="gender-select-btn active" data-gender="male">
+                            👨 남성
+                            <span class="shortcut-hint">(M, B)</span>
+                        </button>
+                        <button class="gender-select-btn" data-gender="female">
+                            👩 여성
+                            <span class="shortcut-hint">(F, G)</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="zodiac-preview" id="zodiac-preview"></div>
+                
+                <button class="confirm-zodiac-btn" onclick="confirmMyZodiac()">내 운세 보러가기</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 간편 궁합보기 모달 -->
+    <div id="simple-compatibility-modal" class="modal" onclick="if(event.target === this) closeModal('simple-compatibility-modal')">
+        <div class="modal-content my-zodiac-content">
+            <span class="close-btn" onclick="closeModal('simple-compatibility-modal')">&times;</span>
+            <h2>💑 궁합보기</h2>
+            
+            <div class="my-zodiac-form">
+                <!-- 출생년도 한 줄 입력 -->
+                <div class="compat-birth-row">
+                    <label>출생년도:</label>
+                    <div class="compat-input-wrapper">
+                        <input type="text" id="compat-my-year" placeholder="나" maxlength="4" class="compat-year-input" inputmode="numeric" lang="en" autocomplete="off">
+                        <button class="year-picker-btn" onclick="showCompatYearPicker('my')" title="년도 선택">🔍</button>
+                    </div>
+                    <div class="compat-gender-group">
+                        <button class="compat-gender-btn" data-person="my" data-gender="male" tabindex="0">♂</button>
+                        <button class="compat-gender-btn" data-person="my" data-gender="female" tabindex="0">♀</button>
+                    </div>
+                    <div class="compat-input-wrapper">
+                        <input type="text" id="compat-partner-year" placeholder="상대" maxlength="4" class="compat-year-input" inputmode="numeric" lang="en" autocomplete="off">
+                        <button class="year-picker-btn" onclick="showCompatYearPicker('partner')" title="년도 선택">🔍</button>
+                    </div>
+                    <div class="compat-gender-group">
+                        <button class="compat-gender-btn" data-person="partner" data-gender="male" tabindex="0">♂</button>
+                        <button class="compat-gender-btn" data-person="partner" data-gender="female" tabindex="0">♀</button>
+                    </div>
+                </div>
+                
+                <!-- 관계 유형 라벨 -->
+                <div class="compat-relation-label">
+                    <label>관계 유형:</label>
+                </div>
+                
+                <!-- 관계 유형 버튼들 -->
+                <div class="compat-relation-buttons">
+                    <button class="relation-btn" data-type="lover" tabindex="0">
+                        <span class="relation-icon">💕</span>
+                        <span class="relation-text">연인</span>
+                    </button>
+                    <button class="relation-btn" data-type="spouse" tabindex="0">
+                        <span class="relation-icon">💍</span>
+                        <span class="relation-text">부부</span>
+                    </button>
+                    <button class="relation-btn" data-type="friend" tabindex="0">
+                        <span class="relation-icon">🤝</span>
+                        <span class="relation-text">친구</span>
+                    </button>
+                    <button class="relation-btn" data-type="business" tabindex="0">
+                        <span class="relation-icon">💼</span>
+                        <span class="relation-text">사업</span>
+                    </button>
+                    <button class="relation-btn" data-type="parent-child" tabindex="0">
+                        <span class="relation-icon">👨‍👩‍👧</span>
+                        <span class="relation-text">부모자식</span>
+                    </button>
+                </div>
+                
+                <!-- 개별 선택 드롭다운 (궁합용) -->
+                <div id="compat-picker-dropdown" class="individual-picker-dropdown">
+                    <div id="compat-picker-content"></div>
+                    <button class="picker-close" onclick="closeCompatPicker()">닫기</button>
+                </div>
+                
+                <div class="zodiac-compat-preview">
+                    <div id="my-zodiac-compat" class="zodiac-display-box"></div>
+                    <div class="heart-separator">💕</div>
+                    <div id="partner-zodiac-compat" class="zodiac-display-box"></div>
+                </div>
+                
+                <button class="confirm-zodiac-btn" onclick="showCompatibilityResultWithValidation()">궁합 결과 보기</button>
+            </div>
+        </div>
+        
+        <!-- 년도 선택 드롭다운 -->
+        <div id="compat-year-picker" class="year-picker-dropdown" style="display: none;">
+            <div class="year-picker-content"></div>
+        </div>
+    </div>
+
+    <!-- 궁합 입력 모달 -->
+    <div id="compatibility-modal" class="modal">
+        <div class="modal-content compatibility-content">
+            <span class="close-btn" onclick="closeModal('compatibility-modal')">&times;</span>
+            <h2>띠별 궁합 보기</h2>
+            
+            <div class="compatibility-form">
+                <div class="person-input">
+                    <h3>나의 정보</h3>
+                    <div class="input-group">
+                        <label>생년월일</label>
+                        <input type="text" id="my-year" placeholder="1990" maxlength="4">
+                        <input type="text" id="my-month" placeholder="01" maxlength="2">
+                        <input type="text" id="my-day" placeholder="01" maxlength="2">
+                    </div>
+                    <div class="gender-select">
+                        <label>성별</label>
+                        <button class="gender-option active" data-gender="male">남성</button>
+                        <button class="gender-option" data-gender="female">여성</button>
+                    </div>
+                    <div class="zodiac-display" id="my-zodiac-display"></div>
+                </div>
+                
+                <div class="person-input">
+                    <h3>상대방 정보</h3>
+                    <div class="input-group">
+                        <label>생년월일</label>
+                        <input type="text" id="partner-year" placeholder="1990" maxlength="4">
+                        <input type="text" id="partner-month" placeholder="01" maxlength="2">
+                        <input type="text" id="partner-day" placeholder="01" maxlength="2">
+                    </div>
+                    <div class="gender-select">
+                        <label>성별</label>
+                        <button class="gender-option" data-gender="male">남성</button>
+                        <button class="gender-option active" data-gender="female">여성</button>
+                    </div>
+                    <div class="zodiac-display" id="partner-zodiac-display"></div>
+                </div>
+            </div>
+            
+            <div class="relationship-type">
+                <label>관계 유형</label>
+                <select id="relationship-type">
+                    <option value="lover">연인</option>
+                    <option value="spouse">부부</option>
+                    <option value="friend">친구</option>
+                    <option value="business">사업 파트너</option>
+                    <option value="parent">부모-자녀</option>
+                </select>
+            </div>
+            
+            <button class="check-compatibility-btn" onclick="checkCompatibility()">궁합 보기</button>
+        </div>
+    </div>
+
+    <!-- 궁합 결과 모달 -->
+    <div id="result-modal" class="modal" onclick="if(event.target === this) closeModal('result-modal')">
+        <div class="modal-content result-content">
+            <span class="close-btn" onclick="closeModal('result-modal')">&times;</span>
+            <h2 style="display: inline-flex; align-items: center; gap: 10px;">
+                궁합 결과
+                <button class="modal-back-btn-inline" onclick="backToCompatibilityModal()" title="뒤로가기">←</button>
+            </h2>
+            <div id="compatibility-result"></div>
+        </div>
+    </div>
+
+    <!-- 오버레이 -->
+    <div id="overlay" class="overlay"></div>
+
+    <script src="script.js"></script>
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('active');
+        }
+        
+        // 모바일에서 띠 선택 후 사이드바 닫기
+        if (window.innerWidth <= 768) {
+            document.querySelectorAll('.zodiac-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    setTimeout(() => {
+                        document.getElementById('sidebar').classList.remove('active');
+                    }, 300);
+                });
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,121 @@
+{
+  "description": "오행(五行) - 동양철학의 기본 요소",
+  "elements": [
+    {
+      "id": "wood",
+      "name_kr": "목(木)",
+      "name_en": "Wood",
+      "color": "청록색",
+      "season": "봄",
+      "direction": "동",
+      "time": "새벽",
+      "personality": [
+        "창의적", "성장 지향적", "유연함", "포용력",
+        "활력", "진취적", "확장성"
+      ],
+      "positive_traits": [
+        "새로운 시작을 즐김", "배움을 좋아함", "변화에 적응",
+        "타인을 돕는 것을 좋아함", "꾸준한 성장"
+      ],
+      "lucky_numbers": [3, 8],
+      "lucky_colors": ["청록", "초록", "연두"],
+      "body_parts": ["간", "눈", "근육"],
+      "taste": "신맛",
+      "emotion": "분노(적절히 표현하면 추진력)"
+    },
+    {
+      "id": "fire",
+      "name_kr": "화(火)",
+      "name_en": "Fire",
+      "color": "빨강",
+      "season": "여름",
+      "direction": "남",
+      "time": "낮",
+      "personality": [
+        "열정적", "활발함", "밝음", "리더십",
+        "표현력", "사교적", "따뜻함"
+      ],
+      "positive_traits": [
+        "긍정적 에너지", "타인에게 영감을 줌", "열정적 추진",
+        "밝은 분위기 조성", "표현이 풍부함"
+      ],
+      "lucky_numbers": [2, 7],
+      "lucky_colors": ["빨강", "주황", "자주"],
+      "body_parts": ["심장", "혈관", "혀"],
+      "taste": "쓴맛",
+      "emotion": "기쁨"
+    },
+    {
+      "id": "earth",
+      "name_kr": "토(土)",
+      "name_en": "Earth",
+      "color": "노랑",
+      "season": "환절기",
+      "direction": "중앙",
+      "time": "오후",
+      "personality": [
+        "안정적", "신뢰감", "포용력", "중재",
+        "균형", "성실함", "책임감"
+      ],
+      "positive_traits": [
+        "믿음직함", "조화를 만듦", "실용적 사고",
+        "타인을 지지함", "끈기 있음"
+      ],
+      "lucky_numbers": [5, 10],
+      "lucky_colors": ["노랑", "갈색", "베이지"],
+      "body_parts": ["비장", "위", "입"],
+      "taste": "단맛",
+      "emotion": "걱정(배려로 승화)"
+    },
+    {
+      "id": "metal",
+      "name_kr": "금(金)",
+      "name_en": "Metal",
+      "color": "흰색",
+      "season": "가을",
+      "direction": "서",
+      "time": "저녁",
+      "personality": [
+        "결단력", "정확함", "원칙적", "논리적",
+        "정의감", "깔끔함", "체계적"
+      ],
+      "positive_traits": [
+        "공정한 판단", "명확한 결정", "체계적 접근",
+        "품질 추구", "원칙을 지킴"
+      ],
+      "lucky_numbers": [4, 9],
+      "lucky_colors": ["흰색", "금색", "은색"],
+      "body_parts": ["폐", "코", "피부"],
+      "taste": "매운맛",
+      "emotion": "슬픔(성찰로 전환)"
+    },
+    {
+      "id": "water",
+      "name_kr": "수(水)",
+      "name_en": "Water",
+      "color": "검정",
+      "season": "겨울",
+      "direction": "북",
+      "time": "밤",
+      "personality": [
+        "지혜로움", "직관력", "적응력", "깊이",
+        "신중함", "유연함", "통찰력"
+      ],
+      "positive_traits": [
+        "본질을 꿰뚫음", "상황 판단력", "유연한 대처",
+        "깊은 사색", "타인의 마음을 이해"
+      ],
+      "lucky_numbers": [1, 6],
+      "lucky_colors": ["파랑", "검정", "남색"],
+      "body_parts": ["신장", "귀", "뼈"],
+      "taste": "짠맛",
+      "emotion": "두려움(신중함으로 승화)"
+    }
+  ],
+  "cycle_order": ["wood", "fire", "earth", "metal", "water"],
+  "notes": {
+    "generation_cycle": "목→화→토→금→수 (상생)",
+    "conquest_cycle": "목극토, 토극수, 수극화, 화극금, 금극목 (상극)",
+    "philosophy": "오행은 우주 만물의 기본 구성 요소이자 변화의 원리입니다. 각 요소는 고유한 특성을 지니며, 상호작용을 통해 균형을 이룹니다."
+  }
+}

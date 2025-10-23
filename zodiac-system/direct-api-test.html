@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head><meta charset="UTF-8"><title>API 직접 테스트</title></head>
+<body>
+<h1>API 직접 호출 테스트</h1>
+<button onclick="test()">황소자리(2) 테스트</button>
+<pre id="result" style="background:#f5f5f5; padding:20px; font-family:monospace; white-space:pre-wrap;"></pre>
+
+<script src="api/zodiac-api-real.js?v=20251015-debug-log"></script>
+<script>
+async function test() {
+    const result = document.getElementById('result');
+    result.textContent = '=== 테스트 시작 ===\n\n';
+
+    // 3초 대기 (데이터 로드)
+    await new Promise(r => setTimeout(r, 3000));
+
+    result.textContent += '=== getDailyFortune(2) 호출 ===\n';
+    const fortune = await zodiacAPI.getDailyFortune(2);
+
+    result.textContent += '\n반환된 객체:\n';
+    result.textContent += JSON.stringify(fortune, null, 2);
+
+    result.textContent += '\n\n=== 주요 필드 확인 ===\n';
+    result.textContent += `overall: "${fortune.overall}"\n`;
+    result.textContent += `overall 길이: ${fortune.overall?.length || 0}자\n\n`;
+
+    if (fortune.fortunes) {
+        result.textContent += `love: "${fortune.fortunes.love}"\n`;
+        result.textContent += `love 길이: ${fortune.fortunes.love?.length || 0}자\n\n`;
+        result.textContent += `money: "${fortune.fortunes.money}"\n`;
+        result.textContent += `work: "${fortune.fortunes.work}"\n`;
+        result.textContent += `health: "${fortune.fortunes.health}"\n`;
+    } else {
+        result.textContent += '❌ fortunes 객체 없음\n';
+    }
+
+    result.textContent += `\nsource: ${fortune.source}\n`;
+
+    // 판정
+    result.textContent += '\n\n=== 판정 ===\n';
+    if (fortune.overall && fortune.overall.includes('안정된 하루')) {
+        result.textContent += '✅ overall: 개선된 메시지 확인!\n';
+    } else {
+        result.textContent += `❌ overall: 예상과 다름\n`;
+    }
+
+    if (fortune.fortunes?.love && fortune.fortunes.love.length >= 20) {
+        result.textContent += '✅ love: 개선된 메시지 확인!\n';
+    } else {
+        result.textContent += '❌ love: 너무 짧거나 없음\n';
+    }
+}
+</script>
+</body>
+</html>

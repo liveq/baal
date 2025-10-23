@@ -1,0 +1,163 @@
+{
+  "description": "오행 상생상극(相生相剋) 관계 - 동양철학의 핵심 원리",
+  "mutual_generation": {
+    "description": "상생(相生) - 서로 돕고 키워주는 관계",
+    "cycle": {
+      "wood": {
+        "generates": "fire",
+        "reason": "목생화(木生火) - 나무가 불을 만듦",
+        "meaning": "성장의 에너지가 열정으로 전환",
+        "positive_effect": "창의성이 행동력으로"
+      },
+      "fire": {
+        "generates": "earth",
+        "reason": "화생토(火生土) - 불이 타면 흙이 됨",
+        "meaning": "열정이 결실을 맺음",
+        "positive_effect": "행동이 안정으로"
+      },
+      "earth": {
+        "generates": "metal",
+        "reason": "토생금(土生金) - 흙 속에서 금속이 생김",
+        "meaning": "안정이 가치를 만듦",
+        "positive_effect": "축적이 결정으로"
+      },
+      "metal": {
+        "generates": "water",
+        "reason": "금생수(金生水) - 금속 표면에 이슬이 맺힘",
+        "meaning": "명확함이 지혜를 낳음",
+        "positive_effect": "원칙이 유연함으로"
+      },
+      "water": {
+        "generates": "wood",
+        "reason": "수생목(水生木) - 물이 나무를 키움",
+        "meaning": "지혜가 성장을 돕음",
+        "positive_effect": "통찰이 창의로"
+      }
+    }
+  },
+  "mutual_conquest": {
+    "description": "상극(相剋) - 서로 제한하고 조절하는 관계 (부정적이 아닌 균형의 원리)",
+    "cycle": {
+      "wood": {
+        "conquers": "earth",
+        "reason": "목극토(木剋土) - 나무 뿌리가 흙을 가름",
+        "meaning": "성장이 정체를 깨뜨림",
+        "balance_effect": "과도한 안주를 변화로 유도"
+      },
+      "earth": {
+        "conquers": "water",
+        "reason": "토극수(土剋水) - 흙이 물을 막음",
+        "meaning": "안정이 흐름을 조절함",
+        "balance_effect": "과도한 유동성을 안정화"
+      },
+      "water": {
+        "conquers": "fire",
+        "reason": "수극화(水剋火) - 물이 불을 끔",
+        "meaning": "냉정함이 과열을 식힘",
+        "balance_effect": "과도한 열정을 신중함으로"
+      },
+      "fire": {
+        "conquers": "metal",
+        "reason": "화극금(火剋金) - 불이 금속을 녹임",
+        "meaning": "열정이 경직을 녹임",
+        "balance_effect": "과도한 원칙을 유연하게"
+      },
+      "metal": {
+        "conquers": "wood",
+        "reason": "금극목(金剋木) - 금속(도끼)이 나무를 자름",
+        "meaning": "결단이 과잉 성장을 가지치기",
+        "balance_effect": "무분별한 확장을 정리"
+      }
+    }
+  },
+  "compatibility_scores": {
+    "description": "관계에 따른 기본 궁합 점수 (100점 만점)",
+    "generation": {
+      "score": 90,
+      "level": "매우 좋음",
+      "keywords": ["서로 돕는", "성장", "시너지", "조화"]
+    },
+    "generated_by": {
+      "score": 85,
+      "level": "좋음",
+      "keywords": ["도움받는", "지원", "발전", "성장"]
+    },
+    "same": {
+      "score": 80,
+      "level": "좋음",
+      "keywords": ["이해", "공감", "비슷한 가치관", "협력"]
+    },
+    "neutral": {
+      "score": 70,
+      "level": "보통",
+      "keywords": ["독립적", "존중", "배움의 기회", "다양성"]
+    },
+    "conquest": {
+      "score": 60,
+      "level": "노력 필요",
+      "keywords": ["성장 기회", "균형 학습", "상호 보완", "인내"]
+    },
+    "conquered_by": {
+      "score": 65,
+      "level": "보통",
+      "keywords": ["배움", "겸손", "조절", "성숙"]
+    }
+  },
+  "relationship_matrix": {
+    "description": "각 오행 간의 구체적 관계",
+    "wood": {
+      "wood": "same",
+      "fire": "generation",
+      "earth": "conquest",
+      "metal": "conquered_by",
+      "water": "generated_by"
+    },
+    "fire": {
+      "wood": "generated_by",
+      "fire": "same",
+      "earth": "generation",
+      "metal": "conquest",
+      "water": "conquered_by"
+    },
+    "earth": {
+      "wood": "conquered_by",
+      "fire": "generated_by",
+      "earth": "same",
+      "metal": "generation",
+      "water": "conquest"
+    },
+    "metal": {
+      "wood": "conquest",
+      "fire": "conquered_by",
+      "earth": "generated_by",
+      "metal": "same",
+      "water": "generation"
+    },
+    "water": {
+      "wood": "generation",
+      "fire": "conquest",
+      "earth": "conquered_by",
+      "metal": "generated_by",
+      "water": "same"
+    }
+  },
+  "interpretation_guide": {
+    "generation_relationship": {
+      "compatibility": "서로를 북돋아주는 환상의 조합이에요! 함께하면 더 큰 성장을 이룰 수 있어요.",
+      "advice": "각자의 강점을 살려 시너지를 만들어보세요."
+    },
+    "same_relationship": {
+      "compatibility": "서로를 잘 이해하는 편안한 관계예요! 공감대가 높아요.",
+      "advice": "비슷한 점을 살리되, 새로운 자극도 찾아보세요."
+    },
+    "conquest_relationship": {
+      "compatibility": "서로 다른 점에서 배울 수 있는 성장의 기회예요!",
+      "advice": "차이를 인정하고 균형을 찾으면 더 단단한 관계가 될 거예요."
+    }
+  },
+  "notes": {
+    "philosophy": "상생상극은 대립이 아닌 균형의 원리입니다. 모든 관계에는 배움과 성장의 기회가 있습니다.",
+    "important": "상극 관계도 부정적이지 않습니다. 서로 다른 특성으로 균형을 만들어가는 과정입니다.",
+    "usage": "이 데이터는 궁합 매트릭스의 기본 점수를 산정하는 데 사용됩니다."
+  }
+}

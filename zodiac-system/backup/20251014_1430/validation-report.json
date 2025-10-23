@@ -1,0 +1,2197 @@
+{
+  "summary": {
+    "total": 78,
+    "passed": 0,
+    "failed": 78,
+    "passRate": "0.0%"
+  },
+  "violations": [
+    {
+      "category": "negative",
+      "word": "주의",
+      "count": 66
+    },
+    {
+      "category": "negative",
+      "word": "충돌",
+      "count": 66
+    },
+    {
+      "category": "negative",
+      "word": "걱정",
+      "count": 4
+    },
+    {
+      "category": "political",
+      "word": "보수",
+      "count": 3
+    }
+  ],
+  "failedReports": [
+    {
+      "timestamp": "2025-10-14T06:54:13.946Z",
+      "meta": {
+        "key": "1-1",
+        "zodiac1": "양자리",
+        "zodiac2": "양자리"
+      },
+      "passed": false,
+      "violations": [],
+      "scores": {
+        "positive": 62,
+        "readability": 100,
+        "total": 138.6
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.949Z",
+      "meta": {
+        "key": "1-2",
+        "zodiac1": "양자리",
+        "zodiac2": "황소자리"
+      },
+      "passed": false,
+      "violations": [
+        {
+          "category": "negative",
+          "word": "주의",
+          "position": 120
+        },
+        {
+          "category": "negative",
+          "word": "충돌",
+          "position": 110
+        }
+      ],
+      "scores": {
+        "positive": 62,
+        "readability": 100,
+        "total": 18.6
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.949Z",
+      "meta": {
+        "key": "1-3",
+        "zodiac1": "양자리",
+        "zodiac2": "쌍둥이자리"
+      },
+      "passed": false,
+      "violations": [
+        {
+          "category": "negative",
+          "word": "주의",
+          "position": 121
+        },
+        {
+          "category": "negative",
+          "word": "충돌",
+          "position": 111
+        }
+      ],
+      "scores": {
+        "positive": 62,
+        "readability": 100,
+        "total": 18.6
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.949Z",
+      "meta": {
+        "key": "1-4",
+        "zodiac1": "양자리",
+        "zodiac2": "게자리"
+      },
+      "passed": false,
+      "violations": [
+        {
+          "category": "negative",
+          "word": "주의",
+          "position": 119
+        },
+        {
+          "category": "negative",
+          "word": "충돌",
+          "position": 109
+        }
+      ],
+      "scores": {
+        "positive": 56,
+        "readability": 100,
+        "total": 16.8
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.949Z",
+      "meta": {
+        "key": "1-5",
+        "zodiac1": "양자리",
+        "zodiac2": "사자자리"
+      },
+      "passed": false,
+      "violations": [
+        {
+          "category": "negative",
+          "word": "주의",
+          "position": 120
+        },
+        {
+          "category": "negative",
+          "word": "충돌",
+          "position": 110
+        }
+      ],
+      "scores": {
+        "positive": 59,
+        "readability": 100,
+        "total": 17.7
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.949Z",
+      "meta": {
+        "key": "1-6",
+        "zodiac1": "양자리",
+        "zodiac2": "처녀자리"
+      },
+      "passed": false,
+      "violations": [
+        {
+          "category": "negative",
+          "word": "주의",
+          "position": 120
+        },
+        {
+          "category": "negative",
+          "word": "충돌",
+          "position": 110
+        }
+      ],
+      "scores": {
+        "positive": 62,
+        "readability": 100,
+        "total": 18.6
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.949Z",
+      "meta": {
+        "key": "1-7",
+        "zodiac1": "양자리",
+        "zodiac2": "천칭자리"
+      },
+      "passed": false,
+      "violations": [
+        {
+          "category": "negative",
+          "word": "주의",
+          "position": 121
+        },
+        {
+          "category": "negative",
+          "word": "충돌",
+          "position": 111
+        }
+      ],
+      "scores": {
+        "positive": 62,
+        "readability": 100,
+        "total": 18.6
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.949Z",
+      "meta": {
+        "key": "1-8",
+        "zodiac1": "양자리",
+        "zodiac2": "전갈자리"
+      },
+      "passed": false,
+      "violations": [
+        {
+          "category": "negative",
+          "word": "주의",
+          "position": 121
+        },
+        {
+          "category": "negative",
+          "word": "충돌",
+          "position": 111
+        }
+      ],
+      "scores": {
+        "positive": 59,
+        "readability": 100,
+        "total": 17.7
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.949Z",
+      "meta": {
+        "key": "1-9",
+        "zodiac1": "양자리",
+        "zodiac2": "사수자리"
+      },
+      "passed": false,
+      "violations": [
+        {
+          "category": "negative",
+          "word": "주의",
+          "position": 119
+        },
+        {
+          "category": "negative",
+          "word": "충돌",
+          "position": 109
+        }
+      ],
+      "scores": {
+        "positive": 59,
+        "readability": 100,
+        "total": 17.7
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.949Z",
+      "meta": {
+        "key": "1-10",
+        "zodiac1": "양자리",
+        "zodiac2": "염소자리"
+      },
+      "passed": false,
+      "violations": [
+        {
+          "category": "negative",
+          "word": "주의",
+          "position": 120
+        },
+        {
+          "category": "negative",
+          "word": "충돌",
+          "position": 110
+        }
+      ],
+      "scores": {
+        "positive": 59,
+        "readability": 100,
+        "total": 17.7
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.949Z",
+      "meta": {
+        "key": "1-11",
+        "zodiac1": "양자리",
+        "zodiac2": "물병자리"
+      },
+      "passed": false,
+      "violations": [
+        {
+          "category": "negative",
+          "word": "주의",
+          "position": 121
+        },
+        {
+          "category": "negative",
+          "word": "충돌",
+          "position": 111
+        }
+      ],
+      "scores": {
+        "positive": 56,
+        "readability": 100,
+        "total": 16.8
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.949Z",
+      "meta": {
+        "key": "1-12",
+        "zodiac1": "양자리",
+        "zodiac2": "물고기자리"
+      },
+      "passed": false,
+      "violations": [
+        {
+          "category": "negative",
+          "word": "주의",
+          "position": 123
+        },
+        {
+          "category": "negative",
+          "word": "충돌",
+          "position": 113
+        }
+      ],
+      "scores": {
+        "positive": 56,
+        "readability": 100,
+        "total": 16.8
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.949Z",
+      "meta": {
+        "key": "2-2",
+        "zodiac1": "황소자리",
+        "zodiac2": "황소자리"
+      },
+      "passed": false,
+      "violations": [],
+      "scores": {
+        "positive": 68,
+        "readability": 100,
+        "total": 140.4
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.949Z",
+      "meta": {
+        "key": "2-3",
+        "zodiac1": "황소자리",
+        "zodiac2": "쌍둥이자리"
+      },
+      "passed": false,
+      "violations": [
+        {
+          "category": "negative",
+          "word": "주의",
+          "position": 126
+        },
+        {
+          "category": "negative",
+          "word": "충돌",
+          "position": 116
+        }
+      ],
+      "scores": {
+        "positive": 65,
+        "readability": 100,
+        "total": 19.5
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.950Z",
+      "meta": {
+        "key": "2-4",
+        "zodiac1": "황소자리",
+        "zodiac2": "게자리"
+      },
+      "passed": false,
+      "violations": [
+        {
+          "category": "negative",
+          "word": "주의",
+          "position": 122
+        },
+        {
+          "category": "negative",
+          "word": "충돌",
+          "position": 112
+        }
+      ],
+      "scores": {
+        "positive": 62,
+        "readability": 100,
+        "total": 18.6
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.950Z",
+      "meta": {
+        "key": "2-5",
+        "zodiac1": "황소자리",
+        "zodiac2": "사자자리"
+      },
+      "passed": false,
+      "violations": [
+        {
+          "category": "negative",
+          "word": "주의",
+          "position": 126
+        },
+        {
+          "category": "negative",
+          "word": "충돌",
+          "position": 116
+        }
+      ],
+      "scores": {
+        "positive": 65,
+        "readability": 100,
+        "total": 19.5
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.950Z",
+      "meta": {
+        "key": "2-6",
+        "zodiac1": "황소자리",
+        "zodiac2": "처녀자리"
+      },
+      "passed": false,
+      "violations": [
+        {
+          "category": "negative",
+          "word": "주의",
+          "position": 123
+        },
+        {
+          "category": "negative",
+          "word": "충돌",
+          "position": 113
+        },
+        {
+          "category": "political",
+          "word": "보수",
+          "position": 91
+        }
+      ],
+      "scores": {
+        "positive": 65,
+        "readability": 100,
+        "total": 9.5
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.950Z",
+      "meta": {
+        "key": "2-7",
+        "zodiac1": "황소자리",
+        "zodiac2": "천칭자리"
+      },
+      "passed": false,
+      "violations": [
+        {
+          "category": "negative",
+          "word": "주의",
+          "position": 125
+        },
+        {
+          "category": "negative",
+          "word": "충돌",
+          "position": 115
+        },
+        {
+          "category": "political",
+          "word": "보수",
+          "position": 93
+        }
+      ],
+      "scores": {
+        "positive": 62,
+        "readability": 100,
+        "total": 8.600000000000001
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.950Z",
+      "meta": {
+        "key": "2-8",
+        "zodiac1": "황소자리",
+        "zodiac2": "전갈자리"
+      },
+      "passed": false,
+      "violations": [
+        {
+          "category": "negative",
+          "word": "주의",
+          "position": 125
+        },
+        {
+          "category": "negative",
+          "word": "충돌",
+          "position": 115
+        }
+      ],
+      "scores": {
+        "positive": 62,
+        "readability": 100,
+        "total": 18.6
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.950Z",
+      "meta": {
+        "key": "2-9",
+        "zodiac1": "황소자리",
+        "zodiac2": "사수자리"
+      },
+      "passed": false,
+      "violations": [
+        {
+          "category": "negative",
+          "word": "주의",
+          "position": 68
+        },
+        {
+          "category": "negative",
+          "word": "충돌",
+          "position": 112
+        },
+        {
+          "category": "political",
+          "word": "보수",
+          "position": 91
+        }
+      ],
+      "scores": {
+        "positive": 59,
+        "readability": 100,
+        "total": 7.699999999999999
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.950Z",
+      "meta": {
+        "key": "2-10",
+        "zodiac1": "황소자리",
+        "zodiac2": "염소자리"
+      },
+      "passed": false,
+      "violations": [
+        {
+          "category": "negative",
+          "word": "주의",
+          "position": 122
+        },
+        {
+          "category": "negative",
+          "word": "충돌",
+          "position": 112
+        }
+      ],
+      "scores": {
+        "positive": 65,
+        "readability": 100,
+        "total": 19.5
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.950Z",
+      "meta": {
+        "key": "2-11",
+        "zodiac1": "황소자리",
+        "zodiac2": "물병자리"
+      },
+      "passed": false,
+      "violations": [
+        {
+          "category": "negative",
+          "word": "주의",
+          "position": 126
+        },
+        {
+          "category": "negative",
+          "word": "충돌",
+          "position": 116
+        }
+      ],
+      "scores": {
+        "positive": 62,
+        "readability": 100,
+        "total": 18.6
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.950Z",
+      "meta": {
+        "key": "2-12",
+        "zodiac1": "황소자리",
+        "zodiac2": "물고기자리"
+      },
+      "passed": false,
+      "violations": [
+        {
+          "category": "negative",
+          "word": "주의",
+          "position": 126
+        },
+        {
+          "category": "negative",
+          "word": "충돌",
+          "position": 116
+        }
+      ],
+      "scores": {
+        "positive": 62,
+        "readability": 100,
+        "total": 18.6
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.950Z",
+      "meta": {
+        "key": "3-3",
+        "zodiac1": "쌍둥이자리",
+        "zodiac2": "쌍둥이자리"
+      },
+      "passed": false,
+      "violations": [],
+      "scores": {
+        "positive": 62,
+        "readability": 100,
+        "total": 138.6
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.950Z",
+      "meta": {
+        "key": "3-4",
+        "zodiac1": "쌍둥이자리",
+        "zodiac2": "게자리"
+      },
+      "passed": false,
+      "violations": [
+        {
+          "category": "negative",
+          "word": "주의",
+          "position": 122
+        },
+        {
+          "category": "negative",
+          "word": "충돌",
+          "position": 112
+        }
+      ],
+      "scores": {
+        "positive": 56,
+        "readability": 100,
+        "total": 16.8
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.950Z",
+      "meta": {
+        "key": "3-5",
+        "zodiac1": "쌍둥이자리",
+        "zodiac2": "사자자리"
+      },
+      "passed": false,
+      "violations": [
+        {
+          "category": "negative",
+          "word": "주의",
+          "position": 126
+        },
+        {
+          "category": "negative",
+          "word": "충돌",
+          "position": 116
+        }
+      ],
+      "scores": {
+        "positive": 59,
+        "readability": 100,
+        "total": 17.7
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.950Z",
+      "meta": {
+        "key": "3-6",
+        "zodiac1": "쌍둥이자리",
+        "zodiac2": "처녀자리"
+      },
+      "passed": false,
+      "violations": [
+        {
+          "category": "negative",
+          "word": "주의",
+          "position": 128
+        },
+        {
+          "category": "negative",
+          "word": "충돌",
+          "position": 118
+        }
+      ],
+      "scores": {
+        "positive": 62,
+        "readability": 100,
+        "total": 18.6
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.950Z",
+      "meta": {
+        "key": "3-7",
+        "zodiac1": "쌍둥이자리",
+        "zodiac2": "천칭자리"
+      },
+      "passed": false,
+      "violations": [
+        {
+          "category": "negative",
+          "word": "주의",
+          "position": 123
+        },
+        {
+          "category": "negative",
+          "word": "충돌",
+          "position": 113
+        }
+      ],
+      "scores": {
+        "positive": 62,
+        "readability": 100,
+        "total": 18.6
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.951Z",
+      "meta": {
+        "key": "3-8",
+        "zodiac1": "쌍둥이자리",
+        "zodiac2": "전갈자리"
+      },
+      "passed": false,
+      "violations": [
+        {
+          "category": "negative",
+          "word": "주의",
+          "position": 125
+        },
+        {
+          "category": "negative",
+          "word": "충돌",
+          "position": 115
+        }
+      ],
+      "scores": {
+        "positive": 59,
+        "readability": 100,
+        "total": 17.7
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.951Z",
+      "meta": {
+        "key": "3-9",
+        "zodiac1": "쌍둥이자리",
+        "zodiac2": "사수자리"
+      },
+      "passed": false,
+      "violations": [
+        {
+          "category": "negative",
+          "word": "주의",
+          "position": 69
+        },
+        {
+          "category": "negative",
+          "word": "충돌",
+          "position": 114
+        }
+      ],
+      "scores": {
+        "positive": 62,
+        "readability": 100,
+        "total": 18.6
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.951Z",
+      "meta": {
+        "key": "3-10",
+        "zodiac1": "쌍둥이자리",
+        "zodiac2": "염소자리"
+      },
+      "passed": false,
+      "violations": [
+        {
+          "category": "negative",
+          "word": "주의",
+          "position": 126
+        },
+        {
+          "category": "negative",
+          "word": "충돌",
+          "position": 116
+        }
+      ],
+      "scores": {
+        "positive": 62,
+        "readability": 100,
+        "total": 18.6
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.951Z",
+      "meta": {
+        "key": "3-11",
+        "zodiac1": "쌍둥이자리",
+        "zodiac2": "물병자리"
+      },
+      "passed": false,
+      "violations": [
+        {
+          "category": "negative",
+          "word": "주의",
+          "position": 126
+        },
+        {
+          "category": "negative",
+          "word": "충돌",
+          "position": 116
+        }
+      ],
+      "scores": {
+        "positive": 59,
+        "readability": 100,
+        "total": 17.7
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.951Z",
+      "meta": {
+        "key": "3-12",
+        "zodiac1": "쌍둥이자리",
+        "zodiac2": "물고기자리"
+      },
+      "passed": false,
+      "violations": [
+        {
+          "category": "negative",
+          "word": "주의",
+          "position": 129
+        },
+        {
+          "category": "negative",
+          "word": "충돌",
+          "position": 119
+        }
+      ],
+      "scores": {
+        "positive": 62,
+        "readability": 100,
+        "total": 18.6
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.951Z",
+      "meta": {
+        "key": "4-4",
+        "zodiac1": "게자리",
+        "zodiac2": "게자리"
+      },
+      "passed": false,
+      "violations": [],
+      "scores": {
+        "positive": 59,
+        "readability": 100,
+        "total": 137.7
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.951Z",
+      "meta": {
+        "key": "4-5",
+        "zodiac1": "게자리",
+        "zodiac2": "사자자리"
+      },
+      "passed": false,
+      "violations": [
+        {
+          "category": "negative",
+          "word": "주의",
+          "position": 122
+        },
+        {
+          "category": "negative",
+          "word": "충돌",
+          "position": 112
+        }
+      ],
+      "scores": {
+        "positive": 56,
+        "readability": 100,
+        "total": 16.8
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.951Z",
+      "meta": {
+        "key": "4-6",
+        "zodiac1": "게자리",
+        "zodiac2": "처녀자리"
+      },
+      "passed": false,
+      "violations": [
+        {
+          "category": "negative",
+          "word": "주의",
+          "position": 126
+        },
+        {
+          "category": "negative",
+          "word": "충돌",
+          "position": 116
+        }
+      ],
+      "scores": {
+        "positive": 68,
+        "readability": 100,
+        "total": 20.400000000000002
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.951Z",
+      "meta": {
+        "key": "4-7",
+        "zodiac1": "게자리",
+        "zodiac2": "천칭자리"
+      },
+      "passed": false,
+      "violations": [
+        {
+          "category": "negative",
+          "word": "주의",
+          "position": 122
+        },
+        {
+          "category": "negative",
+          "word": "충돌",
+          "position": 112
+        }
+      ],
+      "scores": {
+        "positive": 56,
+        "readability": 100,
+        "total": 16.8
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.952Z",
+      "meta": {
+        "key": "4-8",
+        "zodiac1": "게자리",
+        "zodiac2": "전갈자리"
+      },
+      "passed": false,
+      "violations": [
+        {
+          "category": "negative",
+          "word": "주의",
+          "position": 123
+        },
+        {
+          "category": "negative",
+          "word": "충돌",
+          "position": 113
+        }
+      ],
+      "scores": {
+        "positive": 56,
+        "readability": 100,
+        "total": 16.8
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.952Z",
+      "meta": {
+        "key": "4-9",
+        "zodiac1": "게자리",
+        "zodiac2": "사수자리"
+      },
+      "passed": false,
+      "violations": [
+        {
+          "category": "negative",
+          "word": "주의",
+          "position": 124
+        },
+        {
+          "category": "negative",
+          "word": "충돌",
+          "position": 114
+        }
+      ],
+      "scores": {
+        "positive": 56,
+        "readability": 100,
+        "total": 16.8
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.952Z",
+      "meta": {
+        "key": "4-10",
+        "zodiac1": "게자리",
+        "zodiac2": "염소자리"
+      },
+      "passed": false,
+      "violations": [
+        {
+          "category": "negative",
+          "word": "주의",
+          "position": 124
+        },
+        {
+          "category": "negative",
+          "word": "충돌",
+          "position": 114
+        }
+      ],
+      "scores": {
+        "positive": 62,
+        "readability": 100,
+        "total": 18.6
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.952Z",
+      "meta": {
+        "key": "4-11",
+        "zodiac1": "게자리",
+        "zodiac2": "물병자리"
+      },
+      "passed": false,
+      "violations": [
+        {
+          "category": "negative",
+          "word": "주의",
+          "position": 121
+        },
+        {
+          "category": "negative",
+          "word": "충돌",
+          "position": 111
+        }
+      ],
+      "scores": {
+        "positive": 59,
+        "readability": 100,
+        "total": 17.7
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.952Z",
+      "meta": {
+        "key": "4-12",
+        "zodiac1": "게자리",
+        "zodiac2": "물고기자리"
+      },
+      "passed": false,
+      "violations": [
+        {
+          "category": "negative",
+          "word": "주의",
+          "position": 128
+        },
+        {
+          "category": "negative",
+          "word": "충돌",
+          "position": 118
+        }
+      ],
+      "scores": {
+        "positive": 56,
+        "readability": 100,
+        "total": 16.8
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.952Z",
+      "meta": {
+        "key": "5-5",
+        "zodiac1": "사자자리",
+        "zodiac2": "사자자리"
+      },
+      "passed": false,
+      "violations": [],
+      "scores": {
+        "positive": 65,
+        "readability": 100,
+        "total": 139.5
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.952Z",
+      "meta": {
+        "key": "5-6",
+        "zodiac1": "사자자리",
+        "zodiac2": "처녀자리"
+      },
+      "passed": false,
+      "violations": [
+        {
+          "category": "negative",
+          "word": "주의",
+          "position": 121
+        },
+        {
+          "category": "negative",
+          "word": "걱정",
+          "position": 104
+        },
+        {
+          "category": "negative",
+          "word": "충돌",
+          "position": 111
+        }
+      ],
+      "scores": {
+        "positive": 59,
+        "readability": 100,
+        "total": 7.699999999999999
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.952Z",
+      "meta": {
+        "key": "5-7",
+        "zodiac1": "사자자리",
+        "zodiac2": "천칭자리"
+      },
+      "passed": false,
+      "violations": [
+        {
+          "category": "negative",
+          "word": "주의",
+          "position": 123
+        },
+        {
+          "category": "negative",
+          "word": "충돌",
+          "position": 113
+        }
+      ],
+      "scores": {
+        "positive": 56,
+        "readability": 100,
+        "total": 16.8
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.952Z",
+      "meta": {
+        "key": "5-8",
+        "zodiac1": "사자자리",
+        "zodiac2": "전갈자리"
+      },
+      "passed": false,
+      "violations": [
+        {
+          "category": "negative",
+          "word": "주의",
+          "position": 122
+        },
+        {
+          "category": "negative",
+          "word": "충돌",
+          "position": 112
+        }
+      ],
+      "scores": {
+        "positive": 59,
+        "readability": 100,
+        "total": 17.7
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.952Z",
+      "meta": {
+        "key": "5-9",
+        "zodiac1": "사자자리",
+        "zodiac2": "사수자리"
+      },
+      "passed": false,
+      "violations": [
+        {
+          "category": "negative",
+          "word": "주의",
+          "position": 121
+        },
+        {
+          "category": "negative",
+          "word": "충돌",
+          "position": 111
+        }
+      ],
+      "scores": {
+        "positive": 59,
+        "readability": 100,
+        "total": 17.7
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.952Z",
+      "meta": {
+        "key": "5-10",
+        "zodiac1": "사자자리",
+        "zodiac2": "염소자리"
+      },
+      "passed": false,
+      "violations": [
+        {
+          "category": "negative",
+          "word": "주의",
+          "position": 126
+        },
+        {
+          "category": "negative",
+          "word": "충돌",
+          "position": 116
+        }
+      ],
+      "scores": {
+        "positive": 59,
+        "readability": 100,
+        "total": 17.7
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.952Z",
+      "meta": {
+        "key": "5-11",
+        "zodiac1": "사자자리",
+        "zodiac2": "물병자리"
+      },
+      "passed": false,
+      "violations": [
+        {
+          "category": "negative",
+          "word": "주의",
+          "position": 124
+        },
+        {
+          "category": "negative",
+          "word": "충돌",
+          "position": 114
+        }
+      ],
+      "scores": {
+        "positive": 56,
+        "readability": 100,
+        "total": 16.8
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.952Z",
+      "meta": {
+        "key": "5-12",
+        "zodiac1": "사자자리",
+        "zodiac2": "물고기자리"
+      },
+      "passed": false,
+      "violations": [
+        {
+          "category": "negative",
+          "word": "주의",
+          "position": 125
+        },
+        {
+          "category": "negative",
+          "word": "충돌",
+          "position": 115
+        }
+      ],
+      "scores": {
+        "positive": 62,
+        "readability": 100,
+        "total": 18.6
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.952Z",
+      "meta": {
+        "key": "6-6",
+        "zodiac1": "처녀자리",
+        "zodiac2": "처녀자리"
+      },
+      "passed": false,
+      "violations": [],
+      "scores": {
+        "positive": 65,
+        "readability": 100,
+        "total": 139.5
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.952Z",
+      "meta": {
+        "key": "6-7",
+        "zodiac1": "처녀자리",
+        "zodiac2": "천칭자리"
+      },
+      "passed": false,
+      "violations": [
+        {
+          "category": "negative",
+          "word": "주의",
+          "position": 124
+        },
+        {
+          "category": "negative",
+          "word": "충돌",
+          "position": 114
+        }
+      ],
+      "scores": {
+        "positive": 59,
+        "readability": 100,
+        "total": 17.7
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.952Z",
+      "meta": {
+        "key": "6-8",
+        "zodiac1": "처녀자리",
+        "zodiac2": "전갈자리"
+      },
+      "passed": false,
+      "violations": [
+        {
+          "category": "negative",
+          "word": "주의",
+          "position": 124
+        },
+        {
+          "category": "negative",
+          "word": "충돌",
+          "position": 114
+        }
+      ],
+      "scores": {
+        "positive": 62,
+        "readability": 100,
+        "total": 18.6
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.952Z",
+      "meta": {
+        "key": "6-9",
+        "zodiac1": "처녀자리",
+        "zodiac2": "사수자리"
+      },
+      "passed": false,
+      "violations": [
+        {
+          "category": "negative",
+          "word": "주의",
+          "position": 124
+        },
+        {
+          "category": "negative",
+          "word": "걱정",
+          "position": 92
+        },
+        {
+          "category": "negative",
+          "word": "충돌",
+          "position": 114
+        }
+      ],
+      "scores": {
+        "positive": 59,
+        "readability": 100,
+        "total": 7.699999999999999
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.952Z",
+      "meta": {
+        "key": "6-10",
+        "zodiac1": "처녀자리",
+        "zodiac2": "염소자리"
+      },
+      "passed": false,
+      "violations": [
+        {
+          "category": "negative",
+          "word": "주의",
+          "position": 121
+        },
+        {
+          "category": "negative",
+          "word": "걱정",
+          "position": 90
+        },
+        {
+          "category": "negative",
+          "word": "충돌",
+          "position": 111
+        }
+      ],
+      "scores": {
+        "positive": 62,
+        "readability": 100,
+        "total": 8.600000000000001
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.952Z",
+      "meta": {
+        "key": "6-11",
+        "zodiac1": "처녀자리",
+        "zodiac2": "물병자리"
+      },
+      "passed": false,
+      "violations": [
+        {
+          "category": "negative",
+          "word": "주의",
+          "position": 70
+        },
+        {
+          "category": "negative",
+          "word": "충돌",
+          "position": 119
+        }
+      ],
+      "scores": {
+        "positive": 62,
+        "readability": 95,
+        "total": 17.6
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.952Z",
+      "meta": {
+        "key": "6-12",
+        "zodiac1": "처녀자리",
+        "zodiac2": "물고기자리"
+      },
+      "passed": false,
+      "violations": [
+        {
+          "category": "negative",
+          "word": "주의",
+          "position": 125
+        },
+        {
+          "category": "negative",
+          "word": "걱정",
+          "position": 93
+        },
+        {
+          "category": "negative",
+          "word": "충돌",
+          "position": 115
+        }
+      ],
+      "scores": {
+        "positive": 59,
+        "readability": 100,
+        "total": 7.699999999999999
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.952Z",
+      "meta": {
+        "key": "7-7",
+        "zodiac1": "천칭자리",
+        "zodiac2": "천칭자리"
+      },
+      "passed": false,
+      "violations": [],
+      "scores": {
+        "positive": 65,
+        "readability": 100,
+        "total": 139.5
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.953Z",
+      "meta": {
+        "key": "7-8",
+        "zodiac1": "천칭자리",
+        "zodiac2": "전갈자리"
+      },
+      "passed": false,
+      "violations": [
+        {
+          "category": "negative",
+          "word": "주의",
+          "position": 123
+        },
+        {
+          "category": "negative",
+          "word": "충돌",
+          "position": 113
+        }
+      ],
+      "scores": {
+        "positive": 56,
+        "readability": 100,
+        "total": 16.8
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.953Z",
+      "meta": {
+        "key": "7-9",
+        "zodiac1": "천칭자리",
+        "zodiac2": "사수자리"
+      },
+      "passed": false,
+      "violations": [
+        {
+          "category": "negative",
+          "word": "주의",
+          "position": 68
+        },
+        {
+          "category": "negative",
+          "word": "충돌",
+          "position": 112
+        }
+      ],
+      "scores": {
+        "positive": 56,
+        "readability": 100,
+        "total": 16.8
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.953Z",
+      "meta": {
+        "key": "7-10",
+        "zodiac1": "천칭자리",
+        "zodiac2": "염소자리"
+      },
+      "passed": false,
+      "violations": [
+        {
+          "category": "negative",
+          "word": "주의",
+          "position": 125
+        },
+        {
+          "category": "negative",
+          "word": "충돌",
+          "position": 115
+        }
+      ],
+      "scores": {
+        "positive": 59,
+        "readability": 100,
+        "total": 17.7
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.953Z",
+      "meta": {
+        "key": "7-11",
+        "zodiac1": "천칭자리",
+        "zodiac2": "물병자리"
+      },
+      "passed": false,
+      "violations": [
+        {
+          "category": "negative",
+          "word": "주의",
+          "position": 69
+        },
+        {
+          "category": "negative",
+          "word": "충돌",
+          "position": 114
+        }
+      ],
+      "scores": {
+        "positive": 59,
+        "readability": 100,
+        "total": 17.7
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.953Z",
+      "meta": {
+        "key": "7-12",
+        "zodiac1": "천칭자리",
+        "zodiac2": "물고기자리"
+      },
+      "passed": false,
+      "violations": [
+        {
+          "category": "negative",
+          "word": "주의",
+          "position": 127
+        },
+        {
+          "category": "negative",
+          "word": "충돌",
+          "position": 117
+        }
+      ],
+      "scores": {
+        "positive": 59,
+        "readability": 100,
+        "total": 17.7
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.953Z",
+      "meta": {
+        "key": "8-8",
+        "zodiac1": "전갈자리",
+        "zodiac2": "전갈자리"
+      },
+      "passed": false,
+      "violations": [],
+      "scores": {
+        "positive": 59,
+        "readability": 100,
+        "total": 137.7
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.953Z",
+      "meta": {
+        "key": "8-9",
+        "zodiac1": "전갈자리",
+        "zodiac2": "사수자리"
+      },
+      "passed": false,
+      "violations": [
+        {
+          "category": "negative",
+          "word": "주의",
+          "position": 69
+        },
+        {
+          "category": "negative",
+          "word": "충돌",
+          "position": 113
+        }
+      ],
+      "scores": {
+        "positive": 59,
+        "readability": 100,
+        "total": 17.7
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.953Z",
+      "meta": {
+        "key": "8-10",
+        "zodiac1": "전갈자리",
+        "zodiac2": "염소자리"
+      },
+      "passed": false,
+      "violations": [
+        {
+          "category": "negative",
+          "word": "주의",
+          "position": 123
+        },
+        {
+          "category": "negative",
+          "word": "충돌",
+          "position": 113
+        }
+      ],
+      "scores": {
+        "positive": 59,
+        "readability": 100,
+        "total": 17.7
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.953Z",
+      "meta": {
+        "key": "8-11",
+        "zodiac1": "전갈자리",
+        "zodiac2": "물병자리"
+      },
+      "passed": false,
+      "violations": [
+        {
+          "category": "negative",
+          "word": "주의",
+          "position": 69
+        },
+        {
+          "category": "negative",
+          "word": "충돌",
+          "position": 115
+        }
+      ],
+      "scores": {
+        "positive": 59,
+        "readability": 100,
+        "total": 17.7
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.953Z",
+      "meta": {
+        "key": "8-12",
+        "zodiac1": "전갈자리",
+        "zodiac2": "물고기자리"
+      },
+      "passed": false,
+      "violations": [
+        {
+          "category": "negative",
+          "word": "주의",
+          "position": 127
+        },
+        {
+          "category": "negative",
+          "word": "충돌",
+          "position": 117
+        }
+      ],
+      "scores": {
+        "positive": 56,
+        "readability": 100,
+        "total": 16.8
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.953Z",
+      "meta": {
+        "key": "9-9",
+        "zodiac1": "사수자리",
+        "zodiac2": "사수자리"
+      },
+      "passed": false,
+      "violations": [],
+      "scores": {
+        "positive": 65,
+        "readability": 100,
+        "total": 139.5
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.953Z",
+      "meta": {
+        "key": "9-10",
+        "zodiac1": "사수자리",
+        "zodiac2": "염소자리"
+      },
+      "passed": false,
+      "violations": [
+        {
+          "category": "negative",
+          "word": "주의",
+          "position": 122
+        },
+        {
+          "category": "negative",
+          "word": "충돌",
+          "position": 112
+        }
+      ],
+      "scores": {
+        "positive": 56,
+        "readability": 100,
+        "total": 16.8
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.953Z",
+      "meta": {
+        "key": "9-11",
+        "zodiac1": "사수자리",
+        "zodiac2": "물병자리"
+      },
+      "passed": false,
+      "violations": [
+        {
+          "category": "negative",
+          "word": "주의",
+          "position": 57
+        },
+        {
+          "category": "negative",
+          "word": "충돌",
+          "position": 114
+        }
+      ],
+      "scores": {
+        "positive": 56,
+        "readability": 100,
+        "total": 16.8
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.953Z",
+      "meta": {
+        "key": "9-12",
+        "zodiac1": "사수자리",
+        "zodiac2": "물고기자리"
+      },
+      "passed": false,
+      "violations": [
+        {
+          "category": "negative",
+          "word": "주의",
+          "position": 126
+        },
+        {
+          "category": "negative",
+          "word": "충돌",
+          "position": 116
+        }
+      ],
+      "scores": {
+        "positive": 59,
+        "readability": 100,
+        "total": 17.7
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.953Z",
+      "meta": {
+        "key": "10-10",
+        "zodiac1": "염소자리",
+        "zodiac2": "염소자리"
+      },
+      "passed": false,
+      "violations": [],
+      "scores": {
+        "positive": 68,
+        "readability": 100,
+        "total": 140.4
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.953Z",
+      "meta": {
+        "key": "10-11",
+        "zodiac1": "염소자리",
+        "zodiac2": "물병자리"
+      },
+      "passed": false,
+      "violations": [
+        {
+          "category": "negative",
+          "word": "주의",
+          "position": 127
+        },
+        {
+          "category": "negative",
+          "word": "충돌",
+          "position": 117
+        }
+      ],
+      "scores": {
+        "positive": 62,
+        "readability": 100,
+        "total": 18.6
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.953Z",
+      "meta": {
+        "key": "10-12",
+        "zodiac1": "염소자리",
+        "zodiac2": "물고기자리"
+      },
+      "passed": false,
+      "violations": [
+        {
+          "category": "negative",
+          "word": "주의",
+          "position": 128
+        },
+        {
+          "category": "negative",
+          "word": "충돌",
+          "position": 118
+        }
+      ],
+      "scores": {
+        "positive": 62,
+        "readability": 100,
+        "total": 18.6
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.953Z",
+      "meta": {
+        "key": "11-11",
+        "zodiac1": "물병자리",
+        "zodiac2": "물병자리"
+      },
+      "passed": false,
+      "violations": [],
+      "scores": {
+        "positive": 65,
+        "readability": 100,
+        "total": 139.5
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.953Z",
+      "meta": {
+        "key": "11-12",
+        "zodiac1": "물병자리",
+        "zodiac2": "물고기자리"
+      },
+      "passed": false,
+      "violations": [
+        {
+          "category": "negative",
+          "word": "주의",
+          "position": 125
+        },
+        {
+          "category": "negative",
+          "word": "충돌",
+          "position": 115
+        }
+      ],
+      "scores": {
+        "positive": 56,
+        "readability": 100,
+        "total": 16.8
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    },
+    {
+      "timestamp": "2025-10-14T06:54:13.953Z",
+      "meta": {
+        "key": "12-12",
+        "zodiac1": "물고기자리",
+        "zodiac2": "물고기자리"
+      },
+      "passed": false,
+      "violations": [],
+      "scores": {
+        "positive": 59,
+        "readability": 100,
+        "total": 137.7
+      },
+      "details": {
+        "positiveToneIssue": true
+      }
+    }
+  ]
+}

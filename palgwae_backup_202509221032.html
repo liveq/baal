@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BAAL 팔괘 심리테스트 포털</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #fafbfc;
+            color: #1a1a1a;
+            min-height: 100vh;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* 좌측 패널 */
+        .left-panel {
+            width: 280px;
+            background: #ffffff;
+            padding: 32px 20px;
+            border-right: 1px solid #e5e7eb;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 4px 0 24px rgba(0, 0, 0, 0.04);
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        .panel-title {
+            font-size: 4em;
+            font-weight: 900;
+            color: #1a1a1a;
+            margin-bottom: 24px;
+            letter-spacing: -1px;
+            text-align: center;
+            font-family: 'Inter', sans-serif;
+            line-height: 1;
+            transition: opacity 0.2s;
+        }
+
+        .panel-title:hover {
+            opacity: 0.8;
+        }
+
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .test-button {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 16px 12px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            color: #374151;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .test-button:hover {
+            background: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+            border-color: #d1d5db;
+        }
+
+        .test-icon {
+            font-size: 24px;
+            opacity: 0.8;
+        }
+
+        .test-name {
+            font-size: 12px;
+            font-weight: 500;
+            color: #6b7280;
+        }
+
+        /* 우측 메인 영역 */
+        .main-area {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            background: linear-gradient(135deg, #f3f4f6 0%, #ffffff 100%);
+        }
+
+        /* 팔괘 컨테이너 */
+        .bagua-container {
+            width: 600px;
+            height: 600px;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+
+        /* 팔괘 버튼들 */
+        .bagua-button-wrapper {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none; /* 래퍼는 이벤트 무시 */
+            z-index: 2; /* 버튼들을 위한 계층 */
+        }
+
+        .bagua-pos {
+            position: absolute;
+            width: 90px;
+            height: 90px;
+            background: #ffffff;
+            border: 1.5px solid #d1d5db;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+            text-decoration: none;
+            color: #374151;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            z-index: 3;
+            pointer-events: auto; /* 버튼은 클릭 가능하도록 */
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .bagua-pos:hover {
+            transform: translate(-50%, -50%) scale(1.2);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+            background: #f9fafb;
+        }
+
+        /* 괘 심볼 스타일 */
+        .trigram {
+            font-size: 20px;
+            font-weight: bold;
+            color: #1f2937;
+            line-height: 1;
+            margin-bottom: 2px;
+        }
+
+        /* 괘 호버 효과 */
+        .trigram-group {
+            cursor: pointer;
+            position: relative;
+            z-index: 10;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            pointer-events: auto;
+        }
+
+        .trigram-hover-area {
+            cursor: pointer;
+        }
+
+        .trigram-symbol {
+            pointer-events: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            transition: font-size 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-block;
+            transform-origin: center;
+        }
+
+        /* 호버 시 해당 그룹을 최상위로 올림 */
+        .trigram-group:hover {
+            z-index: 1000000;
+        }
+
+        .trigram-group:hover .trigram-symbol {
+            fill: #111827;
+            font-size: 36px;
+        }
+
+        /* 팔괘 SVG 배경 */
+        .bagua-svg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 1; /* 버튼보다 아래로 설정 */
+            pointer-events: none; /* SVG 전체는 이벤트 무시 */
+        }
+
+        /* 툴팁 스타일 */
+        #trigram-tooltip {
+            position: fixed;
+            pointer-events: none;
+            z-index: 10000;
+            display: none;
+        }
+
+        .tooltip-content {
+            border-radius: 4px;
+            padding: 6px 10px;
+            color: white;
+            font-weight: 700;
+            text-align: center;
+            min-width: 50px;
+        }
+
+        .bagua-pos .test-icon {
+            font-size: 22px;
+            opacity: 0.85;
+        }
+
+        .bagua-pos .test-name {
+            font-size: 11px;
+            font-weight: 600;
+            color: #6b7280;
+            margin-top: 2px;
+        }
+
+        /* 팔각형 각 변의 바깥 중앙에 버튼 배치 - 대각선은 더 멀리 */
+        .pos-1 { /* 상단 변 중앙 - 별자리 */
+            left: 300px;
+            top: 40px;
+            transform: translate(-50%, -50%);
+        }
+
+        .pos-2 { /* 우상단 대각선 변 중앙 - 혈액형 (더 멀리) */
+            left: 500px;
+            top: 100px;
+            transform: translate(-50%, -50%);
+        }
+
+        .pos-3 { /* 우측 변 중앙 - 타로 */
+            left: 560px;
+            top: 300px;
+            transform: translate(-50%, -50%);
+        }
+
+        .pos-4 { /* 우하단 대각선 변 중앙 - 사주 (더 멀리) */
+            left: 500px;
+            top: 500px;
+            transform: translate(-50%, -50%);
+        }
+
+        .pos-5 { /* 하단 변 중앙 - 포춘쿠키 */
+            left: 300px;
+            top: 560px;
+            transform: translate(-50%, -50%);
+        }
+
+        .pos-6 { /* 좌하단 대각선 변 중앙 - 에니어그램 (더 멀리) */
+            left: 100px;
+            top: 500px;
+            transform: translate(-50%, -50%);
+        }
+
+        .pos-7 { /* 좌측 변 중앙 - 손금 */
+            left: 40px;
+            top: 300px;
+            transform: translate(-50%, -50%);
+        }
+
+        .pos-8 { /* 좌상단 대각선 변 중앙 - 수비학 (더 멀리) */
+            left: 100px;
+            top: 100px;
+            transform: translate(-50%, -50%);
+        }
+
+        /* 중앙 태극 영역 */
+        .center-taiji {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 150px;
+            height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+        }
+
+        /* 태극 SVG */
+        .taiji-container {
+            width: 120px;
+            height: 120px;
+            position: relative;
+            cursor: pointer;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .taiji-svg {
+            width: 100%;
+            height: 100%;
+            animation: rotate 20s linear infinite;
+            cursor: pointer;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* 태극 내부 상하좌우 버튼 - 다른 버튼과 동일 크기 */
+        .taiji-top,
+        .taiji-bottom,
+        .taiji-left,
+        .taiji-right {
+            position: absolute;
+            width: 90px;
+            height: 90px;
+            background: rgba(255, 255, 255, 0.95);
+            border: 1.5px solid #d1d5db;
+            border-radius: 16px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+            text-decoration: none;
+            color: #374151;
+            font-size: 11px;
+            font-weight: 600;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            z-index: 9999; /* 사신수 버튼들을 높은 계층으로 올림 */
+            backdrop-filter: blur(10px);
+            pointer-events: auto;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .taiji-top,
+        .taiji-bottom {
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .taiji-top {
+            top: -83px;
+        }
+
+        .taiji-bottom {
+            bottom: -83px;
+        }
+
+        .taiji-left {
+            left: -83px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .taiji-right {
+            right: -83px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .taiji-top:hover,
+        .taiji-bottom:hover {
+            transform: translateX(-50%) scale(1.2);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+            background: #f9fafb;
+        }
+
+        .taiji-left:hover,
+        .taiji-right:hover {
+            transform: translateY(-50%) scale(1.2);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+            background: #f9fafb;
+        }
+
+        .taiji-top .test-icon,
+        .taiji-bottom .test-icon,
+        .taiji-left .test-icon,
+        .taiji-right .test-icon {
+            font-size: 22px;
+            opacity: 0.85;
+        }
+
+        .taiji-top .test-name,
+        .taiji-bottom .test-name,
+        .taiji-left .test-name,
+        .taiji-right .test-name {
+            font-size: 11px;
+            font-weight: 600;
+            color: #6b7280;
+            margin-top: 2px;
+        }
+
+        /* 반응형 */
+        @media (max-width: 1024px) {
+            .left-panel {
+                width: 240px;
+            }
+
+            .bagua-container {
+                width: 500px;
+                height: 500px;
+            }
+
+            .bagua-pos {
+                width: 80px;
+                height: 80px;
+            }
+        }
+        /* 모달 스타일 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal.show {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            padding: 80px;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 700px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+            animation: slideUp 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 30px;
+            right: 35px;
+            font-size: 32px;
+            color: #9ca3af;
+            cursor: pointer;
+            transition: color 0.2s;
+            background: none;
+            border: none;
+            font-weight: 300;
+        }
+
+        .modal-close:hover {
+            color: #6b7280;
+        }
+
+        .modal-header {
+            margin-bottom: 50px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .modal-title {
+            font-family: 'Inter', sans-serif;
+            font-size: 4em;
+            font-weight: 900;
+            color: #1a1a1a;
+            letter-spacing: -1px;
+            line-height: 1;
+            cursor: default;
+        }
+
+        .modal-subtitle {
+            position: absolute;
+            right: -60px;
+            bottom: 0;
+            font-size: 1.2em;
+            color: #9ca3af;
+            font-weight: 400;
+            opacity: 0;
+            transition: opacity 0.6s ease;
+        }
+
+        .modal-subtitle.show {
+            opacity: 1;
+        }
+
+        .modal-text {
+            font-size: 1.15em;
+            line-height: 2;
+            color: #4a5568;
+            margin-bottom: 12px;
+            font-weight: 400;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* 토스트 메시지 스타일 */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 10000;
+        }
+
+        .toast.show {
+            opacity: 1;
+            visibility: visible;
+        }
+    </style>
+</head>
+<body>
+    <!-- 좌측 패널 -->
+    <div class="left-panel">
+        <h1 class="panel-title" onclick="showBaalModal()" style="cursor: pointer;">BAAL</h1>
+        <div class="test-grid">
+            <a href="zodiac-system/web/zodiac.html" class="test-button" target="_blank">
+                <span class="test-icon">♈</span>
+                <span class="test-name">별자리</span>
+            </a>
+            <a href="blood-type-system/web/blood-type-sidebar.html" class="test-button" target="_blank">
+                <span class="test-icon">🩸</span>
+                <span class="test-name">혈액형</span>
+            </a>
+            <a href="hormone-test/index.html" class="test-button" target="_blank">
+                <span class="test-icon">⚗️</span>
+                <span class="test-name">호르몬</span>
+            </a>
+            <a href="tarot-system/web/tarot.html" class="test-button" target="_blank">
+                <span class="test-icon">🎴</span>
+                <span class="test-name">타로</span>
+            </a>
+            <a href="mbti-test/index.html" class="test-button" target="_blank">
+                <span class="test-icon">🧠</span>
+                <span class="test-name">MBTI</span>
+            </a>
+            <a href="#" class="test-button" onclick="showToast('준비 중입니다'); return false;">
+                <span class="test-icon">📅</span>
+                <span class="test-name">사주</span>
+            </a>
+            <a href="#" class="test-button" onclick="showToast('준비 중입니다'); return false;">
+                <span class="test-icon">🥠</span>
+                <span class="test-name">포춘쿠키</span>
+            </a>
+            <a href="#" class="test-button" onclick="showToast('준비 중입니다'); return false;">
+                <span class="test-icon">9️⃣</span>
+                <span class="test-name">에니어그램</span>
+            </a>
+            <a href="#" class="test-button" onclick="showToast('준비 중입니다'); return false;">
+                <span class="test-icon">✋</span>
+                <span class="test-name">손금</span>
+            </a>
+            <a href="#" class="test-button" onclick="showToast('준비 중입니다'); return false;">
+                <span class="test-icon">🔢</span>
+                <span class="test-name">수비학</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- 우측 메인 영역 -->
+    <div class="main-area">
+        <div class="bagua-container">
+            <!-- 팔괘 SVG 배경 -->
+            <svg class="bagua-svg" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
+                <!-- 정팔각형 (윗면이 수평) - 정확한 정팔각형 -->
+                <polygon points="220,100 380,100 500,220 500,380 380,500 220,500 100,380 100,220"
+                         fill="none"
+                         stroke="#9ca3af"
+                         stroke-width="2"
+                         stroke-dasharray="0"/>
+
+                <!-- 중심에서 각 꼭짓점으로 향하는 선들 -->
+                <line x1="300" y1="300" x2="220" y2="100" stroke="#e5e7eb" stroke-width="1" opacity="0.4"/>
+                <line x1="300" y1="300" x2="380" y2="100" stroke="#e5e7eb" stroke-width="1" opacity="0.4"/>
+                <line x1="300" y1="300" x2="500" y2="220" stroke="#e5e7eb" stroke-width="1" opacity="0.4"/>
+                <line x1="300" y1="300" x2="500" y2="380" stroke="#e5e7eb" stroke-width="1" opacity="0.4"/>
+                <line x1="300" y1="300" x2="380" y2="500" stroke="#e5e7eb" stroke-width="1" opacity="0.4"/>
+                <line x1="300" y1="300" x2="220" y2="500" stroke="#e5e7eb" stroke-width="1" opacity="0.4"/>
+                <line x1="300" y1="300" x2="100" y2="380" stroke="#e5e7eb" stroke-width="1" opacity="0.4"/>
+                <line x1="300" y1="300" x2="100" y2="220" stroke="#e5e7eb" stroke-width="1" opacity="0.4"/>
+
+                <!-- 각 변의 안쪽에 괘 심볼 배치 (건곤감리진손간태) -->
+                <!-- 감(☵) 북쪽(위) -->
+                <g class="trigram-group" data-name="감" data-color="#000080">
+                    <circle cx="300" cy="130" r="25" fill="transparent" stroke="none" class="trigram-hover-area"/>
+                    <text x="300" y="130" text-anchor="middle" font-size="28" fill="#374151" class="trigram-symbol">☵</text>
+                </g>
+                <!-- 간(☶) 북동쪽 -->
+                <g class="trigram-group" data-name="간" data-color="#8B4513">
+                    <circle cx="420" cy="180" r="25" fill="transparent" stroke="none" class="trigram-hover-area"/>
+                    <text x="420" y="180" text-anchor="middle" font-size="28" fill="#374151" class="trigram-symbol">☶</text>
+                </g>
+                <!-- 진(☳) 동쪽(오른쪽) -->
+                <g class="trigram-group" data-name="진" data-color="#4B0082">
+                    <circle cx="480" cy="300" r="25" fill="transparent" stroke="none" class="trigram-hover-area"/>
+                    <text x="480" y="300" text-anchor="middle" font-size="28" fill="#374151" class="trigram-symbol">☳</text>
+                </g>
+                <!-- 손(☴) 남동쪽 -->
+                <g class="trigram-group" data-name="손" data-color="#228B22">
+                    <circle cx="420" cy="440" r="25" fill="transparent" stroke="none" class="trigram-hover-area"/>
+                    <text x="420" y="440" text-anchor="middle" font-size="28" fill="#374151" class="trigram-symbol">☴</text>
+                </g>
+                <!-- 리(☲) 남쪽(아래) -->
+                <g class="trigram-group" data-name="리" data-color="#DC143C">
+                    <circle cx="300" cy="490" r="25" fill="transparent" stroke="none" class="trigram-hover-area"/>
+                    <text x="300" y="490" text-anchor="middle" font-size="28" fill="#374151" class="trigram-symbol">☲</text>
+                </g>
+                <!-- 곤(☷) 남서쪽 -->
+                <g class="trigram-group" data-name="곤" data-color="#DAA520">
+                    <circle cx="180" cy="440" r="25" fill="transparent" stroke="none" class="trigram-hover-area"/>
+                    <text x="180" y="440" text-anchor="middle" font-size="28" fill="#374151" class="trigram-symbol">☷</text>
+                </g>
+                <!-- 태(☱) 서쪽(왼쪽) -->
+                <g class="trigram-group" data-name="태" data-color="#87CEEB">
+                    <circle cx="120" cy="300" r="25" fill="transparent" stroke="none" class="trigram-hover-area"/>
+                    <text x="120" y="300" text-anchor="middle" font-size="28" fill="#374151" class="trigram-symbol">☱</text>
+                </g>
+                <!-- 건(☰) 북서쪽 -->
+                <g class="trigram-group" data-name="건" data-color="#FFD700">
+                    <circle cx="180" cy="180" r="25" fill="transparent" stroke="none" class="trigram-hover-area"/>
+                    <text x="180" y="180" text-anchor="middle" font-size="28" fill="#374151" class="trigram-symbol">☰</text>
+                </g>
+            </svg>
+
+            <!-- 팔괘 버튼들 -->
+            <div class="bagua-button-wrapper">
+                <a href="zodiac-system/web/zodiac.html" class="bagua-pos pos-1" target="_blank">
+                    <span class="test-icon">♈</span>
+                    <span class="test-name">별자리</span>
+                </a>
+                <a href="blood-type-system/web/blood-type-sidebar.html" class="bagua-pos pos-2" target="_blank">
+                    <span class="test-icon">🩸</span>
+                    <span class="test-name">혈액형</span>
+                </a>
+                <a href="tarot-system/web/tarot.html" class="bagua-pos pos-3" target="_blank">
+                    <span class="test-icon">🎴</span>
+                    <span class="test-name">타로</span>
+                </a>
+                <a href="#" class="bagua-pos pos-4" onclick="showToast('준비 중입니다'); return false;">
+                    <span class="test-icon">📅</span>
+                    <span class="test-name">사주</span>
+                </a>
+                <a href="#" class="bagua-pos pos-5" onclick="showToast('준비 중입니다'); return false;">
+                    <span class="test-icon">🥠</span>
+                    <span class="test-name">포춘쿠키</span>
+                </a>
+                <a href="#" class="bagua-pos pos-6" onclick="showToast('준비 중입니다'); return false;">
+                    <span class="test-icon">9️⃣</span>
+                    <span class="test-name">에니어그램</span>
+                </a>
+                <a href="#" class="bagua-pos pos-7" onclick="showToast('준비 중입니다'); return false;">
+                    <span class="test-icon">✋</span>
+                    <span class="test-name">손금</span>
+                </a>
+                <a href="#" class="bagua-pos pos-8" onclick="showToast('준비 중입니다'); return false;">
+                    <span class="test-icon">🔢</span>
+                    <span class="test-name">수비학</span>
+                </a>
+            </div>
+
+            <!-- 중앙 태극 -->
+            <div class="center-taiji">
+                <a href="hormone-test/index.html" class="taiji-top" target="_blank">
+                    <span class="test-icon">⚗️</span>
+                    <span class="test-name">호르몬</span>
+                </a>
+
+                <a href="#" class="taiji-left" onclick="showToast('준비 중입니다'); return false;">
+                    <span class="test-icon">❓</span>
+                    <span class="test-name">예비1</span>
+                </a>
+
+                <div class="taiji-container">
+                    <svg class="taiji-svg" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+                        <!-- 태극 원형 테두리 -->
+                        <circle cx="80" cy="80" r="78" fill="white" stroke="#9ca3af" stroke-width="2"/>
+
+                        <!-- 태극 음양 (한국 태극기 색상) -->
+                        <path d="M80,2 A39,39 0 0,1 80,80 A39,39 0 0,0 80,158 A78,78 0 0,0 80,2" fill="#DC143C"/>
+                        <path d="M80,2 A39,39 0 0,0 80,80 A39,39 0 0,1 80,158 A78,78 0 0,1 80,2" fill="#0047AB"/>
+
+                        <!-- 작은 원 -->
+                        <circle cx="80" cy="41" r="13" fill="#0047AB"/>
+                        <circle cx="80" cy="119" r="13" fill="#DC143C"/>
+                    </svg>
+                </div>
+
+                <a href="#" class="taiji-right" onclick="showToast('준비 중입니다'); return false;">
+                    <span class="test-icon">❓</span>
+                    <span class="test-name">예비2</span>
+                </a>
+
+                <a href="mbti-test/index.html" class="taiji-bottom" target="_blank">
+                    <span class="test-icon">🧠</span>
+                    <span class="test-name">MBTI</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 팔괘 툴팁 -->
+    <div id="trigram-tooltip">
+        <div class="tooltip-content"></div>
+    </div>
+
+    <!-- BAAL 모달 -->
+    <div id="baalModal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeBaalModal()">&times;</button>
+            <div class="modal-header" onmouseover="showKoreanText()" onmouseout="">
+                <h2 class="modal-title">BAAL</h2>
+                <span class="modal-subtitle" id="koreanText" onclick="openHiddenPage()" style="cursor: pointer;">바알</span>
+            </div>
+            <div>
+                <p class="modal-text">사람은 무엇으로 갈증을 채우는가</p>
+                <p class="modal-text">잃어야 얻고, 끝나야 시작된다</p>
+                <p class="modal-text">가치 있는 자만이 가치를 얻는 법</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showBaalModal() {
+            document.getElementById('baalModal').classList.add('show');
+        }
+
+        function closeBaalModal() {
+            document.getElementById('baalModal').classList.remove('show');
+            // 모달 닫을 때 한글 텍스트 초기화
+            document.getElementById('koreanText').classList.remove('show');
+        }
+
+        function showKoreanText() {
+            document.getElementById('koreanText').classList.add('show');
+        }
+
+        // hidden.html 페이지 열기
+        function openHiddenPage() {
+            window.open('hidden.html', '_blank');
+        }
+
+        // 토스트 메시지 표시 함수
+        function showToast(message) {
+            let toast = document.getElementById('toast');
+            if (!toast) {
+                toast = document.createElement('div');
+                toast.id = 'toast';
+                toast.className = 'toast';
+                document.body.appendChild(toast);
+            }
+            toast.textContent = message;
+            toast.classList.add('show');
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2000);
+        }
+
+        // 사신수 데이터
+        const fourGuardians = {
+            '감': { // 북쪽 - 현무
+                name: '현무',
+                icon: '🐢',
+                color: '#000080',
+                description: '북방의 수호신',
+                position: 'top'
+            },
+            '리': { // 남쪽 - 주작
+                name: '주작',
+                icon: '🦅🧯',
+                color: '#DC143C',
+                description: '남방의 수호신',
+                position: 'bottom'
+            },
+            '진': { // 동쪽 - 청룡
+                name: '청룡',
+                icon: '🐲',
+                color: '#4B0082',
+                description: '동방의 수호신',
+                position: 'right'
+            },
+            '태': { // 서쪽 - 백호
+                name: '백호',
+                icon: '🐯💄',
+                color: '#FFFFFF',
+                description: '서방의 수호신',
+                position: 'left'
+            }
+        };
+
+        // 원래 버튼 데이터 저장
+        const originalButtons = {
+            top: { icon: '⚗️', name: '호르몬', href: 'hormone-test/index.html' },
+            left: { icon: '❓', name: '예비1', href: '#' },
+            right: { icon: '❓', name: '예비2', href: '#' },
+            bottom: { icon: '🧠', name: 'MBTI', href: 'mbti-test/index.html' }
+        };
+
+        // 각 버튼의 활성화 상태 추적
+        let buttonStates = {
+            top: false,
+            left: false,
+            right: false,
+            bottom: false
+        };
+
+        // 팔괘 클릭 카운트 추적
+        let trigramClickCounts = {
+            '감': 0,
+            '리': 0,
+            '진': 0,
+            '태': 0
+        };
+
+        // 태극 클릭 카운트
+        let taijiClickCount = 0;
+        let taijiColorState = 'default'; // default or inverted
+
+        // 팔괘 클릭 이벤트 핸들러 (2회 클릭 누적)
+        function handleTrigramClick(event) {
+            const trigramGroup = event.currentTarget;
+            const trigramName = trigramGroup.getAttribute('data-name');
+
+            // 사신수에 해당하는 팔괘인지 확인
+            if (fourGuardians[trigramName]) {
+                event.preventDefault();
+                event.stopPropagation();
+
+                trigramClickCounts[trigramName]++;
+
+                if (trigramClickCounts[trigramName] >= 2) {
+                    const guardian = fourGuardians[trigramName];
+                    const position = guardian.position;
+
+                    if (buttonStates[position]) {
+                        // 이미 활성화된 경우 원래대로 복구
+                        resetButton(position);
+                        buttonStates[position] = false;
+                    } else {
+                        // 해당 방위 버튼만 변경
+                        activateGuardian(trigramName);
+                        buttonStates[position] = true;
+                    }
+
+                    // 카운트 리셋
+                    trigramClickCounts[trigramName] = 0;
+                }
+            }
+        }
+
+        // 태극 클릭 이벤트 핸들러
+        function handleTaijiClick(event) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            taijiClickCount++;
+
+            if (taijiClickCount >= 2) {
+                // 2번 클릭 누적 시 색상 변경
+                toggleTaijiColors();
+                taijiClickCount = 0;
+            }
+        }
+
+        // 태극 색상 토글
+        function toggleTaijiColors() {
+            const taiji = document.querySelector('.taiji-svg');
+            const paths = taiji.querySelectorAll('path');
+            const circles = taiji.querySelectorAll('circle');
+
+            if (taijiColorState === 'default') {
+                // 빨강 → 흰색, 파랑 → 검정
+                paths.forEach(path => {
+                    const currentFill = path.getAttribute('fill');
+                    if (currentFill === '#DC143C') {
+                        path.setAttribute('fill', '#FFFFFF');
+                    } else if (currentFill === '#0047AB') {
+                        path.setAttribute('fill', '#000000');
+                    }
+                });
+
+                circles.forEach(circle => {
+                    const currentFill = circle.getAttribute('fill');
+                    if (currentFill === '#DC143C') {
+                        circle.setAttribute('fill', '#FFFFFF');
+                    } else if (currentFill === '#0047AB') {
+                        circle.setAttribute('fill', '#000000');
+                    }
+                });
+
+                taijiColorState = 'inverted';
+            } else {
+                // 원래대로 복구
+                paths.forEach(path => {
+                    const currentFill = path.getAttribute('fill');
+                    if (currentFill === '#FFFFFF') {
+                        path.setAttribute('fill', '#DC143C');
+                    } else if (currentFill === '#000000') {
+                        path.setAttribute('fill', '#0047AB');
+                    }
+                });
+
+                circles.forEach(circle => {
+                    const currentFill = circle.getAttribute('fill');
+                    if (currentFill === '#FFFFFF') {
+                        circle.setAttribute('fill', '#DC143C');
+                    } else if (currentFill === '#000000') {
+                        circle.setAttribute('fill', '#0047AB');
+                    }
+                });
+
+                taijiColorState = 'default';
+            }
+        }
+
+        // 사신수 활성화 (해당 방위 버튼만)
+        function activateGuardian(guardianKey) {
+            const guardian = fourGuardians[guardianKey];
+            const position = guardian.position;
+            const btn = document.querySelector(`.taiji-${position}`);
+            const original = originalButtons[position];
+
+            if (btn) {
+                btn.querySelector('.test-icon').textContent = guardian.icon;
+                btn.querySelector('.test-name').textContent = original.name; // 테스트 이름 유지
+                btn.style.borderColor = guardian.color;
+
+                // 원래 링크 유지
+                if (original.href !== '#') {
+                    btn.onclick = null;
+                    btn.href = original.href;
+                    btn.target = '_blank';
+                } else {
+                    btn.onclick = (e) => {
+                        e.preventDefault();
+                        showToast('준비 중입니다');
+                        return false;
+                    };
+                }
+            }
+        }
+
+        // 특정 버튼만 원래대로 복구
+        function resetButton(position) {
+            const btn = document.querySelector(`.taiji-${position}`);
+            const original = originalButtons[position];
+
+            if (btn && original) {
+                btn.querySelector('.test-icon').textContent = original.icon;
+                btn.querySelector('.test-name').textContent = original.name;
+                btn.style.borderColor = '';
+
+                if (position === 'left' || position === 'right') {
+                    btn.onclick = (e) => {
+                        e.preventDefault();
+                        showToast('준비 중입니다');
+                        return false;
+                    };
+                } else {
+                    btn.onclick = null;
+                    btn.href = original.href;
+                }
+            }
+        }
+
+        // 팔괘 툴팁 관련 함수들
+        function showTrigramTooltip(event, trigramName) {
+            const tooltip = document.getElementById('trigram-tooltip');
+            const tooltipContent = tooltip.querySelector('.tooltip-content');
+
+            // 팔괘 정보
+            const trigramInfo = {
+                '감': { name: '감', color: '#000080' },
+                '리': { name: '리', color: '#DC143C' },
+                '진': { name: '진', color: '#4B0082' },
+                '손': { name: '손', color: '#228B22' },
+                '곤': { name: '곤', color: '#DAA520' },
+                '태': { name: '태', color: '#87CEEB' },
+                '간': { name: '간', color: '#8B4513' },
+                '건': { name: '건', color: '#FFD700' }
+            };
+
+            // 툴팁 내용 및 색상 설정
+            const info = trigramInfo[trigramName];
+            if (info) {
+                tooltipContent.textContent = info.name;
+                tooltipContent.style.backgroundColor = info.color;
+
+                // 위치 계산 (심볼 오른쪽에 표시)
+                const rect = event.target.getBoundingClientRect();
+                let left = rect.right; // 10px 제거하여 왼쪽으로 이동
+                let top = rect.top + (rect.height / 2) - 20; // 툴팁을 심볼 중앙에 정렬
+
+                // 화면 경계 체크 및 조정
+                const tooltipWidth = 80; // 예상 툴팁 너비
+                const tooltipHeight = 40; // 예상 툴팁 높이
+
+                // 오른쪽 경계 체크
+                if (left + tooltipWidth > window.innerWidth) {
+                    left = rect.left - tooltipWidth - 10; // 왼쪽으로 이동
+                }
+
+                // 상하 경계 체크
+                if (top < 0) {
+                    top = 10;
+                } else if (top + tooltipHeight > window.innerHeight) {
+                    top = window.innerHeight - tooltipHeight - 10;
+                }
+
+                tooltip.style.left = left + 'px';
+                tooltip.style.top = top + 'px';
+                tooltip.style.display = 'block';
+            }
+        }
+
+        function hideTrigramTooltip() {
+            document.getElementById('trigram-tooltip').style.display = 'none';
+        }
+
+        // window 객체에 함수 등록
+        window.showTrigramTooltip = showTrigramTooltip;
+        window.hideTrigramTooltip = hideTrigramTooltip;
+
+        // 페이지 로드 시 이벤트 리스너 추가
+        document.addEventListener('DOMContentLoaded', function() {
+            // 모든 팔괘 그룹에 툴팁 이벤트 추가
+            const allTrigrams = ['감', '리', '진', '손', '곤', '태', '간', '건'];
+            allTrigrams.forEach(name => {
+                const trigramGroup = document.querySelector(`g[data-name="${name}"]`);
+                if (trigramGroup) {
+                    trigramGroup.addEventListener('mouseenter', function(event) {
+                        showTrigramTooltip(event, name);
+                    });
+                    trigramGroup.addEventListener('mouseleave', hideTrigramTooltip);
+                }
+            });
+
+            // 사신수 팔괘에 클릭 이벤트 추가
+            ['감', '리', '진', '태'].forEach(name => {
+                const trigramGroup = document.querySelector(`g[data-name="${name}"]`);
+                if (trigramGroup) {
+                    trigramGroup.addEventListener('click', handleTrigramClick);
+                    trigramGroup.style.cursor = 'pointer';
+                }
+            });
+
+            // 태극에 클릭 이벤트 추가
+            const taijiContainer = document.querySelector('.taiji-container');
+            if (taijiContainer) {
+                taijiContainer.addEventListener('click', handleTaijiClick);
+            }
+        });
+
+        // 모달 바깥 클릭시 닫기
+        window.onclick = function(event) {
+            const modal = document.getElementById('baalModal');
+            if (event.target == modal) {
+                closeBaalModal();
+            }
+        }
+    </script>
+</body>
+</html>

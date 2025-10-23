@@ -1,0 +1,1393 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --blood-type-a: #0066cc;
+    --blood-type-b: #ff9500;
+    --blood-type-o: #dc3545;
+    --blood-type-ab: #8b5cf6;
+    --blood-accent: #dc3545;
+    --blood-bg-primary: #f8f9fa;
+    --blood-bg-secondary: #ffffff;
+    --blood-text-primary: #212529;
+    --blood-text-secondary: #6c757d;
+    --blood-border: #dee2e6;
+    
+    /* 바이오리듬 전용 색상 */
+    --bio-physical: var(--blood-type-o);
+    --bio-emotional: var(--blood-type-b);
+    --bio-intellectual: var(--blood-type-a);
+}
+
+body {
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--blood-bg-primary);
+    color: var(--blood-text-primary);
+    line-height: 1.6;
+    min-height: 100vh;
+    /* 한국어 타이포그래피 최적화 */
+    word-break: keep-all;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+}
+
+.blood-container {
+    margin-left: 200px;
+    padding: 12px;
+    transition: margin-left 0.3s ease;
+    min-height: 100vh;
+}
+
+.blood-nav {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    width: 200px;
+    background: white;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease;
+}
+
+.blood-nav.collapsed {
+    transform: translateX(-200px);
+}
+
+.blood-nav.collapsed ~ .blood-container {
+    margin-left: 20px;
+}
+
+
+.nav-header {
+    padding: 15px;
+    background: linear-gradient(135deg, var(--blood-type-o), var(--blood-type-a));
+    color: white;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.nav-header h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    flex: 1;
+}
+
+.main-btn, .close-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.3s ease;
+}
+
+.main-btn:hover, .close-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.nav-items {
+    flex: 1;
+    padding: 10px;
+}
+
+/* 세로 레이아웃 네비게이션 (기존 스타일 복원) */
+.nav-items {
+    flex: 1;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.blood-type-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+}
+
+.nav-item-compact {
+    flex: 1;
+    padding: 15px;
+    background: var(--blood-bg-secondary);
+    border: 2px solid var(--blood-border);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 60px;
+}
+
+.nav-item-compact:hover {
+    background: var(--blood-bg-primary);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.nav-item-compact .nav-symbol {
+    font-size: 32px;
+    font-weight: bold;
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(220, 53, 69, 0.1);
+    border-radius: 50%;
+}
+
+.nav-item-compact .nav-name {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 2px;
+}
+
+.nav-item-compact .nav-trait {
+    font-size: 11px;
+    color: var(--blood-text-secondary);
+}
+
+.gender-buttons-vertical {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 40px;
+}
+
+.gender-btn-new {
+    padding: 6px 8px;
+    font-size: 11px;
+    font-weight: 500;
+    border: 1px solid var(--blood-border);
+    border-radius: 6px;
+    background: var(--blood-bg-secondary);
+    color: var(--blood-text-secondary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    min-height: 28px;
+}
+
+.gender-btn-new:hover {
+    background: var(--blood-bg-primary);
+    transform: scale(1.05);
+}
+
+.gender-btn-new.active {
+    background: var(--blood-accent);
+    color: white;
+    border-color: var(--blood-accent);
+    font-weight: 600;
+}
+
+/* 혈액형별 심볼 색상 */
+.blood-type-item[data-blood="A"] .nav-symbol {
+    background: rgba(0, 102, 204, 0.1);
+    color: var(--blood-type-a);
+}
+
+.blood-type-item[data-blood="B"] .nav-symbol {
+    background: rgba(255, 149, 0, 0.1);
+    color: var(--blood-type-b);
+}
+
+.blood-type-item[data-blood="O"] .nav-symbol {
+    background: rgba(220, 53, 69, 0.1);
+    color: var(--blood-type-o);
+}
+
+.blood-type-item[data-blood="AB"] .nav-symbol {
+    background: rgba(139, 92, 246, 0.1);
+    color: var(--blood-type-ab);
+}
+
+/* 혈액형별 활성화 스타일 */
+.blood-type-item[data-blood="A"] .nav-item-compact.active {
+    border-color: var(--blood-type-a);
+    background: linear-gradient(135deg, rgba(0, 102, 204, 0.1), rgba(0, 102, 204, 0.05));
+}
+
+.blood-type-item[data-blood="B"] .nav-item-compact.active {
+    border-color: var(--blood-type-b);
+    background: linear-gradient(135deg, rgba(255, 149, 0, 0.1), rgba(255, 149, 0, 0.05));
+}
+
+.blood-type-item[data-blood="O"] .nav-item-compact.active {
+    border-color: var(--blood-type-o);
+    background: linear-gradient(135deg, rgba(220, 53, 69, 0.1), rgba(220, 53, 69, 0.05));
+}
+
+.blood-type-item[data-blood="AB"] .nav-item-compact.active {
+    border-color: var(--blood-type-ab);
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(139, 92, 246, 0.05));
+}
+
+/* 혈액형 그룹 컨테이너 */
+.nav-item {
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 10px;
+    background: transparent;
+    border: 2px solid var(--blood-border);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    position: relative;
+}
+
+.nav-item:hover {
+    background: var(--blood-bg-primary);
+    transform: translateY(-2px);
+}
+
+.nav-item.active {
+    border-color: var(--blood-accent);
+    background: linear-gradient(135deg, rgba(220, 53, 69, 0.1), rgba(220, 53, 69, 0.05));
+}
+
+.nav-item[data-blood="A"].active {
+    border-color: var(--blood-type-a);
+    background: linear-gradient(135deg, rgba(0, 102, 204, 0.1), rgba(0, 102, 204, 0.05));
+}
+
+.nav-item[data-blood="B"].active {
+    border-color: var(--blood-type-b);
+    background: linear-gradient(135deg, rgba(255, 149, 0, 0.1), rgba(255, 149, 0, 0.05));
+}
+
+.nav-item[data-blood="O"].active {
+    border-color: var(--blood-type-o);
+    background: linear-gradient(135deg, rgba(220, 53, 69, 0.1), rgba(220, 53, 69, 0.05));
+}
+
+.nav-item[data-blood="AB"].active {
+    border-color: var(--blood-type-ab);
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(139, 92, 246, 0.05));
+}
+
+.gender-buttons {
+    position: absolute;
+    right: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.gender-btn-mini {
+    padding: 4px 8px;
+    font-size: 10px;
+    font-weight: 500;
+    border: 1px solid var(--blood-border);
+    border-radius: 4px;
+    background: var(--blood-bg-secondary);
+    color: var(--blood-text-secondary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 32px;
+    word-break: keep-all;
+}
+
+.gender-btn-mini:hover {
+    background: var(--blood-bg-primary);
+    border-color: var(--blood-accent);
+    transform: scale(1.05);
+}
+
+.gender-btn-mini.active {
+    background: var(--blood-accent);
+    color: white;
+    border-color: var(--blood-accent);
+    font-weight: 600;
+}
+
+/* 혈액형 헤더 (아이콘 + 이름) */
+.blood-type-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+/* 성별 선택 그리드 */
+.gender-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    margin-left: 55px; /* 아이콘 영역만큼 들여쓰기 */
+}
+
+.nav-item {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    background: white;
+    border: 2px solid var(--blood-border);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.nav-item:hover {
+    background: var(--blood-bg-primary);
+    transform: translateX(5px);
+}
+
+.nav-item.active {
+    border-color: var(--blood-accent);
+    background: linear-gradient(135deg, rgba(220, 53, 69, 0.1), rgba(220, 53, 69, 0.05));
+}
+
+.nav-item[data-blood="A"].active {
+    border-color: var(--blood-type-a);
+    background: linear-gradient(135deg, rgba(0, 102, 204, 0.1), rgba(0, 102, 204, 0.05));
+}
+
+.nav-item[data-blood="B"].active {
+    border-color: var(--blood-type-b);
+    background: linear-gradient(135deg, rgba(255, 149, 0, 0.1), rgba(255, 149, 0, 0.05));
+}
+
+.nav-item[data-blood="O"].active {
+    border-color: var(--blood-type-o);
+    background: linear-gradient(135deg, rgba(220, 53, 69, 0.1), rgba(220, 53, 69, 0.05));
+}
+
+.nav-item[data-blood="AB"].active {
+    border-color: var(--blood-type-ab);
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(139, 92, 246, 0.05));
+}
+
+.nav-symbol {
+    font-size: 24px;
+    font-weight: 800;
+    margin-right: 15px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--blood-bg-primary);
+}
+
+.nav-item[data-blood="A"] .nav-symbol {
+    color: var(--blood-type-a);
+    background: rgba(0, 102, 204, 0.1);
+}
+
+.nav-item[data-blood="B"] .nav-symbol {
+    color: var(--blood-type-b);
+    background: rgba(255, 149, 0, 0.1);
+}
+
+.nav-item[data-blood="O"] .nav-symbol {
+    color: var(--blood-type-o);
+    background: rgba(220, 53, 69, 0.1);
+}
+
+.nav-item[data-blood="AB"] .nav-symbol {
+    color: var(--blood-type-ab);
+    background: rgba(139, 92, 246, 0.1);
+}
+
+.nav-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.nav-name {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.nav-trait {
+    font-size: 12px;
+    color: var(--blood-text-secondary);
+}
+
+/* 성별 버튼 스타일 */
+.gender-btn-compact {
+    padding: 6px 8px;
+    background: white;
+    border: 1px solid var(--blood-border);
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 11px;
+    font-weight: 500;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.gender-btn-compact:hover {
+    background: var(--blood-bg-primary);
+    transform: scale(1.05);
+}
+
+.gender-btn-compact.active {
+    background: var(--blood-accent);
+    color: white;
+    border-color: var(--blood-accent);
+}
+
+/* 혈액형별 성별 버튼 색상 */
+.blood-type-group[data-blood="A"] .gender-btn-compact.active {
+    background: var(--blood-type-a);
+    border-color: var(--blood-type-a);
+}
+
+.blood-type-group[data-blood="B"] .gender-btn-compact.active {
+    background: var(--blood-type-b);
+    border-color: var(--blood-type-b);
+}
+
+.blood-type-group[data-blood="O"] .gender-btn-compact.active {
+    background: var(--blood-type-o);
+    border-color: var(--blood-type-o);
+}
+
+.blood-type-group[data-blood="AB"] .gender-btn-compact.active {
+    background: var(--blood-type-ab);
+    border-color: var(--blood-type-ab);
+}
+
+/* 기존 하단 성별 선택기 숨김 */
+.gender-selector {
+    display: none;
+}
+
+/* 향상된 인터랙션 효과 */
+.blood-type-group {
+    position: relative;
+    overflow: hidden;
+}
+
+.blood-type-group::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    transition: left 0.5s ease;
+}
+
+.blood-type-group:hover::before {
+    left: 100%;
+}
+
+/* 성별 버튼 개선된 호버 효과 */
+.gender-btn-compact {
+    position: relative;
+    overflow: hidden;
+}
+
+.gender-btn-compact::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    transform: translate(-50%, -50%);
+}
+
+.gender-btn-compact:hover::before {
+    width: 100px;
+    height: 100px;
+}
+
+/* 활성 상태 강화 효과 */
+.gender-btn-compact.active {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    transform: translateY(-1px);
+}
+
+/* 포커스 효과 개선 */
+.gender-btn-compact:focus,
+.blood-type-group:focus-within {
+    outline: 2px solid var(--blood-accent);
+    outline-offset: 2px;
+}
+
+/* 부드러운 트랜지션 추가 */
+.blood-type-header,
+.gender-grid,
+.nav-symbol,
+.nav-info {
+    transition: all 0.2s ease;
+}
+
+.nav-toggle {
+    position: fixed;
+    left: 200px;
+    top: 20px;
+    width: 35px;
+    height: 35px;
+    background: white;
+    border: 2px solid var(--blood-accent);
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    z-index: 101;
+    transition: left 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.blood-nav.collapsed ~ .nav-toggle {
+    left: 20px;
+}
+
+.blood-header {
+    text-align: center;
+    margin-bottom: 10px;
+    padding: 8px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.blood-header h1 {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--blood-text-primary);
+    margin-bottom: 5px;
+}
+
+.blood-header p {
+    font-size: 13px;
+    color: var(--blood-text-secondary);
+}
+
+.blood-overview {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4개 균등 배치 */
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+/* 화면이 좁아질 때 2x2로 변경 */
+@media (max-width: 1200px) {
+    .blood-overview {
+        grid-template-columns: repeat(2, 1fr); /* 2x2 배치 */
+    }
+}
+
+/* 모바일에서는 1열로 */
+@media (max-width: 768px) {
+    .blood-overview {
+        grid-template-columns: 1fr; /* 세로 1열 */
+    }
+}
+
+.blood-card {
+    background: white;
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+    position: relative;
+    min-height: 240px; /* 최소 높이 줄임 */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    cursor: pointer;
+}
+
+.blood-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.blood-type-badge {
+    font-size: 32px;
+    font-weight: 800;
+    padding: 10px 15px;
+    border-radius: 10px;
+}
+
+.blood-card[data-type="A"] .blood-type-badge {
+    color: var(--blood-type-a);
+    background: rgba(0, 102, 204, 0.1);
+}
+
+.blood-card[data-type="B"] .blood-type-badge {
+    color: var(--blood-type-b);
+    background: rgba(255, 149, 0, 0.1);
+}
+
+.blood-card[data-type="O"] .blood-type-badge {
+    color: var(--blood-type-o);
+    background: rgba(220, 53, 69, 0.1);
+}
+
+.blood-card[data-type="AB"] .blood-type-badge {
+    color: var(--blood-type-ab);
+    background: rgba(139, 92, 246, 0.1);
+}
+
+.magnifier-btn {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    border: 1px solid var(--blood-border);
+    background: white;
+    cursor: pointer;
+    font-size: 18px;
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.blood-card:hover .magnifier-btn {
+    opacity: 1;
+}
+
+.magnifier-btn:hover {
+    background: var(--blood-bg-primary);
+    transform: scale(1.1);
+}
+
+.blood-card h3 {
+    font-size: 18px; /* 4개 배치에 맞게 약간 작게 */
+    font-weight: 700;
+    margin-bottom: 10px;
+    /* 한국어 제목 최적화 */
+    word-break: keep-all;
+    line-height: 1.3;
+}
+
+.card-description {
+    font-size: 13px; /* 4개 배치에 맞게 약간 작게 */
+    line-height: 1.6;
+    color: var(--blood-text-secondary);
+    margin-bottom: 15px;
+    flex: 1; /* 남은 공간 차지 */
+    /* 한국어 텍스트 최적화 - 단어 단위 줄바꿈 */
+    word-break: keep-all; /* 한글 단어가 중간에 끊기지 않음 */
+    overflow-wrap: break-word; /* 긴 단어는 필요시 줄바꿈 */
+    hyphens: none; /* 하이픈 없이 깔끔하게 */
+    max-width: 80%; /* 여유 공간 20% 확보 */
+}
+
+.card-traits {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 15px;
+}
+
+.trait-tag {
+    padding: 4px 10px;
+    background: var(--blood-bg-primary);
+    border-radius: 15px;
+    font-size: 12px;
+    color: var(--blood-text-secondary);
+    /* 태그 텍스트 한 줄 유지 */
+    white-space: nowrap;
+}
+
+.card-action {
+    width: 100%;
+    padding: 10px;
+    background: transparent;
+    border: 2px solid var(--blood-border);
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    /* 버튼 텍스트 보호 */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.blood-card[data-type="A"] .card-action:hover {
+    background: var(--blood-type-a);
+    color: white;
+    border-color: var(--blood-type-a);
+}
+
+.blood-card[data-type="B"] .card-action:hover {
+    background: var(--blood-type-b);
+    color: white;
+    border-color: var(--blood-type-b);
+}
+
+.blood-card[data-type="O"] .card-action:hover {
+    background: var(--blood-type-o);
+    color: white;
+    border-color: var(--blood-type-o);
+}
+
+.blood-card[data-type="AB"] .card-action:hover {
+    background: var(--blood-type-ab);
+    color: white;
+    border-color: var(--blood-type-ab);
+}
+
+.blood-detail {
+    background: white;
+    border-radius: 10px;
+    padding: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+/* 별자리 스타일 뒤로가기 버튼 */
+.back-button {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border: none;
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    margin-right: 15px;
+    margin-bottom: 0;
+    box-shadow: 0 2px 6px rgba(118,75,162,0.3);
+    padding: 0;
+    text-decoration: none;
+    position: relative;
+    overflow: visible;
+    flex-shrink: 0;
+}
+
+/* 호버 효과 */
+.back-button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 3px 10px rgba(118,75,162,0.4);
+    background: linear-gradient(135deg, #764ba2, #667eea);
+}
+
+/* 툴팁 스타일 */
+.back-button .tooltip {
+    position: absolute;
+    top: -35px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(118,75,162,0.3);
+    pointer-events: none;
+    z-index: 1000;
+}
+
+/* 툴팁 화살표 */
+.back-button .tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 6px solid #764ba2;
+}
+
+/* 호버 시 툴팁 표시 */
+.back-button:hover .tooltip {
+    opacity: 1;
+    visibility: visible;
+    top: -40px;
+}
+
+/* 클릭 효과 */
+.back-button:active {
+    transform: scale(0.95);
+    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* SVG 아이콘 스타일 */
+.back-button .back-icon {
+    width: 20px;
+    height: 20px;
+    stroke: currentColor;
+    margin: 0;
+}
+
+/* 텍스트는 원형 버튼에서 숨김 */
+.back-button .back-text {
+    display: none;
+}
+
+.detail-tabs {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+    border-bottom: 2px solid var(--blood-border);
+    padding-bottom: 8px;
+}
+
+/* 성별 토글 버튼 그룹 */
+.gender-toggle-tabs {
+    display: flex;
+    gap: 5px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 3px;
+    border-radius: 10px;
+    margin-right: 10px;
+}
+
+/* 성별 탭 버튼 스타일 */
+.gender-tab-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
+    color: var(--blood-text-secondary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+/* 성별 기호 스타일 */
+.gender-symbol {
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 1;
+}
+
+/* 남성 활성화 상태 */
+.gender-tab-btn.active {
+    background: linear-gradient(135deg, #3b82f6, #1e40af);
+    color: white;
+    box-shadow: 0 2px 6px rgba(59, 130, 246, 0.3);
+}
+
+/* 여성 활성화 상태 */
+.gender-tab-btn.active[onclick*="female"] {
+    background: linear-gradient(135deg, #ec4899, #be185d);
+    box-shadow: 0 2px 6px rgba(236, 72, 153, 0.3);
+}
+
+/* 호버 효과 */
+.gender-tab-btn:hover:not(.active) {
+    background: rgba(255, 255, 255, 0.08);
+    transform: scale(1.05);
+}
+
+/* 툴팁 스타일 */
+.gender-tab-btn:hover::after {
+    content: attr(title);
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0;
+    animation: fadeInTooltip 0.3s forwards;
+    pointer-events: none;
+    z-index: 100;
+}
+
+@keyframes fadeInTooltip {
+    to {
+        opacity: 1;
+        top: -35px;
+    }
+}
+
+.tab-btn {
+    padding: 10px 20px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+    color: var(--blood-text-secondary);
+    transition: all 0.3s ease;
+    border-radius: 8px;
+}
+
+.tab-btn:hover {
+    background: var(--blood-bg-primary);
+}
+
+.tab-btn.active {
+    background: var(--blood-accent);
+    color: white;
+}
+
+.tab-panel {
+    display: none;
+    min-height: auto;
+    padding: 12px;
+}
+
+.tab-panel.active {
+    display: block;
+}
+
+.compatibility-selector {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.compatibility-selector select {
+    padding: 10px 15px;
+    border: 2px solid var(--blood-border);
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.heart-icon {
+    font-size: 24px;
+    animation: heartbeat 1.5s ease-in-out infinite;
+}
+
+@keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.story-modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    position: relative;
+    background: white;
+    margin: 5% auto;
+    padding: 30px;
+    width: 90%;
+    max-width: 600px;
+    border-radius: 15px;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.modal-close {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    font-size: 28px;
+    cursor: pointer;
+    color: var(--blood-text-secondary);
+}
+
+.modal-close:hover {
+    color: var(--blood-accent);
+}
+
+/* 모바일 반응형 디자인 */
+@media (max-width: 768px) {
+    .blood-nav {
+        transform: translateX(-200px);
+    }
+    
+    .blood-nav.open {
+        transform: translateX(0);
+    }
+    
+    .blood-container {
+        margin-left: 20px;
+    }
+    
+    .nav-toggle {
+        left: 20px;
+    }
+    
+    .blood-overview {
+        grid-template-columns: 1fr;
+    }
+    
+    /* 모바일에서 혈액형 그룹 간격 조정 */
+    .nav-items {
+        padding: 10px;
+        gap: 12px;
+    }
+    
+    .blood-type-group {
+        padding: 10px;
+    }
+    
+    .blood-type-header {
+        margin-bottom: 6px;
+    }
+    
+    .nav-symbol {
+        width: 35px;
+        height: 35px;
+        font-size: 20px;
+        margin-right: 12px;
+    }
+    
+    .nav-name {
+        font-size: 13px;
+    }
+    
+    .nav-trait {
+        font-size: 11px;
+    }
+    
+    .gender-grid {
+        margin-left: 47px; /* 모바일에서 아이콘 크기에 맞게 조정 */
+        gap: 5px;
+    }
+    
+    .gender-btn-compact {
+        padding: 5px 6px;
+        font-size: 10px;
+    }
+}
+
+/* 태블릿 사이즈 최적화 */
+@media (max-width: 1024px) and (min-width: 769px) {
+    .nav-items {
+        gap: 12px;
+    }
+    
+    .gender-grid {
+        gap: 5px;
+    }
+    
+    .gender-btn-compact {
+        font-size: 10px;
+        padding: 5px 7px;
+    }
+}
+
+/* 모달창 인물 스토리 섹션 스타일 */
+.story-section {
+    margin-bottom: 10px; /* 인물별 여백 축소 */
+    padding: 12px;
+    background: var(--blood-bg-primary);
+    border-radius: 6px;
+    border-left: 3px solid var(--blood-accent);
+}
+
+.story-section:last-child {
+    margin-bottom: 0; /* 마지막 섹션은 여백 제거 */
+}
+
+.story-section h3 {
+    color: var(--blood-accent);
+    font-size: 16px;
+    margin-bottom: 10px;
+    word-break: keep-all; /* 한국어 제목 보호 */
+}
+
+.story-section p {
+    line-height: 1.7;
+    color: var(--blood-text-secondary);
+    word-break: keep-all; /* 한국어 단어 보호 */
+    overflow-wrap: break-word;
+}
+
+/* 바이오리듬 탭 스타일 */
+.biorhythm-header {
+    text-align: center;
+    margin-bottom: 12px;
+    word-break: keep-all;
+}
+
+.biorhythm-header h3 {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--blood-text-primary);
+    margin-bottom: 8px;
+}
+
+.biorhythm-header p {
+    color: var(--blood-text-secondary);
+    font-size: 14px;
+}
+
+.biorhythm-charts {
+    margin-bottom: 20px;
+}
+
+.chart-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+}
+
+.chart-item {
+    text-align: center;
+    background: var(--blood-bg-secondary);
+    padding: 12px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    transition: transform 0.3s ease;
+    word-break: keep-all;
+}
+
+.chart-item:hover {
+    transform: translateY(-2px);
+}
+
+.chart-item h4 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: var(--blood-text-primary);
+}
+
+.chart-circle {
+    margin: 0 auto 15px;
+    position: relative;
+}
+
+.chart-description {
+    font-size: 13px;
+    color: var(--blood-text-secondary);
+    line-height: 1.4;
+    max-width: 80%; /* 여유 공간 20% 확보 */
+}
+
+/* 바이오리듬 상세 정보 - 2열 Grid 레이아웃 */
+.biorhythm-details {
+    background: var(--blood-bg-secondary);
+    border-radius: 12px;
+    padding: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.biorhythm-details .lucky-section {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.fortune-section,
+.advice-section {
+    margin-bottom: 10px;
+    word-break: keep-all;
+}
+
+.fortune-section h4,
+.advice-section h4 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--blood-text-primary);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.fortune-section h4::before {
+    content: "🌟";
+    font-size: 16px;
+}
+
+.advice-section h4::before {
+    content: "💡";
+    font-size: 16px;
+}
+
+.fortune-message,
+.advice-message {
+    line-height: 1.6;
+    color: var(--blood-text-secondary);
+    font-size: 15px;
+    max-width: 80%; /* 여유 공간 20% 확보 */
+    margin-bottom: 10px;
+}
+
+.lucky-section {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.lucky-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.lucky-label {
+    font-size: 13px;
+    color: var(--blood-text-secondary);
+    margin-bottom: 5px;
+}
+
+.lucky-number {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--blood-text-primary);
+    padding: 8px 16px;
+    background: var(--blood-bg-primary);
+    border-radius: 20px;
+    min-width: 60px;
+}
+
+/* 행운의 색 원형 디스플레이 */
+.lucky-color-display {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    justify-content: center;
+}
+
+.lucky-color-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 4px solid #fff;
+    box-shadow: 
+        0 3px 12px rgba(0,0,0,0.15),
+        inset 0 2px 4px rgba(255,255,255,0.3);
+    background: var(--lucky-color, #cccccc);
+    transition: all 0.3s ease;
+}
+
+.lucky-color-text {
+    font-size: 16px;
+    font-weight: 600;
+    color: #000;
+    text-shadow: 
+        1px 1px 0 #fff,
+        -1px -1px 0 #fff,
+        1px -1px 0 #fff,
+        -1px 1px 0 #fff,
+        2px 2px 3px rgba(255,255,255,0.8);
+}
+
+/* 바이오리듬 차트 애니메이션 */
+.chart-circle svg circle:last-of-type {
+    transition: stroke-dashoffset 1s ease-in-out;
+}
+
+/* 반응형 바이오리듬 차트 */
+@media (max-width: 768px) {
+    .chart-container {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .lucky-section {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .biorhythm-details {
+        padding: 12px;
+    }
+}
+
+/* 사이드바 성별 선택기 스타일 */
+.gender-selector {
+    padding: 15px;
+    background: var(--blood-bg-primary);
+    border-top: 1px solid var(--blood-border);
+    margin-top: auto;
+}
+
+.gender-selector h4 {
+    font-size: 0.9rem;
+    color: var(--blood-text-secondary);
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.gender-btn {
+    width: 100%;
+    padding: 10px 12px;
+    margin: 4px 0;
+    background: white;
+    border: 1px solid var(--blood-border);
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    color: var(--blood-text-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.gender-btn:hover {
+    background: var(--blood-bg-primary);
+    border-color: var(--blood-accent);
+    transform: translateY(-1px);
+}
+
+.gender-btn.active {
+    background: var(--blood-accent);
+    color: white;
+    border-color: var(--blood-accent);
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
+}
+
+.gender-btn.active:hover {
+    background: #c82333;
+    border-color: #c82333;
+}
+

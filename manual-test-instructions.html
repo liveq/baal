@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>팔괘 호버 수동 테스트 가이드</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .test-result {
+            background: #f0f8ff;
+            border: 1px solid #0066cc;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .pass { background: #f0fff0; border-color: #00aa00; }
+        .fail { background: #fff0f0; border-color: #cc0000; }
+        .symbol { font-size: 24px; font-weight: bold; }
+        ol li { margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <h1>🖱️ 팔괘 호버 효과 수동 테스트 가이드</h1>
+
+    <div class="test-result">
+        <h2>📋 테스트 절차</h2>
+        <ol>
+            <li><strong>페이지 열기</strong>: <a href="http://localhost:8080/palgwae.html" target="_blank">http://localhost:8080/palgwae.html</a></li>
+            <li><strong>팔괘 심볼에 마우스 올리기</strong>: 중앙 원형 안의 8개 심볼에 차례로 마우스를 올려보세요</li>
+            <li><strong>한글 이름 확인</strong>: 각 심볼에 마우스를 올렸을 때 한글 이름이 나타나는지 확인</li>
+            <li><strong>마우스 아웃 확인</strong>: 마우스를 다른 곳으로 이동했을 때 이름이 사라지는지 확인</li>
+        </ol>
+    </div>
+
+    <h2>🎯 테스트할 팔괘 심볼들</h2>
+
+    <table border="1" cellpadding="10" cellspacing="0" style="width: 100%; border-collapse: collapse;">
+        <tr style="background: #f5f5f5;">
+            <th>심볼</th>
+            <th>이름</th>
+            <th>위치</th>
+            <th>테스트 결과</th>
+        </tr>
+        <tr>
+            <td class="symbol">☰</td>
+            <td>건 (乾)</td>
+            <td>위쪽</td>
+            <td>[ ] 작동함 [ ] 안됨</td>
+        </tr>
+        <tr>
+            <td class="symbol">☱</td>
+            <td>태 (兌)</td>
+            <td>우상단</td>
+            <td>[ ] 작동함 [ ] 안됨</td>
+        </tr>
+        <tr>
+            <td class="symbol">☲</td>
+            <td>리 (離)</td>
+            <td>오른쪽</td>
+            <td>[ ] 작동함 [ ] 안됨</td>
+        </tr>
+        <tr>
+            <td class="symbol">☳</td>
+            <td>진 (震)</td>
+            <td>우하단</td>
+            <td>[ ] 작동함 [ ] 안됨</td>
+        </tr>
+        <tr>
+            <td class="symbol">☴</td>
+            <td>손 (巽)</td>
+            <td>아래쪽</td>
+            <td>[ ] 작동함 [ ] 안됨</td>
+        </tr>
+        <tr>
+            <td class="symbol">☵</td>
+            <td>감 (坎)</td>
+            <td>좌하단</td>
+            <td>[ ] 작동함 [ ] 안됨</td>
+        </tr>
+        <tr>
+            <td class="symbol">☶</td>
+            <td>간 (艮)</td>
+            <td>왼쪽</td>
+            <td>[ ] 작동함 [ ] 안됨</td>
+        </tr>
+        <tr>
+            <td class="symbol">☷</td>
+            <td>곤 (坤)</td>
+            <td>좌상단</td>
+            <td>[ ] 작동함 [ ] 안됨</td>
+        </tr>
+    </table>
+
+    <div class="test-result">
+        <h2>🔧 Playwright 테스트 결과</h2>
+        <p><strong>✅ JavaScript 함수</strong>: showTrigramName, hideTrigramName 정상 작동</p>
+        <p><strong>✅ DOM 이벤트</strong>: 프로그래밍 방식 이벤트 발생 시 정상 작동</p>
+        <p><strong>❌ 물리적 마우스 호버</strong>: Playwright 자동화 도구에서 SVG 내부 요소 인식 불가</p>
+        <p><strong>📝 추정</strong>: 실제 브라우저에서는 정상 작동할 가능성 높음</p>
+    </div>
+
+    <div class="test-result">
+        <h2>🐛 잠재적 문제와 해결책</h2>
+        <h3>1. Z-Index 문제</h3>
+        <p>현재 상태: SVG z-index: 0, Button wrapper z-index: auto</p>
+        <p>해결책: SVG z-index를 더 높게 설정</p>
+
+        <h3>2. Pointer Events</h3>
+        <p>현재 상태: 모든 요소 pointer-events: auto</p>
+        <p>문제없음: 이벤트 차단 없음</p>
+
+        <h3>3. 요소 겹침</h3>
+        <p>현재 상태: 팔괘 심볼과 버튼들이 겹치지 않음</p>
+        <p>문제없음: 물리적 충돌 없음</p>
+    </div>
+
+    <script>
+        // 브라우저 환경에서 실시간 테스트
+        console.log('🧪 브라우저 환경 실시간 테스트 시작...');
+
+        // 모든 팔괘 심볼에 이벤트 리스너 확인
+        const symbols = document.querySelectorAll('text[onmouseover]');
+        console.log(`발견된 팔괘 심볼 수: ${symbols.length}`);
+
+        symbols.forEach((symbol, index) => {
+            const name = symbol.getAttribute('onmouseover').match(/'([^']+)'/)[1];
+            console.log(`${index + 1}. ${symbol.textContent} (${name})`);
+        });
+
+        // 실시간 이벤트 모니터링
+        symbols.forEach(symbol => {
+            symbol.addEventListener('mouseover', (e) => {
+                console.log(`✅ 마우스 올림: ${e.target.textContent}`);
+            });
+
+            symbol.addEventListener('mouseout', (e) => {
+                console.log(`⬅️ 마우스 나감: ${e.target.textContent}`);
+            });
+        });
+
+        // trigramNameText 요소 모니터링
+        const nameText = document.getElementById('trigramNameText');
+        if (nameText) {
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+                        const isVisible = nameText.style.display !== 'none';
+                        const content = nameText.textContent;
+                        console.log(`📍 라벨 상태 변경: ${isVisible ? '보임' : '숨김'} - "${content}"`);
+                    }
+                });
+            });
+
+            observer.observe(nameText, { attributes: true });
+            console.log('📊 라벨 변경 모니터링 시작됨');
+        }
+    </script>
+</body>
+</html>

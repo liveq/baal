@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="정식 MBTI 성격유형 테스트 - 70개 전문 문항으로 정확한 16가지 성격유형 진단">
+    <meta property="og:title" content="MBTI 성격유형 테스트 - 바알">
+    <meta property="og:description" content="정식 수준의 MBTI 테스트로 나만의 성격유형을 정확하게 알아보세요!">
+    <title>MBTI 테스트 - 바알</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 헤더 -->
+    <header class="header">
+        <div class="header-content">
+            <h1 class="logo">BAAL</h1>
+            <div class="header-title">MBTI 성격유형 테스트</div>
+            <button class="header-test-btn" title="테스트 시작">Test</button>
+        </div>
+    </header>
+
+    <!-- 메인 컨테이너 -->
+    <div class="main-container">
+        <!-- 좌측 사이드바 -->
+        <aside class="sidebar">
+            <button class="sidebar-toggle" aria-label="메뉴 토글">☰</button>
+            <nav class="sidebar-nav">
+                <button class="type-btn" data-type="home">
+                    <span class="icon">🏠</span>
+                    <span>홈</span>
+                </button>
+                <div class="type-group">
+                    <h3>분석가 (NT)</h3>
+                    <button class="type-btn" data-type="INTJ">
+                        <span class="icon">🧠</span>
+                        <span>INTJ</span>
+                    </button>
+                    <button class="type-btn" data-type="INTP">
+                        <span class="icon">💡</span>
+                        <span>INTP</span>
+                    </button>
+                    <button class="type-btn" data-type="ENTJ">
+                        <span class="icon">👑</span>
+                        <span>ENTJ</span>
+                    </button>
+                    <button class="type-btn" data-type="ENTP">
+                        <span class="icon">⚡</span>
+                        <span>ENTP</span>
+                    </button>
+                </div>
+                <div class="type-group">
+                    <h3>외교관 (NF)</h3>
+                    <button class="type-btn" data-type="INFJ">
+                        <span class="icon">🌟</span>
+                        <span>INFJ</span>
+                    </button>
+                    <button class="type-btn" data-type="INFP">
+                        <span class="icon">🦋</span>
+                        <span>INFP</span>
+                    </button>
+                    <button class="type-btn" data-type="ENFJ">
+                        <span class="icon">❤️</span>
+                        <span>ENFJ</span>
+                    </button>
+                    <button class="type-btn" data-type="ENFP">
+                        <span class="icon">🌈</span>
+                        <span>ENFP</span>
+                    </button>
+                </div>
+                <div class="type-group">
+                    <h3>관리자 (SJ)</h3>
+                    <button class="type-btn" data-type="ISTJ">
+                        <span class="icon">📋</span>
+                        <span>ISTJ</span>
+                    </button>
+                    <button class="type-btn" data-type="ISFJ">
+                        <span class="icon">🤝</span>
+                        <span>ISFJ</span>
+                    </button>
+                    <button class="type-btn" data-type="ESTJ">
+                        <span class="icon">📊</span>
+                        <span>ESTJ</span>
+                    </button>
+                    <button class="type-btn" data-type="ESFJ">
+                        <span class="icon">🌻</span>
+                        <span>ESFJ</span>
+                    </button>
+                </div>
+                <div class="type-group">
+                    <h3>탐험가 (SP)</h3>
+                    <button class="type-btn" data-type="ISTP">
+                        <span class="icon">🔧</span>
+                        <span>ISTP</span>
+                    </button>
+                    <button class="type-btn" data-type="ISFP">
+                        <span class="icon">🎨</span>
+                        <span>ISFP</span>
+                    </button>
+                    <button class="type-btn" data-type="ESTP">
+                        <span class="icon">⚽</span>
+                        <span>ESTP</span>
+                    </button>
+                    <button class="type-btn" data-type="ESFP">
+                        <span class="icon">🎭</span>
+                        <span>ESFP</span>
+                    </button>
+                </div>
+                <button class="test-start-btn sidebar-test">
+                    <span class="icon">📝</span>
+                    <span>테스트 하기</span>
+                </button>
+            </nav>
+        </aside>
+
+        <!-- 메인 콘텐츠 영역 -->
+        <main class="main-content">
+            <!-- 홈 화면 -->
+            <section id="home-screen" class="content-section active">
+                <div class="intro-text">
+                    <h2>나의 MBTI 성격유형은?</h2>
+                    <p>정식 수준의 70문항으로 정확한 성격유형 진단</p>
+                    <div class="stats">🔥 126만명이 참여했어요!</div>
+                    <button class="test-start-btn intro-test">
+                        테스트 시작하기
+                    </button>
+                </div>
+
+                <div class="type-cards">
+                    <div class="card-group">
+                        <h3>분석가 (NT)</h3>
+                        <div class="cards-row">
+                            <div class="card" data-type="INTJ">
+                                <img src="https://api.dicebear.com/7.x/lorelei/svg?seed=INTJ&backgroundColor=c8b5d1" alt="INTJ">
+                                <h4>INTJ</h4>
+                                <p>전략가</p>
+                            </div>
+                            <div class="card" data-type="INTP">
+                                <img src="https://api.dicebear.com/7.x/lorelei/svg?seed=INTP&backgroundColor=d4c8d9" alt="INTP">
+                                <h4>INTP</h4>
+                                <p>논리술사</p>
+                            </div>
+                            <div class="card" data-type="ENTJ">
+                                <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=ENTJ&backgroundColor=b5a8c8" alt="ENTJ">
+                                <h4>ENTJ</h4>
+                                <p>통솔자</p>
+                            </div>
+                            <div class="card" data-type="ENTP">
+                                <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=ENTP&backgroundColor=c1b5d1" alt="ENTP">
+                                <h4>ENTP</h4>
+                                <p>변론가</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-group">
+                        <h3>외교관 (NF)</h3>
+                        <div class="cards-row">
+                            <div class="card" data-type="INFJ">
+                                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=INFJ&backgroundColor=b8d4b8" alt="INFJ">
+                                <h4>INFJ</h4>
+                                <p>옹호자</p>
+                            </div>
+                            <div class="card" data-type="INFP">
+                                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=INFP&backgroundColor=c8e6c8" alt="INFP">
+                                <h4>INFP</h4>
+                                <p>중재자</p>
+                            </div>
+                            <div class="card" data-type="ENFJ">
+                                <img src="https://api.dicebear.com/7.x/personas/svg?seed=ENFJ&backgroundColor=a8c8a8" alt="ENFJ">
+                                <h4>ENFJ</h4>
+                                <p>선도자</p>
+                            </div>
+                            <div class="card" data-type="ENFP">
+                                <img src="https://api.dicebear.com/7.x/personas/svg?seed=ENFP&backgroundColor=b8d4b8" alt="ENFP">
+                                <h4>ENFP</h4>
+                                <p>활동가</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-group">
+                        <h3>관리자 (SJ)</h3>
+                        <div class="cards-row">
+                            <div class="card" data-type="ISTJ">
+                                <img src="https://api.dicebear.com/7.x/lorelei/svg?seed=ISTJ&backgroundColor=d4a574" alt="ISTJ">
+                                <h4>ISTJ</h4>
+                                <p>현실주의자</p>
+                            </div>
+                            <div class="card" data-type="ISFJ">
+                                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=ISFJ&backgroundColor=e6b894" alt="ISFJ">
+                                <h4>ISFJ</h4>
+                                <p>수호자</p>
+                            </div>
+                            <div class="card" data-type="ESTJ">
+                                <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=ESTJ&backgroundColor=c49474" alt="ESTJ">
+                                <h4>ESTJ</h4>
+                                <p>경영자</p>
+                            </div>
+                            <div class="card" data-type="ESFJ">
+                                <img src="https://api.dicebear.com/7.x/personas/svg?seed=ESFJ&backgroundColor=d4a574" alt="ESFJ">
+                                <h4>ESFJ</h4>
+                                <p>집정관</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-group">
+                        <h3>탐험가 (SP)</h3>
+                        <div class="cards-row">
+                            <div class="card" data-type="ISTP">
+                                <img src="https://api.dicebear.com/7.x/lorelei/svg?seed=ISTP&backgroundColor=86c5da" alt="ISTP">
+                                <h4>ISTP</h4>
+                                <p>만능재주꾼</p>
+                            </div>
+                            <div class="card" data-type="ISFP">
+                                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=ISFP&backgroundColor=a8d1e6" alt="ISFP">
+                                <h4>ISFP</h4>
+                                <p>모험가</p>
+                            </div>
+                            <div class="card" data-type="ESTP">
+                                <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=ESTP&backgroundColor=74a5c4" alt="ESTP">
+                                <h4>ESTP</h4>
+                                <p>사업가</p>
+                            </div>
+                            <div class="card" data-type="ESFP">
+                                <img src="https://api.dicebear.com/7.x/personas/svg?seed=ESFP&backgroundColor=86c5da" alt="ESFP">
+                                <h4>ESFP</h4>
+                                <p>연예인</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Top 버튼 -->
+                <button class="top-btn" title="맨 위로 이동">
+                    <span class="top-icon">↑</span>
+                    <span class="top-text">Top</span>
+                </button>
+            </section>
+
+            <!-- 유형별 설명 페이지 -->
+            <section id="type-detail" class="content-section">
+                <div class="type-detail-header">
+                    <button class="back-btn" title="메인으로 돌아가기">
+                        <span class="back-icon">←</span>
+                        <span class="back-text">메인</span>
+                    </button>
+                </div>
+                <div class="type-detail-content">
+                    <!-- 동적으로 채워질 내용 -->
+                </div>
+            </section>
+
+            <!-- 테스트 결과 화면 -->
+            <section id="result-screen" class="content-section">
+                <div class="result-content">
+                    <!-- 동적으로 채워질 결과 -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- 개인정보 입력 모달 -->
+    <div id="info-modal" class="modal">
+        <div class="modal-content">
+            <h2>테스트 시작 전 정보 입력</h2>
+            <p class="info-desc">더 정확한 결과를 위해 간단한 정보를 입력해주세요</p>
+            
+            <div class="input-group">
+                <label for="gender">성별</label>
+                <div class="radio-group">
+                    <label class="radio-label">
+                        <input type="radio" name="gender" value="male">
+                        <span class="radio-custom">👨 남성</span>
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="gender" value="female">
+                        <span class="radio-custom">👩 여성</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="age">나이</label>
+                <div class="age-group">
+                    <label class="age-label">
+                        <input type="radio" name="age" value="10s">
+                        <span class="age-custom">10대</span>
+                    </label>
+                    <label class="age-label">
+                        <input type="radio" name="age" value="20s">
+                        <span class="age-custom">20대</span>
+                    </label>
+                    <label class="age-label">
+                        <input type="radio" name="age" value="30s">
+                        <span class="age-custom">30대</span>
+                    </label>
+                    <label class="age-label">
+                        <input type="radio" name="age" value="40s">
+                        <span class="age-custom">40대</span>
+                    </label>
+                    <label class="age-label">
+                        <input type="radio" name="age" value="50s">
+                        <span class="age-custom">50대+</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="modal-buttons">
+                <button class="next-step-btn" disabled>다음</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 테스트 유형 선택 모달 -->
+    <div id="test-type-modal" class="modal">
+        <div class="modal-content">
+            <h2>테스트 유형을 선택하세요</h2>
+            <p class="type-desc">원하는 테스트 방식을 선택해주세요</p>
+            
+            <div class="test-type-options">
+                <div class="type-option" data-type="quick">
+                    <div class="type-icon">⚡</div>
+                    <h3>약식 테스트</h3>
+                    <div class="type-details">
+                        <span class="type-time">⏱️ 3-4분</span>
+                        <span class="type-questions">📝 20문항</span>
+                    </div>
+                    <p class="type-description">핵심 질문으로 빠르게 성격유형을 파악하는 속도 우선 테스트</p>
+                    <button class="select-type-btn" data-type="quick">약식 테스트 선택</button>
+                </div>
+                
+                <div class="type-option" data-type="full">
+                    <div class="type-icon">🎯</div>
+                    <h3>정식 테스트</h3>
+                    <div class="type-details">
+                        <span class="type-time">⏱️ 15-20분</span>
+                        <span class="type-questions">📝 70문항</span>
+                    </div>
+                    <p class="type-description">정식 수준의 상세한 문항으로 정확한 성격유형을 진단하는 정확성 우선 테스트</p>
+                    <button class="select-type-btn recommended" data-type="full">정식 테스트 선택 <span class="rec-badge">추천</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 테스트 모달 -->
+    <div id="test-modal" class="modal">
+        <div class="modal-content test-modal-content">
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+                <span class="progress-text">1/70</span>
+            </div>
+            <div class="question-container">
+                <h3 class="question-text"></h3>
+                <div class="answer-buttons">
+                    <!-- 동적으로 생성될 답변 버튼들 -->
+                </div>
+            </div>
+            <div class="test-navigation">
+                <button class="nav-btn prev-btn" disabled>이전</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MBTI 유형 선택 모달 -->
+    <div id="type-selector-modal" class="modal">
+        <div class="modal-content type-selector-content">
+            <h2>궁합을 확인할 MBTI 유형을 선택하세요</h2>
+            <p class="selector-desc">16가지 성격유형 중에서 선택해주세요</p>
+            
+            <div class="type-selector-grid">
+                <div class="type-group">
+                    <h3>분석가 (NT)</h3>
+                    <div class="type-buttons">
+                        <button class="type-selector-btn" data-type="INTJ">
+                            <span class="type-icon">🧠</span>
+                            <span class="type-name">INTJ</span>
+                            <span class="type-nickname">전략가</span>
+                        </button>
+                        <button class="type-selector-btn" data-type="INTP">
+                            <span class="type-icon">💡</span>
+                            <span class="type-name">INTP</span>
+                            <span class="type-nickname">논리술사</span>
+                        </button>
+                        <button class="type-selector-btn" data-type="ENTJ">
+                            <span class="type-icon">👑</span>
+                            <span class="type-name">ENTJ</span>
+                            <span class="type-nickname">통솔자</span>
+                        </button>
+                        <button class="type-selector-btn" data-type="ENTP">
+                            <span class="type-icon">⚡</span>
+                            <span class="type-name">ENTP</span>
+                            <span class="type-nickname">변론가</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="type-group">
+                    <h3>외교관 (NF)</h3>
+                    <div class="type-buttons">
+                        <button class="type-selector-btn" data-type="INFJ">
+                            <span class="type-icon">🌟</span>
+                            <span class="type-name">INFJ</span>
+                            <span class="type-nickname">옹호자</span>
+                        </button>
+                        <button class="type-selector-btn" data-type="INFP">
+                            <span class="type-icon">🦋</span>
+                            <span class="type-name">INFP</span>
+                            <span class="type-nickname">중재자</span>
+                        </button>
+                        <button class="type-selector-btn" data-type="ENFJ">
+                            <span class="type-icon">❤️</span>
+                            <span class="type-name">ENFJ</span>
+                            <span class="type-nickname">선도자</span>
+                        </button>
+                        <button class="type-selector-btn" data-type="ENFP">
+                            <span class="type-icon">🌈</span>
+                            <span class="type-name">ENFP</span>
+                            <span class="type-nickname">활동가</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="type-group">
+                    <h3>관리자 (SJ)</h3>
+                    <div class="type-buttons">
+                        <button class="type-selector-btn" data-type="ISTJ">
+                            <span class="type-icon">📋</span>
+                            <span class="type-name">ISTJ</span>
+                            <span class="type-nickname">현실주의자</span>
+                        </button>
+                        <button class="type-selector-btn" data-type="ISFJ">
+                            <span class="type-icon">🤝</span>
+                            <span class="type-name">ISFJ</span>
+                            <span class="type-nickname">수호자</span>
+                        </button>
+                        <button class="type-selector-btn" data-type="ESTJ">
+                            <span class="type-icon">📊</span>
+                            <span class="type-name">ESTJ</span>
+                            <span class="type-nickname">경영자</span>
+                        </button>
+                        <button class="type-selector-btn" data-type="ESFJ">
+                            <span class="type-icon">🌻</span>
+                            <span class="type-name">ESFJ</span>
+                            <span class="type-nickname">집정관</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="type-group">
+                    <h3>탐험가 (SP)</h3>
+                    <div class="type-buttons">
+                        <button class="type-selector-btn" data-type="ISTP">
+                            <span class="type-icon">🔧</span>
+                            <span class="type-name">ISTP</span>
+                            <span class="type-nickname">만능재주꾼</span>
+                        </button>
+                        <button class="type-selector-btn" data-type="ISFP">
+                            <span class="type-icon">🎨</span>
+                            <span class="type-name">ISFP</span>
+                            <span class="type-nickname">모험가</span>
+                        </button>
+                        <button class="type-selector-btn" data-type="ESTP">
+                            <span class="type-icon">⚽</span>
+                            <span class="type-name">ESTP</span>
+                            <span class="type-nickname">사업가</span>
+                        </button>
+                        <button class="type-selector-btn" data-type="ESFP">
+                            <span class="type-icon">🎭</span>
+                            <span class="type-name">ESFP</span>
+                            <span class="type-nickname">연예인</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 오버레이 -->
+    <div id="overlay" class="overlay"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>

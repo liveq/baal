@@ -1,0 +1,610 @@
+/* 전역 스타일 초기화 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* 색상 변수 정의 */
+:root {
+    --primary-red: #DC143C;
+    --primary-gold: #FFD700;
+    --secondary-red: #FF6B6B;
+    --secondary-gold: #FFA500;
+    --bg-cream: #FFF8DC;
+    --text-dark: #2C2C2C;
+    --text-light: #666666;
+    --border-color: #E0E0E0;
+    --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    --sidebar-width: 200px;
+}
+
+/* 기본 body 스타일 */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans KR', sans-serif;
+    background-color: var(--bg-cream);
+    color: var(--text-dark);
+    line-height: 1.6;
+}
+
+/* 헤더 스타일 */
+.header {
+    background: linear-gradient(135deg, var(--primary-red) 0%, var(--primary-gold) 100%);
+    color: white;
+    padding: 1rem 2rem;
+    box-shadow: var(--shadow);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header-left {
+    display: flex;
+    gap: 1rem;
+}
+
+.home-btn, .main-btn {
+    padding: 0.5rem 1rem;
+    background: white;
+    color: var(--primary-red);
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.home-btn:hover, .main-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.header-center {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+}
+
+.birth-input-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: white;
+    padding: 0.5rem 1rem;
+    border-radius: 25px;
+}
+
+.birth-input-group label {
+    color: var(--text-dark);
+    font-weight: bold;
+}
+
+.birth-input {
+    width: 60px;
+    padding: 0.3rem;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    text-align: center;
+}
+
+.search-btn {
+    padding: 0.3rem 0.6rem;
+    background: var(--primary-red);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.search-btn:hover {
+    background: var(--secondary-red);
+}
+
+.compatibility-btn {
+    padding: 0.5rem 1.5rem;
+    background: white;
+    color: var(--primary-red);
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.compatibility-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* 메인 컨테이너 레이아웃 */
+.main-container {
+    display: flex;
+    min-height: calc(100vh - 70px);
+}
+
+/* 사이드바 스타일 */
+.sidebar {
+    width: var(--sidebar-width);
+    background: white;
+    border-right: 1px solid var(--border-color);
+    padding: 1rem 0;
+    position: sticky;
+    top: 70px;
+    height: calc(100vh - 70px);
+    overflow-y: auto;
+}
+
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+}
+
+.zodiac-btn {
+    padding: 1rem;
+    background: white;
+    border: none;
+    border-bottom: 1px solid var(--border-color);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.zodiac-btn:hover {
+    background: var(--bg-cream);
+    padding-left: 1.5rem;
+}
+
+.zodiac-btn.active {
+    background: linear-gradient(90deg, var(--secondary-red) 0%, var(--secondary-gold) 100%);
+    color: white;
+    font-weight: bold;
+}
+
+/* 메인 콘텐츠 영역 */
+.main-content {
+    flex: 1;
+    padding: 2rem;
+    overflow-y: auto;
+}
+
+.content-section {
+    display: none;
+}
+
+.content-section.active {
+    display: block;
+    animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* 메인 페이지 스타일 */
+.intro-text {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.intro-text h1 {
+    font-size: 2.5rem;
+    background: linear-gradient(135deg, var(--primary-red) 0%, var(--primary-gold) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.5rem;
+}
+
+.intro-text p {
+    font-size: 1.2rem;
+    color: var(--text-light);
+}
+
+/* 띠별 카드 그리드 */
+.zodiac-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.zodiac-card {
+    background: white;
+    border-radius: 15px;
+    padding: 1.5rem;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.zodiac-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.card-icon {
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+}
+
+.zodiac-card h3 {
+    font-size: 1.3rem;
+    margin-bottom: 0.3rem;
+}
+
+.zodiac-card p {
+    color: var(--text-light);
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.view-fortune-btn {
+    width: 100%;
+    padding: 0.7rem;
+    background: linear-gradient(135deg, var(--primary-red) 0%, var(--primary-gold) 100%);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.view-fortune-btn:hover {
+    transform: scale(1.05);
+}
+
+.quick-view-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 30px;
+    height: 30px;
+    background: var(--secondary-gold);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.quick-view-btn:hover {
+    background: var(--primary-gold);
+    transform: scale(1.1);
+}
+
+/* 상세 페이지 스타일 */
+.detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.back-btn {
+    padding: 0.5rem 1rem;
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.back-btn:hover {
+    background: var(--bg-cream);
+}
+
+#zodiac-title {
+    font-size: 2rem;
+    color: var(--primary-red);
+}
+
+#zodiac-selector {
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    background: white;
+    cursor: pointer;
+}
+
+/* 탭 스타일 */
+.fortune-tabs {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 0.5rem;
+}
+
+.tab-btn {
+    padding: 0.7rem 1.5rem;
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: 10px 10px 0 0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.tab-btn:hover {
+    background: var(--bg-cream);
+}
+
+.tab-btn.active {
+    background: linear-gradient(135deg, var(--primary-red) 0%, var(--primary-gold) 100%);
+    color: white;
+    border: none;
+}
+
+.gender-tabs {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.gender-btn {
+    padding: 0.7rem 2rem;
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.gender-btn:hover {
+    background: var(--bg-cream);
+}
+
+.gender-btn.active {
+    background: var(--secondary-red);
+    color: white;
+    border: none;
+}
+
+/* 운세 콘텐츠 영역 */
+.fortune-content {
+    background: white;
+    border-radius: 15px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: var(--shadow);
+    min-height: 400px;
+}
+
+.compatibility-check-btn {
+    display: block;
+    margin: 0 auto;
+    padding: 1rem 3rem;
+    background: linear-gradient(135deg, var(--secondary-red) 0%, var(--secondary-gold) 100%);
+    color: white;
+    border: none;
+    border-radius: 25px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.compatibility-check-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* 모달 스타일 */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal.active {
+    display: block;
+}
+
+.modal-content {
+    background: white;
+    margin: 5% auto;
+    padding: 2rem;
+    border-radius: 20px;
+    width: 80%;
+    max-width: 600px;
+    max-height: 80vh;
+    overflow-y: auto;
+    animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+    from { transform: translateY(50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.close-btn {
+    float: right;
+    font-size: 2rem;
+    font-weight: bold;
+    cursor: pointer;
+    color: var(--text-light);
+}
+
+.close-btn:hover {
+    color: var(--primary-red);
+}
+
+/* 궁합 폼 스타일 */
+.compatibility-content {
+    max-width: 700px;
+}
+
+.compatibility-form {
+    display: flex;
+    gap: 2rem;
+    margin: 2rem 0;
+}
+
+.person-input {
+    flex: 1;
+    padding: 1.5rem;
+    background: var(--bg-cream);
+    border-radius: 15px;
+}
+
+.person-input h3 {
+    margin-bottom: 1rem;
+    color: var(--primary-red);
+}
+
+.input-group {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    align-items: center;
+}
+
+.input-group input {
+    flex: 1;
+    padding: 0.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    text-align: center;
+}
+
+.gender-select {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.gender-option {
+    padding: 0.5rem 1rem;
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.gender-option.active {
+    background: var(--secondary-red);
+    color: white;
+    border: none;
+}
+
+.zodiac-display {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: white;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.relationship-type {
+    margin: 1.5rem 0;
+    text-align: center;
+}
+
+.relationship-type select {
+    padding: 0.7rem 2rem;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    background: white;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.check-compatibility-btn {
+    display: block;
+    width: 100%;
+    padding: 1rem;
+    background: linear-gradient(135deg, var(--primary-red) 0%, var(--primary-gold) 100%);
+    color: white;
+    border: none;
+    border-radius: 15px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.check-compatibility-btn:hover {
+    transform: scale(1.02);
+}
+
+/* 오버레이 */
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}
+
+.overlay.active {
+    display: block;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column;
+        padding: 1rem;
+        gap: 1rem;
+    }
+    
+    .header-center {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .birth-input-group {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .sidebar {
+        width: 60px;
+    }
+    
+    .zodiac-btn {
+        padding: 1rem 0.5rem;
+        font-size: 1.5rem;
+        justify-content: center;
+    }
+    
+    .zodiac-btn span {
+        display: none;
+    }
+    
+    .main-content {
+        padding: 1rem;
+    }
+    
+    .zodiac-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+    
+    .compatibility-form {
+        flex-direction: column;
+    }
+}

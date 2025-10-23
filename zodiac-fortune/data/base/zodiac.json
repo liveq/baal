@@ -1,0 +1,326 @@
+{
+  "description": "12띠 기본 정보 - 동물별 특성과 속성",
+  "zodiac_animals": [
+    {
+      "id": "rat",
+      "name": "쥐띠",
+      "icon": "🐭",
+      "order": 1,
+      "earthly_branch": "자(子)",
+      "element": "water",
+      "yin_yang": "양",
+      "traits": [
+        "지혜로움", "민첩함", "경제 감각", "적응력",
+        "사교성", "기민함", "창의적 사고"
+      ],
+      "positive_keywords": [
+        "영리한 전략가", "빠른 학습", "기회 포착",
+        "네트워킹 능력", "문제 해결력"
+      ],
+      "compatible_zodiacs": ["ox", "dragon", "monkey"],
+      "favorable_elements": ["water", "metal"],
+      "lucky_direction": "북",
+      "lucky_season": "겨울",
+      "life_phase_strength": {
+        "youth": "높음",
+        "middle": "매우 높음",
+        "senior": "안정적"
+      }
+    },
+    {
+      "id": "ox",
+      "name": "소띠",
+      "icon": "🐮",
+      "order": 2,
+      "earthly_branch": "축(丑)",
+      "element": "earth",
+      "yin_yang": "음",
+      "traits": [
+        "성실함", "인내심", "책임감", "끈기",
+        "신뢰감", "안정적", "근면함"
+      ],
+      "positive_keywords": [
+        "믿음직한 동반자", "꾸준한 성장", "신뢰 구축",
+        "장기적 안목", "책임감 있는 리더"
+      ],
+      "compatible_zodiacs": ["rat", "snake", "rooster"],
+      "favorable_elements": ["earth", "metal"],
+      "lucky_direction": "북동",
+      "lucky_season": "겨울 말, 이른 봄",
+      "life_phase_strength": {
+        "youth": "안정적",
+        "middle": "높음",
+        "senior": "매우 높음"
+      }
+    },
+    {
+      "id": "tiger",
+      "name": "호랑이띠",
+      "icon": "🐯",
+      "order": 3,
+      "earthly_branch": "인(寅)",
+      "element": "wood",
+      "yin_yang": "양",
+      "traits": [
+        "용맹함", "리더십", "정의감", "자신감",
+        "진취적", "모험심", "보호 본능"
+      ],
+      "positive_keywords": [
+        "용기 있는 개척자", "강한 추진력", "정의 실현",
+        "보호하는 리더", "변화를 주도"
+      ],
+      "compatible_zodiacs": ["horse", "dog", "pig"],
+      "favorable_elements": ["wood", "fire"],
+      "lucky_direction": "동",
+      "lucky_season": "봄",
+      "life_phase_strength": {
+        "youth": "매우 높음",
+        "middle": "높음",
+        "senior": "안정적"
+      }
+    },
+    {
+      "id": "rabbit",
+      "name": "토끼띠",
+      "icon": "🐰",
+      "order": 4,
+      "earthly_branch": "묘(卯)",
+      "element": "wood",
+      "yin_yang": "음",
+      "traits": [
+        "온순함", "예술적 감각", "사교성", "섬세함",
+        "우아함", "배려심", "조화로움"
+      ],
+      "positive_keywords": [
+        "우아한 중재자", "예술적 재능", "조화 창조",
+        "세심한 배려", "평화로운 관계"
+      ],
+      "compatible_zodiacs": ["goat", "pig", "dog"],
+      "favorable_elements": ["wood", "water"],
+      "lucky_direction": "동",
+      "lucky_season": "봄",
+      "life_phase_strength": {
+        "youth": "높음",
+        "middle": "높음",
+        "senior": "매우 높음"
+      }
+    },
+    {
+      "id": "dragon",
+      "name": "용띠",
+      "icon": "🐲",
+      "order": 5,
+      "earthly_branch": "진(辰)",
+      "element": "earth",
+      "yin_yang": "양",
+      "traits": [
+        "카리스마", "야망", "창의성", "리더십",
+        "자신감", "포부", "변화를 만듦"
+      ],
+      "positive_keywords": [
+        "비전을 제시하는 리더", "큰 꿈 실현", "영감 제공",
+        "혁신적 사고", "행운을 부름"
+      ],
+      "compatible_zodiacs": ["rat", "monkey", "rooster"],
+      "favorable_elements": ["earth", "water"],
+      "lucky_direction": "동남",
+      "lucky_season": "봄 말",
+      "life_phase_strength": {
+        "youth": "매우 높음",
+        "middle": "매우 높음",
+        "senior": "높음"
+      }
+    },
+    {
+      "id": "snake",
+      "name": "뱀띠",
+      "icon": "🐍",
+      "order": 6,
+      "earthly_branch": "사(巳)",
+      "element": "fire",
+      "yin_yang": "음",
+      "traits": [
+        "지적임", "직관력", "신중함", "통찰력",
+        "신비로움", "집중력", "분석력"
+      ],
+      "positive_keywords": [
+        "지혜로운 전략가", "본질 파악", "깊은 통찰",
+        "신중한 결정", "직관적 판단"
+      ],
+      "compatible_zodiacs": ["ox", "rooster", "monkey"],
+      "favorable_elements": ["fire", "earth"],
+      "lucky_direction": "남남동",
+      "lucky_season": "여름",
+      "life_phase_strength": {
+        "youth": "안정적",
+        "middle": "매우 높음",
+        "senior": "높음"
+      }
+    },
+    {
+      "id": "horse",
+      "name": "말띠",
+      "icon": "🐴",
+      "order": 7,
+      "earthly_branch": "오(午)",
+      "element": "fire",
+      "yin_yang": "양",
+      "traits": [
+        "자유로움", "열정", "독립심", "활력",
+        "역동적", "모험심", "추진력"
+      ],
+      "positive_keywords": [
+        "자유로운 모험가", "열정적 추진", "활기찬 에너지",
+        "독립적 성취", "긍정적 영향력"
+      ],
+      "compatible_zodiacs": ["tiger", "goat", "dog"],
+      "favorable_elements": ["fire", "wood"],
+      "lucky_direction": "남",
+      "lucky_season": "여름",
+      "life_phase_strength": {
+        "youth": "매우 높음",
+        "middle": "높음",
+        "senior": "안정적"
+      }
+    },
+    {
+      "id": "goat",
+      "name": "양띠",
+      "icon": "🐑",
+      "order": 8,
+      "earthly_branch": "미(未)",
+      "element": "earth",
+      "yin_yang": "음",
+      "traits": [
+        "예술적", "평화로움", "창의적", "온화함",
+        "감성적", "배려심", "조화추구"
+      ],
+      "positive_keywords": [
+        "예술적 감성", "평화 창조", "창의적 표현",
+        "따뜻한 마음", "조화로운 관계"
+      ],
+      "compatible_zodiacs": ["rabbit", "horse", "pig"],
+      "favorable_elements": ["earth", "fire"],
+      "lucky_direction": "남남서",
+      "lucky_season": "여름 말",
+      "life_phase_strength": {
+        "youth": "높음",
+        "middle": "높음",
+        "senior": "매우 높음"
+      }
+    },
+    {
+      "id": "monkey",
+      "name": "원숭이띠",
+      "icon": "🐵",
+      "order": 9,
+      "earthly_branch": "신(申)",
+      "element": "metal",
+      "yin_yang": "양",
+      "traits": [
+        "재치", "호기심", "다재다능", "영리함",
+        "융통성", "유머", "창의성"
+      ],
+      "positive_keywords": [
+        "영리한 문제 해결사", "재치있는 소통", "다양한 재능",
+        "유머러스한 분위기", "빠른 적응"
+      ],
+      "compatible_zodiacs": ["rat", "dragon", "snake"],
+      "favorable_elements": ["metal", "water"],
+      "lucky_direction": "서남",
+      "lucky_season": "가을",
+      "life_phase_strength": {
+        "youth": "매우 높음",
+        "middle": "높음",
+        "senior": "높음"
+      }
+    },
+    {
+      "id": "rooster",
+      "name": "닭띠",
+      "icon": "🐔",
+      "order": 10,
+      "earthly_branch": "유(酉)",
+      "element": "metal",
+      "yin_yang": "음",
+      "traits": [
+        "정확함", "완벽주의", "자신감", "부지런함",
+        "세심함", "책임감", "계획적"
+      ],
+      "positive_keywords": [
+        "정확한 실행자", "꼼꼼한 계획", "성실한 노력",
+        "책임감 있는 완수", "세밀한 배려"
+      ],
+      "compatible_zodiacs": ["ox", "snake", "dragon"],
+      "favorable_elements": ["metal", "earth"],
+      "lucky_direction": "서",
+      "lucky_season": "가을",
+      "life_phase_strength": {
+        "youth": "높음",
+        "middle": "매우 높음",
+        "senior": "높음"
+      }
+    },
+    {
+      "id": "dog",
+      "name": "개띠",
+      "icon": "🐶",
+      "order": 11,
+      "earthly_branch": "술(戌)",
+      "element": "earth",
+      "yin_yang": "양",
+      "traits": [
+        "충직함", "정직함", "의리", "정의감",
+        "보호본능", "따뜻함", "신뢰감"
+      ],
+      "positive_keywords": [
+        "믿음직한 친구", "충실한 동반자", "정의 수호",
+        "따뜻한 보호", "진실한 관계"
+      ],
+      "compatible_zodiacs": ["tiger", "rabbit", "horse"],
+      "favorable_elements": ["earth", "fire"],
+      "lucky_direction": "서북",
+      "lucky_season": "가을 말",
+      "life_phase_strength": {
+        "youth": "높음",
+        "middle": "높음",
+        "senior": "매우 높음"
+      }
+    },
+    {
+      "id": "pig",
+      "name": "돼지띠",
+      "icon": "🐷",
+      "order": 12,
+      "earthly_branch": "해(亥)",
+      "element": "water",
+      "yin_yang": "음",
+      "traits": [
+        "관대함", "정직함", "순수함", "풍요로움",
+        "너그러움", "성실함", "포용력"
+      ],
+      "positive_keywords": [
+        "관대한 베풂", "순수한 마음", "풍요 창조",
+        "진실한 관계", "포용적 태도"
+      ],
+      "compatible_zodiacs": ["rabbit", "goat", "tiger"],
+      "favorable_elements": ["water", "wood"],
+      "lucky_direction": "북북서",
+      "lucky_season": "겨울",
+      "life_phase_strength": {
+        "youth": "안정적",
+        "middle": "높음",
+        "senior": "매우 높음"
+      }
+    }
+  ],
+  "zodiac_cycle": [
+    "rat", "ox", "tiger", "rabbit", "dragon", "snake",
+    "horse", "goat", "monkey", "rooster", "dog", "pig"
+  ],
+  "notes": {
+    "origin": "12띠는 천문학적 목성의 12년 주기에서 유래했습니다.",
+    "philosophy": "각 동물은 고유한 특성과 덕목을 상징하며, 인간의 다양한 성격 유형을 표현합니다.",
+    "usage": "출생년도의 지지(地支)에 해당하는 동물로 그 사람의 기본 성향을 파악할 수 있습니다."
+  }
+}

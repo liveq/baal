@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BAAL - 타로카드</title>
+    <link rel="stylesheet" href="tarot-diora-color.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- 햄버거 메뉴 토글 버튼 -->
+    <button class="nav-toggle" onclick="toggleNav()">☰</button>
+    
+    <!-- 7개 카테고리 아코디언 네비게이션 -->
+    <nav class="tarot-nav">
+        <div class="nav-header">
+            <h3>✨ 타로카드 운세</h3>
+            <div class="nav-controls">
+                <button class="main-btn" onclick="location.href='../../../'" title="메인으로">🏠</button>
+                <button class="close-btn" onclick="window.close()" title="닫기">✕</button>
+            </div>
+        </div>
+        <div class="nav-categories">
+            <!-- 연애운세 -->
+            <div class="nav-category">
+                <button class="category-header" onclick="toggleCategory('love')">
+                    <div class="category-title-group">
+                        <span class="category-icon">💖</span>
+                        <span class="category-title">연애운세</span>
+                    </div>
+                    <span class="category-arrow">▼</span>
+                </button>
+                <div class="category-items" id="category-love">
+                    <button class="nav-item" onclick="selectSpread('solo_fortune')" data-spread="love_single">
+                        <span class="nav-icon">💙</span>
+                        <div class="nav-info">
+                            <span class="nav-name">솔로의 사랑</span>
+                        </div>
+                    </button>
+                    <button class="nav-item" onclick="selectSpread('couple_fortune')" data-spread="love_couple">
+                        <span class="nav-icon">💕</span>
+                        <div class="nav-info">
+                            <span class="nav-name">연인과의 관계</span>
+                        </div>
+                    </button>
+                    <button class="nav-item" onclick="selectSpread('crush_reading')" data-spread="love_crush">
+                        <span class="nav-icon">💘</span>
+                        <div class="nav-info">
+                            <span class="nav-name">짝사랑 운세</span>
+                        </div>
+                    </button>
+                    <button class="nav-item" onclick="selectSpread('breakup_recovery')" data-spread="love_breakup">
+                        <span class="nav-icon">💔</span>
+                        <div class="nav-info">
+                            <span class="nav-name">이별과 회복</span>
+                        </div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 직업운세 -->
+            <div class="nav-category">
+                <button class="category-header" onclick="toggleCategory('career')">
+                    <div class="category-title-group">
+                        <span class="category-icon">💼</span>
+                        <span class="category-title">직업운세</span>
+                    </div>
+                    <span class="category-arrow">▼</span>
+                </button>
+                <div class="category-items" id="category-career">
+                    <button class="nav-item" onclick="selectSpread('job_hunting')" data-spread="career_job">
+                        <span class="nav-icon">🎯</span>
+                        <div class="nav-info">
+                            <span class="nav-name">취업 운세</span>
+                        </div>
+                    </button>
+                    <button class="nav-item" onclick="selectSpread('promotion')" data-spread="career_promotion">
+                        <span class="nav-icon">📈</span>
+                        <div class="nav-info">
+                            <span class="nav-name">승진과 성과</span>
+                        </div>
+                    </button>
+                    <button class="nav-item" onclick="selectSpread('job_change')" data-spread="career_change">
+                        <span class="nav-icon">🔄</span>
+                        <div class="nav-info">
+                            <span class="nav-name">이직과 전환</span>
+                        </div>
+                    </button>
+                    <button class="nav-item" onclick="selectSpread('business_start')" data-spread="career_business">
+                        <span class="nav-icon">🏢</span>
+                        <div class="nav-info">
+                            <span class="nav-name">사업 운세</span>
+                        </div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 건강운세 -->
+            <div class="nav-category">
+                <button class="category-header" onclick="toggleCategory('health')">
+                    <div class="category-title-group">
+                        <span class="category-icon">💚</span>
+                        <span class="category-title">건강운세</span>
+                    </div>
+                    <span class="category-arrow">▼</span>
+                </button>
+                <div class="category-items" id="category-health">
+                    <button class="nav-item" onclick="selectSpread('health_status')" data-spread="health_general">
+                        <span class="nav-icon">🩺</span>
+                        <div class="nav-info">
+                            <span class="nav-name">전반적 건강</span>
+                        </div>
+                    </button>
+                    <button class="nav-item" onclick="selectSpread('recovery_path')" data-spread="health_recovery">
+                        <span class="nav-icon">🌿</span>
+                        <div class="nav-info">
+                            <span class="nav-name">회복과 치유</span>
+                        </div>
+                    </button>
+                    <button class="nav-item" onclick="selectSpread('mental_health')" data-spread="health_mental">
+                        <span class="nav-icon">🧠</span>
+                        <div class="nav-info">
+                            <span class="nav-name">정신건강</span>
+                        </div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 재정운세 -->
+            <div class="nav-category">
+                <button class="category-header" onclick="toggleCategory('finance')">
+                    <div class="category-title-group">
+                        <span class="category-icon">💰</span>
+                        <span class="category-title">재정운세</span>
+                    </div>
+                    <span class="category-arrow">▼</span>
+                </button>
+                <div class="category-items" id="category-finance">
+                    <button class="nav-item" onclick="selectSpread('money_fortune')" data-spread="finance_money">
+                        <span class="nav-icon">💵</span>
+                        <div class="nav-info">
+                            <span class="nav-name">금전 운세</span>
+                        </div>
+                    </button>
+                    <button class="nav-item" onclick="selectSpread('investment_guide')" data-spread="finance_investment">
+                        <span class="nav-icon">📊</span>
+                        <div class="nav-info">
+                            <span class="nav-name">투자 운세</span>
+                        </div>
+                    </button>
+                    <button class="nav-item" onclick="selectSpread('debt_solution')" data-spread="finance_debt">
+                        <span class="nav-icon">💳</span>
+                        <div class="nav-info">
+                            <span class="nav-name">부채해결</span>
+                        </div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 인간관계 -->
+            <div class="nav-category">
+                <button class="category-header" onclick="toggleCategory('relationship')">
+                    <div class="category-title-group">
+                        <span class="category-icon">👥</span>
+                        <span class="category-title">인간관계</span>
+                    </div>
+                    <span class="category-arrow">▼</span>
+                </button>
+                <div class="category-items" id="category-relationship">
+                    <button class="nav-item" onclick="selectSpread('friendship')" data-spread="relationship_friends">
+                        <span class="nav-icon">👯</span>
+                        <div class="nav-info">
+                            <span class="nav-name">친구 관계</span>
+                        </div>
+                    </button>
+                    <button class="nav-item" onclick="selectSpread('family_harmony')" data-spread="relationship_family">
+                        <span class="nav-icon">👨‍👩‍👧‍👦</span>
+                        <div class="nav-info">
+                            <span class="nav-name">가족 관계</span>
+                        </div>
+                    </button>
+                    <button class="nav-item" onclick="selectSpread('workplace_relations')" data-spread="relationship_work">
+                        <span class="nav-icon">🤝</span>
+                        <div class="nav-info">
+                            <span class="nav-name">직장 관계</span>
+                        </div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 영적성장 -->
+            <div class="nav-category">
+                <button class="category-header" onclick="toggleCategory('spiritual')">
+                    <div class="category-title-group">
+                        <span class="category-icon">✨</span>
+                        <span class="category-title">영적성장</span>
+                    </div>
+                    <span class="category-arrow">▼</span>
+                </button>
+                <div class="category-items" id="category-spiritual">
+                    <button class="nav-item" onclick="selectSpread('inner_exploration')" data-spread="spiritual_inner">
+                        <span class="nav-icon">🔍</span>
+                        <div class="nav-info">
+                            <span class="nav-name">내면탐색</span>
+                        </div>
+                    </button>
+                    <button class="nav-item" onclick="selectSpread('spiritual_awakening')" data-spread="spiritual_awakening">
+                        <span class="nav-icon">💫</span>
+                        <div class="nav-info">
+                            <span class="nav-name">영적 각성</span>
+                        </div>
+                    </button>
+                    <button class="nav-item" onclick="selectSpread('meditation_guide')" data-spread="spiritual_meditation">
+                        <span class="nav-icon">🧘</span>
+                        <div class="nav-info">
+                            <span class="nav-name">명상과 평화</span>
+                        </div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 일반운세 -->
+            <div class="nav-category">
+                <button class="category-header active" onclick="toggleCategory('general')">
+                    <div class="category-title-group">
+                        <span class="category-icon">🔮</span>
+                        <span class="category-title">일반운세</span>
+                    </div>
+                    <span class="category-arrow">▲</span>
+                </button>
+                <div class="category-items active" id="category-general">
+                    <button class="nav-item active" onclick="selectSpread('daily')" data-spread="daily">
+                        <span class="nav-icon">☀️</span>
+                        <div class="nav-info">
+                            <span class="nav-name">오늘의 운세</span>
+                        </div>
+                    </button>
+                    <button class="nav-item" onclick="selectSpread('weekly')" data-spread="weekly">
+                        <span class="nav-icon">📅</span>
+                        <div class="nav-info">
+                            <span class="nav-name">주간 운세</span>
+                        </div>
+                    </button>
+                    <button class="nav-item" onclick="selectSpread('monthly')" data-spread="monthly">
+                        <span class="nav-icon">🗓️</span>
+                        <div class="nav-info">
+                            <span class="nav-name">월간 운세</span>
+                        </div>
+                    </button>
+                    <button class="nav-item" onclick="selectSpread('yearly')" data-spread="yearly">
+                        <span class="nav-icon">📆</span>
+                        <div class="nav-info">
+                            <span class="nav-name">연간 운세</span>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="nav-footer">
+            <button class="nav-special-btn" onclick="showTodayCard()">
+                <span class="nav-icon">⭐</span>
+                <span>오늘의 카드</span>
+            </button>
+            <button class="nav-special-btn" onclick="showHistory()">
+                <span class="nav-icon">📚</span>
+                <span>히스토리</span>
+            </button>
+        </div>
+    </nav>
+    
+    <div class="tarot-container">
+        <!-- 컴팩트한 헤더 -->
+        <header class="tarot-header">
+            <h1 onclick="resetToWelcome()" style="cursor: pointer;">🔮 타로카드</h1>
+            <div class="header-controls">
+                <span class="spread-title" id="spreadTitle">오늘의 한 장</span>
+                <button class="draw-button compact" id="drawButton" onclick="performReading()">
+                    <span class="btn-icon">✨</span>
+                    <span class="btn-text">카드 뽑기</span>
+                </button>
+            </div>
+        </header>
+        
+        <!-- 새로운 분할 레이아웃: 왼쪽 40% 카드 시각화, 오른쪽 60% 해석 -->
+        <div class="main-content">
+            <!-- 왼쪽 패널: 컴팩트 카드 스프레드 시각화 (40%) -->
+            <div class="cards-panel">
+                <!-- 웰컴 메시지 -->
+                <div class="welcome-section" id="welcomeMessage">
+                    <div class="welcome-content">
+                        <span class="welcome-icon">🌙</span>
+                        <h2>타로의 신비로운 세계</h2>
+                        <p>좌측에서 원하는 스프레드를 선택하고<br>카드 뽑기를 눌러 운명을 확인하세요</p>
+                        <div class="mystical-quote">
+                            <p>"카드를 클릭하여 하나씩 펼쳐보세요"</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 카드 스프레드 컨테이너 -->
+                <div class="spread-container" id="spreadContainer" style="display: none;">
+                    <div class="spread-header">
+                        <h3 id="spreadName">오늘의 한 장</h3>
+                        <p id="spreadDesc">하루를 위한 간단한 안내</p>
+                        <div class="spread-stats">
+                            <span class="card-count" id="cardCount">카드 1장</span>
+                            <span class="difficulty" id="difficulty">초급</span>
+                        </div>
+                    </div>
+                    
+                    <!-- 미니 카드들이 배치될 영역 -->
+                    <div class="mini-cards-area" id="miniCardsArea">
+                        <div class="cards-grid" id="cardsGrid">
+                            <!-- 카드들이 동적으로 생성됩니다 -->
+                        </div>
+                    </div>
+                    
+                    <!-- 진행 상태 표시 -->
+                    <div class="reading-progress">
+                        <div class="progress-bar" id="progressBar">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                        <p class="progress-text" id="progressText">카드를 클릭하여 시작하세요</p>
+                    </div>
+                </div>
+                
+                <!-- 로딩 오버레이 -->
+                <div class="loading-overlay" id="loadingIndicator" style="display: none;">
+                    <div class="loading-content">
+                        <div class="loading-spinner"></div>
+                        <p>카드를 준비하고 있습니다...</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 오른쪽 패널: 단계별 해석 및 가이드 (60%) -->
+            <div class="interpretation-panel">
+                <div class="interpretation-content" id="interpretationContent">
+                    
+                    <!-- 상태 1: 초기 웰컴 가이드 -->
+                    <div class="interpretation-state" id="stateWelcome">
+                        <div class="state-header">
+                            <h2>🔮 타로 리딩 가이드</h2>
+                            <p class="state-subtitle">신비로운 타로의 세계로 안내합니다</p>
+                        </div>
+                        <div class="guide-content">
+                            <div class="guide-section">
+                                <h3>📋 사용 방법</h3>
+                                <div class="guide-steps">
+                                    <div class="step-item">
+                                        <span class="step-number">1</span>
+                                        <div class="step-content">
+                                            <strong>스프레드 선택</strong>
+                                            <p>왼쪽 네비게이션에서 원하는 운세 카테고리를 선택하세요</p>
+                                        </div>
+                                    </div>
+                                    <div class="step-item">
+                                        <span class="step-number">2</span>
+                                        <div class="step-content">
+                                            <strong>카드 뽑기</strong>
+                                            <p>헤더의 "카드 다시 뽑기" 버튼을 클릭하세요</p>
+                                        </div>
+                                    </div>
+                                    <div class="step-item">
+                                        <span class="step-number">3</span>
+                                        <div class="step-content">
+                                            <strong>순서대로 해석</strong>
+                                            <p>카드를 하나씩 클릭하여 개별 해석을 확인하세요</p>
+                                        </div>
+                                    </div>
+                                    <div class="step-item">
+                                        <span class="step-number">4</span>
+                                        <div class="step-content">
+                                            <strong>전체 리딩</strong>
+                                            <p>모든 카드 해석 완료 후 종합적인 메시지를 받아보세요</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mystical-wisdom">
+                                <div class="wisdom-quote">
+                                    <span class="quote-icon">✨</span>
+                                    <p>"타로는 미래를 예측하는 것이 아니라, 현재의 마음과 상황을 깊이 들여다보는 거울입니다."</p>
+                                </div>
+                                <div class="wisdom-note">
+                                    <p>마음을 열고 진정한 메시지를 받아들일 준비가 되셨다면, 스프레드를 선택해주세요.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 상태 2: 카드 준비 완료 -->
+                    <div class="interpretation-state" id="stateReady" style="display: none;">
+                        <div class="state-header">
+                            <h2>🎴 카드가 준비되었습니다</h2>
+                            <p class="state-subtitle" id="readySubtitle">클릭하여 하나씩 카드를 펼쳐보세요</p>
+                        </div>
+                        <div class="ready-content">
+                            <div class="spread-overview" id="spreadOverview">
+                                <!-- 스프레드별 설명이 여기 표시됩니다 -->
+                            </div>
+                            <div class="next-action">
+                                <div class="action-guide">
+                                    <span class="guide-icon">👆</span>
+                                    <p><strong>왼쪽 카드를 클릭하여 해석을 시작하세요</strong></p>
+                                    <small>카드를 순서대로 클릭하시거나, 마음이 끌리는 카드부터 선택하셔도 됩니다.</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 상태 3: 개별 카드 해석 -->
+                    <div class="interpretation-state" id="stateCardReading" style="display: none;">
+                        <div class="state-header">
+                            <h2 id="cardReadingTitle">카드 해석</h2>
+                            <p class="state-subtitle" id="cardReadingSubtitle">선택한 카드의 메시지</p>
+                        </div>
+                        
+                        <!-- 위치 의미 설명 -->
+                        <div class="position-meaning" id="positionMeaning">
+                            <h3 class="position-name" id="positionName">카드 위치</h3>
+                            <p class="position-description" id="positionDescription">위치의 의미 설명</p>
+                        </div>
+                        
+                        <!-- 카드 정보 -->
+                        <div class="card-info">
+                            <div class="card-identity">
+                                <h4 class="card-name" id="selectedCardName">카드 이름</h4>
+                                <span class="card-orientation" id="selectedCardOrientation">정방향</span>
+                            </div>
+                            <div class="card-visual" id="selectedCardVisual">
+                                <!-- 카드 이미지 또는 시각적 표현 -->
+                                <div class="card-symbol" id="cardSymbol">🔮</div>
+                            </div>
+                        </div>
+                        
+                        <!-- 카드 해석 내용 -->
+                        <div class="interpretation-content-area">
+                            <div class="interpretation-text" id="cardInterpretationText">
+                                <!-- 카드의 해석 내용이 여기 표시됩니다 -->
+                            </div>
+                        </div>
+                        
+                        <!-- 네비게이션 -->
+                        <div class="card-navigation">
+                            <button class="nav-btn prev-btn" id="prevCardBtn" onclick="navigateCard('prev')" disabled>
+                                <span class="btn-icon">←</span>
+                                <span class="btn-text">이전 카드</span>
+                            </button>
+                            <div class="card-progress" id="cardProgress">
+                                <span id="currentCardNumber">1</span> / <span id="totalCards">1</span>
+                            </div>
+                            <button class="nav-btn next-btn" id="nextCardBtn" onclick="navigateCard('next')">
+                                <span class="btn-text">다음 카드</span>
+                                <span class="btn-icon">→</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- 상태 4: 전체 리딩 완료 -->
+                    <div class="interpretation-state" id="stateFinalReading" style="display: none;">
+                        <div class="state-header">
+                            <h2>🌟 전체 리딩 완료</h2>
+                            <p class="state-subtitle">모든 카드가 전하는 종합적인 메시지</p>
+                        </div>
+                        
+                        <!-- 전체 요약 메시지 -->
+                        <div class="overall-reading" id="overallReading">
+                            <div class="reading-theme">
+                                <h3 id="readingTheme">리딩 주제</h3>
+                                <p id="readingThemeDesc">이번 리딩의 전체적인 주제와 흐름</p>
+                            </div>
+                            <div class="key-message" id="keyMessage">
+                                <!-- 핵심 메시지가 여기 표시됩니다 -->
+                            </div>
+                        </div>
+                        
+                        <!-- 카드별 요약 -->
+                        <div class="cards-summary-section">
+                            <h3>📚 개별 카드 요약</h3>
+                            <div class="summary-cards" id="summaryCards">
+                                <!-- 각 카드의 요약이 여기 표시됩니다 -->
+                            </div>
+                        </div>
+                        
+                        <!-- 행동 버튼들 -->
+                        <div class="final-actions">
+                            <button class="action-btn primary-btn" onclick="saveReading()">
+                                <span class="btn-icon">📚</span>
+                                <span class="btn-text">리딩 저장</span>
+                            </button>
+                            <button class="action-btn secondary-btn" onclick="shareReading()">
+                                <span class="btn-icon">📤</span>
+                                <span class="btn-text">공유하기</span>
+                            </button>
+                            <button class="action-btn outline-btn" onclick="resetReading()">
+                                <span class="btn-icon">🔄</span>
+                                <span class="btn-text">새 리딩</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 카드 상세 모달 (필요시 사용) -->
+    <div class="card-modal" id="cardModal" onclick="closeModal()" style="display: none;">
+        <div class="modal-card" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="closeModal()">×</button>
+            <div class="modal-layout">
+                <div class="modal-image">
+                    <div class="modal-card-visual" id="modalCardVisual">
+                        <div class="card-symbol" id="modalCardSymbol">🔮</div>
+                    </div>
+                    <span class="card-direction" id="modalCardDirection">정방향</span>
+                </div>
+                <div class="modal-details">
+                    <h3 id="modalCardName">카드 이름</h3>
+                    <div class="card-position" id="modalCardPosition">카드 위치</div>
+                    <div class="card-keywords" id="modalCardKeywords"></div>
+                    <div class="card-meaning" id="modalCardMeaning">카드의 의미</div>
+                    <div class="card-context" id="modalContextMeaning" style="display: none;">상황별 해석</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 히스토리 모달 -->
+    <div class="history-modal" id="historyModal" onclick="closeHistoryModal()">
+        <div class="history-modal-content" onclick="event.stopPropagation()">
+            <div class="history-header">
+                <h3>📚 리딩 히스토리</h3>
+                <button class="modal-close" onclick="closeHistoryModal()">×</button>
+            </div>
+            <div class="history-list" id="historyList">
+                <div class="empty-history">
+                    <span class="empty-icon">🔮</span>
+                    <p>아직 저장된 리딩이 없습니다.</p>
+                    <small>카드 뽑기를 해보세요!</small>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 토스트 메시지 -->
+    <div class="toast" id="toastMessage">
+        <div class="toast-content">
+            <i class="fas fa-info-circle"></i>
+            <span id="toastText">메시지</span>
+        </div>
+    </div>
+    
+    <!-- JavaScript -->
+    <script src="../api/tarot-api.js"></script>
+    <script src="tarot-fixed.js"></script>
+</body>
+</html>

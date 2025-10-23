@@ -1,0 +1,1446 @@
+/* DIORA 스타일 - 클린하고 프로페셔널한 디자인 */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap&subset=korean');
+
+:root {
+  /* DIORA 컬러 팔레트 */
+  --primary-white: #FFFFFF;
+  --primary-black: #1A1A1A;
+  --accent-gold: #B8860B;
+  --accent-gold-hover: #A67C00;
+  --text-dark: #333333;
+  --text-light: #666666;
+  --text-muted: #999999;
+  --background-light: #F8F8F8;
+  --border-light: #E0E0E0;
+  --border-lighter: #F0F0F0;
+  
+  /* 그림자 */
+  --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 5px 15px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 15px 30px rgba(0, 0, 0, 0.15);
+  --shadow-gold: 0 10px 20px rgba(184, 134, 11, 0.3);
+  
+  /* 간격 */
+  --spacing-xs: 0.5rem;
+  --spacing-sm: 1rem;
+  --spacing-md: 1.5rem;
+  --spacing-lg: 2rem;
+  --spacing-xl: 3rem;
+  --spacing-2xl: 4rem;
+  
+  /* 카드 크기 */
+  --card-width: 70px;
+  --card-height: 100px;
+}
+
+/* 전역 스타일 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  color: var(--text-dark);
+  background: var(--primary-white);
+  line-height: 1.6;
+  overflow-x: hidden;
+  word-break: keep-all;
+  word-wrap: break-word;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 타이포그래피 */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+  color: var(--primary-black);
+}
+
+h1 {
+  font-size: 48px;
+  letter-spacing: -1px;
+}
+
+h2 {
+  font-size: 36px;
+}
+
+h3 {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+p {
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+/* 햄버거 메뉴 토글 */
+.nav-toggle {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 1001;
+  width: 44px;
+  height: 44px;
+  background: var(--primary-white);
+  border: none;
+  border-radius: 50%;
+  box-shadow: var(--shadow-md);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.nav-toggle:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.nav-toggle:active {
+  transform: translateY(0);
+}
+
+/* 네비게이션 */
+.tarot-nav {
+  position: fixed;
+  left: -320px;
+  top: 0;
+  width: 320px;
+  height: 100vh;
+  background: var(--primary-white);
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+  transition: left 0.3s ease;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.tarot-nav.active {
+  left: 0;
+}
+
+/* 네비게이션 헤더 */
+.nav-header {
+  padding: 30px 25px;
+  background: var(--background-light);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.nav-header h3 {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--accent-gold);
+  letter-spacing: 1px;
+  margin-bottom: 15px;
+}
+
+.nav-controls {
+  display: flex;
+  gap: 10px;
+}
+
+.nav-controls button {
+  width: 36px;
+  height: 36px;
+  background: var(--primary-white);
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  color: var(--text-light);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  font-size: 16px;
+}
+
+.nav-controls button:hover {
+  background: var(--accent-gold);
+  color: var(--primary-white);
+  border-color: var(--accent-gold);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-gold);
+}
+
+/* 카테고리 */
+.nav-categories {
+  flex: 1;
+  padding: 20px 0;
+  overflow-y: auto;
+}
+
+.nav-category {
+  margin-bottom: 5px;
+}
+
+.category-header {
+  width: 100%;
+  padding: 15px 25px;
+  background: transparent;
+  border: none;
+  color: var(--text-dark);
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.category-header:hover {
+  background: var(--background-light);
+  color: var(--accent-gold);
+}
+
+.category-header.active {
+  background: var(--background-light);
+  color: var(--accent-gold);
+}
+
+.category-header::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 0;
+  background: var(--accent-gold);
+  transition: height 0.3s ease;
+}
+
+.category-header.active::after {
+  height: 60%;
+}
+
+.category-title-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.category-icon {
+  font-size: 20px;
+}
+
+.category-title {
+  font-weight: 500;
+}
+
+.category-arrow {
+  font-size: 12px;
+  transition: transform 0.3s ease;
+  color: var(--text-light);
+}
+
+.category-header.active .category-arrow {
+  transform: rotate(180deg);
+}
+
+/* 카테고리 아이템 */
+.category-items {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  background: var(--background-light);
+}
+
+.category-items.active {
+  max-height: 500px;
+}
+
+.nav-item {
+  width: 100%;
+  padding: 12px 25px 12px 50px;
+  background: transparent;
+  border: none;
+  color: var(--text-light);
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.3s ease;
+  text-align: left;
+  position: relative;
+}
+
+.nav-item:hover {
+  background: var(--primary-white);
+  color: var(--accent-gold);
+  padding-left: 55px;
+}
+
+.nav-item.active {
+  background: var(--primary-white);
+  color: var(--accent-gold);
+  font-weight: 500;
+}
+
+.nav-item.active::before {
+  content: '';
+  position: absolute;
+  left: 35px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6px;
+  height: 6px;
+  background: var(--accent-gold);
+  border-radius: 50%;
+}
+
+.nav-icon {
+  font-size: 16px;
+}
+
+.nav-info {
+  flex: 1;
+}
+
+.nav-name {
+  display: block;
+}
+
+/* 네비게이션 푸터 */
+.nav-footer {
+  padding: 20px;
+  border-top: 1px solid var(--border-light);
+  background: var(--background-light);
+}
+
+.nav-special-btn {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 10px;
+  background: var(--primary-white);
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  color: var(--text-dark);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+}
+
+.nav-special-btn:last-child {
+  margin-bottom: 0;
+}
+
+.nav-special-btn:hover {
+  background: var(--accent-gold);
+  color: var(--primary-white);
+  border-color: var(--accent-gold);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-gold);
+}
+
+/* 메인 컨테이너 */
+.tarot-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  transition: margin-left 0.3s ease;
+}
+
+.tarot-container.nav-active {
+  margin-left: 320px;
+}
+
+/* 헤더 */
+.tarot-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  background: var(--primary-white);
+  box-shadow: var(--shadow-sm);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  padding: 0 30px;
+  transition: all 0.3s ease;
+}
+
+.tarot-container.nav-active .tarot-header {
+  left: 320px;
+}
+
+.tarot-header h1 {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--accent-gold);
+  letter-spacing: 1px;
+  margin: 0;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+
+.tarot-header h1:hover {
+  opacity: 0.8;
+}
+
+.header-controls {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.spread-title {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-dark);
+}
+
+.draw-button {
+  padding: 12px 30px;
+  background: var(--accent-gold);
+  border: none;
+  border-radius: 50px;
+  color: var(--primary-white);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+}
+
+.draw-button:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-gold);
+  background: var(--accent-gold-hover);
+}
+
+.draw-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* 메인 콘텐츠 */
+.main-content {
+  flex: 1;
+  display: flex;
+  margin-top: 80px;
+  min-height: calc(100vh - 80px);
+}
+
+/* 왼쪽 카드 패널 */
+.cards-panel {
+  width: 40%;
+  background: var(--background-light);
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+/* 웰컴 섹션 */
+.welcome-section {
+  text-align: center;
+  animation: fadeInUp 0.8s ease;
+}
+
+.welcome-content {
+  max-width: 400px;
+}
+
+.welcome-icon {
+  font-size: 60px;
+  margin-bottom: 20px;
+  display: block;
+  animation: float 3s ease-in-out infinite;
+}
+
+.welcome-content h2 {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--primary-black);
+  margin-bottom: 15px;
+  letter-spacing: -0.5px;
+}
+
+.welcome-content p {
+  color: var(--text-light);
+  font-size: 16px;
+  line-height: 1.8;
+  margin-bottom: 30px;
+}
+
+.mystical-quote {
+  padding: 20px;
+  background: var(--primary-white);
+  border-radius: 12px;
+  box-shadow: var(--shadow-sm);
+}
+
+.mystical-quote p {
+  color: var(--text-light);
+  font-style: italic;
+  font-size: 14px;
+  margin: 0;
+}
+
+/* 스프레드 컨테이너 */
+.spread-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: fadeInUp 0.8s ease;
+}
+
+.spread-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.spread-header h3 {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--primary-black);
+  margin-bottom: 8px;
+}
+
+.spread-header p {
+  color: var(--text-light);
+  font-size: 14px;
+}
+
+.spread-stats {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.spread-stats span {
+  padding: 4px 12px;
+  background: var(--primary-white);
+  border-radius: 20px;
+  font-size: 12px;
+  color: var(--text-light);
+  box-shadow: var(--shadow-sm);
+}
+
+/* 미니 카드 영역 */
+.mini-cards-area {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  position: relative;
+}
+
+.cards-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+  align-items: center;
+  max-width: 500px;
+}
+
+/* 타로 카드 */
+.tarot-card {
+  width: var(--card-width);
+  height: var(--card-height);
+  background: var(--primary-white);
+  border-radius: 8px;
+  box-shadow: var(--shadow-md);
+  cursor: pointer;
+  position: relative;
+  transition: all 0.3s ease;
+  transform-style: preserve-3d;
+}
+
+.tarot-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+}
+
+.tarot-card.face-down {
+  background: linear-gradient(135deg, var(--accent-gold), #D4A017);
+}
+
+.tarot-card.face-up {
+  background: var(--primary-white);
+}
+
+.tarot-card.flipping {
+  animation: cardFlip 0.6s ease;
+}
+
+.tarot-card.selected {
+  border: 2px solid var(--accent-gold);
+  box-shadow: var(--shadow-gold);
+}
+
+/* 카드 내용 */
+.card-content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border-radius: 8px;
+}
+
+.card-back {
+  background: linear-gradient(135deg, var(--accent-gold), #D4A017);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+}
+
+.card-image {
+  width: 40px;
+  height: 40px;
+  margin-bottom: 5px;
+}
+
+.card-mini-name {
+  font-size: 10px;
+  text-align: center;
+  line-height: 1.2;
+  color: var(--text-dark);
+  font-weight: 500;
+}
+
+/* 진행 상태 */
+.reading-progress {
+  width: 100%;
+  max-width: 300px;
+  margin-top: 30px;
+}
+
+.progress-bar {
+  height: 4px;
+  background: var(--border-light);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--accent-gold);
+  width: 0%;
+  transition: width 0.3s ease;
+}
+
+.progress-text {
+  text-align: center;
+  font-size: 14px;
+  color: var(--text-light);
+}
+
+/* 오른쪽 해석 패널 */
+.interpretation-panel {
+  flex: 1;
+  background: var(--primary-white);
+  padding: 40px;
+  overflow-y: auto;
+}
+
+.interpretation-content {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* 해석 상태 */
+.interpretation-state {
+  animation: fadeInUp 0.8s ease;
+}
+
+.state-header {
+  text-align: center;
+  margin-bottom: 40px;
+  padding-bottom: 30px;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.state-header h2 {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--primary-black);
+  margin-bottom: 10px;
+  letter-spacing: -0.5px;
+}
+
+.state-subtitle {
+  color: var(--text-light);
+  font-size: 16px;
+}
+
+/* 가이드 콘텐츠 */
+.guide-content {
+  padding: 20px 0;
+}
+
+.guide-section {
+  margin-bottom: 40px;
+}
+
+.guide-section h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--primary-black);
+  margin-bottom: 20px;
+}
+
+.guide-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.step-item {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+  background: var(--background-light);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.step-item:hover {
+  transform: translateX(5px);
+  box-shadow: var(--shadow-md);
+}
+
+.step-number {
+  width: 40px;
+  height: 40px;
+  background: var(--accent-gold);
+  color: var(--primary-white);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.step-content {
+  flex: 1;
+}
+
+.step-content strong {
+  display: block;
+  color: var(--primary-black);
+  margin-bottom: 5px;
+  font-size: 16px;
+}
+
+.step-content p {
+  color: var(--text-light);
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* 지혜 섹션 */
+.mystical-wisdom {
+  margin-top: 40px;
+  padding: 30px;
+  background: var(--background-light);
+  border-radius: 12px;
+}
+
+.wisdom-quote {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.quote-icon {
+  font-size: 24px;
+  color: var(--accent-gold);
+}
+
+.wisdom-quote p {
+  flex: 1;
+  color: var(--text-dark);
+  font-style: italic;
+  line-height: 1.8;
+  margin: 0;
+}
+
+.wisdom-note {
+  padding: 15px;
+  background: var(--primary-white);
+  border-radius: 8px;
+  border-left: 3px solid var(--accent-gold);
+}
+
+.wisdom-note p {
+  color: var(--text-light);
+  font-size: 14px;
+  margin: 0;
+}
+
+/* 준비 상태 */
+.ready-content {
+  text-align: center;
+  padding: 40px 0;
+}
+
+.spread-overview {
+  margin-bottom: 30px;
+  padding: 30px;
+  background: var(--background-light);
+  border-radius: 12px;
+}
+
+.next-action {
+  margin-top: 40px;
+}
+
+.action-guide {
+  display: inline-block;
+  padding: 30px 40px;
+  background: var(--primary-white);
+  border-radius: 12px;
+  box-shadow: var(--shadow-md);
+  transition: all 0.3s ease;
+}
+
+.action-guide:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+}
+
+.guide-icon {
+  font-size: 48px;
+  display: block;
+  margin-bottom: 15px;
+  animation: float 3s ease-in-out infinite;
+}
+
+.action-guide p {
+  color: var(--primary-black);
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.action-guide small {
+  color: var(--text-light);
+  font-size: 14px;
+}
+
+/* 카드 리딩 상태 */
+.position-meaning {
+  padding: 20px;
+  background: var(--background-light);
+  border-radius: 12px;
+  margin-bottom: 30px;
+  border-left: 4px solid var(--accent-gold);
+}
+
+.position-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--primary-black);
+  margin-bottom: 5px;
+}
+
+.position-description {
+  color: var(--text-light);
+  font-size: 14px;
+}
+
+/* 카드 정보 */
+.card-info {
+  display: flex;
+  gap: 30px;
+  margin-bottom: 30px;
+  padding: 30px;
+  background: var(--background-light);
+  border-radius: 12px;
+}
+
+.card-identity {
+  flex: 1;
+}
+
+.card-name {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--primary-black);
+  margin-bottom: 10px;
+}
+
+.card-orientation {
+  display: inline-block;
+  padding: 5px 15px;
+  background: var(--accent-gold);
+  color: var(--primary-white);
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.card-visual {
+  width: 120px;
+  height: 170px;
+  background: var(--primary-white);
+  border-radius: 8px;
+  box-shadow: var(--shadow-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-symbol {
+  font-size: 48px;
+  color: var(--accent-gold);
+}
+
+/* 해석 내용 */
+.interpretation-content-area {
+  padding: 30px;
+  background: var(--primary-white);
+  border-radius: 12px;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 30px;
+}
+
+.interpretation-text {
+  color: var(--text-dark);
+  line-height: 1.8;
+  font-size: 16px;
+}
+
+.interpretation-text p {
+  margin-bottom: 15px;
+}
+
+.interpretation-text p:last-child {
+  margin-bottom: 0;
+}
+
+/* 카드 네비게이션 */
+.card-navigation {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.nav-btn {
+  padding: 12px 24px;
+  background: var(--primary-white);
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  color: var(--text-dark);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+}
+
+.nav-btn:hover:not(:disabled) {
+  background: var(--accent-gold);
+  color: var(--primary-white);
+  border-color: var(--accent-gold);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-gold);
+}
+
+.nav-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.card-progress {
+  color: var(--text-light);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* 최종 리딩 */
+.overall-reading {
+  margin-bottom: 40px;
+}
+
+.reading-theme {
+  padding: 30px;
+  background: linear-gradient(135deg, var(--background-light), var(--primary-white));
+  border-radius: 12px;
+  margin-bottom: 30px;
+  border-left: 4px solid var(--accent-gold);
+}
+
+.reading-theme h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--primary-black);
+  margin-bottom: 8px;
+}
+
+.reading-theme p {
+  color: var(--text-light);
+  font-size: 14px;
+}
+
+.key-message {
+  padding: 30px;
+  background: var(--primary-white);
+  border-radius: 12px;
+  box-shadow: var(--shadow-sm);
+  color: var(--text-dark);
+  line-height: 1.8;
+}
+
+/* 카드 요약 */
+.cards-summary-section {
+  margin-bottom: 40px;
+}
+
+.cards-summary-section h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--primary-black);
+  margin-bottom: 20px;
+}
+
+.summary-cards {
+  display: grid;
+  gap: 15px;
+}
+
+.summary-card-item {
+  padding: 20px;
+  background: var(--background-light);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.summary-card-item:hover {
+  transform: translateX(5px);
+  box-shadow: var(--shadow-md);
+}
+
+/* 액션 버튼 */
+.final-actions {
+  display: flex;
+  gap: 15px;
+}
+
+.action-btn {
+  flex: 1;
+  padding: 15px;
+  border-radius: 50px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  border: none;
+}
+
+.primary-btn {
+  background: var(--accent-gold);
+  color: var(--primary-white);
+}
+
+.primary-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-gold);
+  background: var(--accent-gold-hover);
+}
+
+.secondary-btn {
+  background: var(--primary-white);
+  border: 2px solid var(--accent-gold);
+  color: var(--accent-gold);
+}
+
+.secondary-btn:hover {
+  background: var(--accent-gold);
+  color: var(--primary-white);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-gold);
+}
+
+.outline-btn {
+  background: var(--primary-white);
+  border: 2px solid var(--border-light);
+  color: var(--text-dark);
+}
+
+.outline-btn:hover {
+  border-color: var(--accent-gold);
+  color: var(--accent-gold);
+  transform: translateY(-2px);
+}
+
+/* 모달 */
+.card-modal,
+.history-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(4px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: 20px;
+  animation: fadeIn 0.4s ease;
+}
+
+.modal-card,
+.history-modal-content {
+  background: var(--primary-white);
+  border-radius: 16px;
+  max-width: 900px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  animation: slideUp 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+}
+
+.modal-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(26, 26, 26, 0.9);
+  color: var(--primary-white);
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.modal-close:hover {
+  background: var(--accent-gold);
+  transform: rotate(90deg) scale(1.1);
+  box-shadow: var(--shadow-gold);
+}
+
+/* 히스토리 모달 */
+.history-header {
+  padding: 30px;
+  border-bottom: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.history-header h3 {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--primary-black);
+  margin: 0;
+}
+
+.history-list {
+  padding: 30px;
+}
+
+.empty-history {
+  text-align: center;
+  padding: 60px;
+}
+
+.empty-icon {
+  font-size: 60px;
+  display: block;
+  margin-bottom: 20px;
+  opacity: 0.5;
+}
+
+.empty-history p {
+  font-size: 18px;
+  color: var(--text-dark);
+  margin-bottom: 10px;
+}
+
+.empty-history small {
+  color: var(--text-light);
+  font-size: 14px;
+}
+
+/* 토스트 메시지 */
+.toast {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: var(--primary-white);
+  border-radius: 12px;
+  padding: 15px 20px;
+  box-shadow: var(--shadow-lg);
+  min-width: 300px;
+  transform: translateY(100px);
+  opacity: 0;
+  transition: all 0.3s ease;
+  z-index: 3000;
+}
+
+.toast.show {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.toast-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.toast-content i {
+  color: var(--accent-gold);
+  font-size: 20px;
+}
+
+#toastText {
+  color: var(--text-dark);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* 로딩 오버레이 */
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.loading-content {
+  text-align: center;
+}
+
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 3px solid var(--border-light);
+  border-top-color: var(--accent-gold);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 20px;
+}
+
+.loading-content p {
+  color: var(--text-light);
+  font-size: 16px;
+  font-weight: 500;
+}
+
+/* 애니메이션 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(50px) scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes cardFlip {
+  0% {
+    transform: rotateY(0);
+  }
+  50% {
+    transform: rotateY(90deg);
+  }
+  100% {
+    transform: rotateY(0);
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* 반응형 디자인 */
+@media (max-width: 1024px) {
+  .main-content {
+    flex-direction: column;
+  }
+  
+  .cards-panel {
+    width: 100%;
+    min-height: 400px;
+  }
+  
+  .interpretation-panel {
+    width: 100%;
+  }
+  
+  .tarot-container.nav-active {
+    margin-left: 0;
+  }
+  
+  .tarot-container.nav-active .tarot-header {
+    left: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  :root {
+    --card-width: 60px;
+    --card-height: 85px;
+  }
+  
+  .tarot-nav {
+    width: 280px;
+    left: -280px;
+  }
+  
+  .tarot-header {
+    padding: 0 20px;
+  }
+  
+  .tarot-header h1 {
+    font-size: 24px;
+  }
+  
+  .header-controls {
+    gap: 15px;
+  }
+  
+  .spread-title {
+    display: none;
+  }
+  
+  .draw-button {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+  
+  .cards-panel,
+  .interpretation-panel {
+    padding: 30px 20px;
+  }
+  
+  h1 {
+    font-size: 32px;
+  }
+  
+  h2 {
+    font-size: 28px;
+  }
+  
+  h3 {
+    font-size: 20px;
+  }
+  
+  .final-actions {
+    flex-direction: column;
+  }
+  
+  .action-btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .tarot-header h1 {
+    font-size: 20px;
+  }
+  
+  .nav-toggle {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .welcome-icon {
+    font-size: 48px;
+  }
+  
+  .welcome-content h2 {
+    font-size: 24px;
+  }
+  
+  .cards-grid {
+    gap: 10px;
+  }
+}

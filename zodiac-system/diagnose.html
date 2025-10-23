@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>진단</title>
+    <style>
+        body { font-family: monospace; padding: 20px; background: #1e1e1e; color: #d4d4d4; }
+        .success { color: #4ec9b0; }
+        .error { color: #f48771; }
+        .warning { color: #dcdcaa; }
+        pre { background: #252526; padding: 15px; border-left: 3px solid #007acc; overflow-x: auto; }
+    </style>
+</head>
+<body>
+<h1>🔍 별자리 API 진단</h1>
+<div id="output"></div>
+
+<script>
+const output = document.getElementById('output');
+
+function log(msg, type = 'info') {
+    const div = document.createElement('div');
+    div.className = type;
+    div.textContent = msg;
+    output.appendChild(div);
+}
+
+async function diagnose() {
+    log('='.repeat(60));
+    log('1️⃣ 환경 확인');
+    log('='.repeat(60));
+    log(`현재 URL: ${window.location.href}`);
+    log(`프로토콜: ${window.location.protocol}`);
+    log('');
+
+    log('='.repeat(60));
+    log('2️⃣ 직접 Fetch 테스트');
+    log('='.repeat(60));
+
+    const testUrl = 'api/fortune-data.json';
+    log(`테스트 URL: ${testUrl}`);
+
+    try {
+        log('fetch 시작...', 'warning');
+        const start = Date.now();
+        const response = await fetch(testUrl);
+        const elapsed = Date.now() - start;
+
+        log(`✅ fetch 성공 (${elapsed}ms)`, 'success');
+        log(`Status: ${response.status}`);
+        log(`OK: ${response.ok}`);
+        log(`Content-Type: ${response.headers.get('content-type')}`);
+        log('');
+
+        log('JSON 파싱 시작...', 'warning');
+        const parseStart = Date.now();
+        const data = await response.json();
+        const parseElapsed = Date.now() - parseStart;
+
+        log(`✅ JSON 파싱 성공 (${parseElapsed}ms)`, 'success');
+        log(`daily 키 개수: ${Object.keys(data.daily || {}).length}`);
+        log(`2025-10-15 존재: ${data.daily && data.daily['2025-10-15'] ? 'YES ✅' : 'NO ❌'}`);
+
+        if (data.daily && data.daily['2025-10-15'] && data.daily['2025-10-15']['2']) {
+            const loveMsg = data.daily['2025-10-15']['2'].fortunes.love;
+            log('');
+            log('='.repeat(60));
+            log('3️⃣ 샘플 데이터');
+            log('='.repeat(60));
+            const pre = document.createElement('pre');
+            pre.textContent = `황소자리 (2025-10-15) love 메시지:\n"${loveMsg}"\n\n길이: ${loveMsg.length}자`;
+            output.appendChild(pre);
+
+            if (loveMsg.length >= 20) {
+                log('✅✅✅ 개선된 메시지 확인! ✅✅✅', 'success');
+            } else {
+                log('❌ 폴백 메시지 (너무 짧음)', 'error');
+            }
+        }
+
+    } catch (e) {
+        log(`❌ 에러 발생: ${e.message}`, 'error');
+        log(`에러 타입: ${e.constructor.name}`, 'error');
+        const pre = document.createElement('pre');
+        pre.className = 'error';
+        pre.textContent = e.stack;
+        output.appendChild(pre);
+    }
+
+    log('');
+    log('='.repeat(60));
+    log('4️⃣ API 인스턴스 확인');
+    log('='.repeat(60));
+
+    if (typeof zodiacAPI !== 'undefined') {
+        log('✅ zodiacAPI 전역 변수 존재', 'success');
+        log(`basePath: ${zodiacAPI.basePath}`);
+        log(`fortuneData: ${zodiacAPI.fortuneData ? 'EXISTS' : 'NULL'}`);
+
+        if (zodiacAPI.fortuneData) {
+            log(`daily 키 개수: ${Object.keys(zodiacAPI.fortuneData.daily || {}).length}`);
+        }
+    } else {
+        log('❌ zodiacAPI 전역 변수 없음', 'error');
+    }
+}
+
+// 스크립트 로드 후 실행
+const script = document.createElement('script');
+script.src = 'api/zodiac-api-real.js?v=20251015-iife-path';
+script.onload = () => {
+    setTimeout(diagnose, 3000);  // API 로드 대기
+};
+script.onerror = (e) => {
+    log('❌ zodiac-api-real.js 로드 실패', 'error');
+};
+document.head.appendChild(script);
+</script>
+</body>
+</html>

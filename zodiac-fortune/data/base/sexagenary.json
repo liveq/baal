@@ -1,0 +1,1128 @@
+{
+  "description": "60갑자 시스템 - 천간(10) × 지지(12) 조합",
+  "sexagenary_cycle": [
+    {
+      "id": 1,
+      "name": "갑자",
+      "heavenly_stem": "갑(甲)",
+      "earthly_branch": "자(子)",
+      "stem_element": "wood",
+      "branch_element": "water",
+      "stem_yinyang": "양",
+      "branch_yinyang": "양",
+      "zodiac": "rat",
+      "personality_traits": [
+        "창의적", "지혜로움", "기민함", "적응력이 뛰어남"
+      ],
+      "lucky_numbers": [1, 4, 6],
+      "lucky_colors": ["파랑", "검정", "초록"],
+      "compatible_elements": ["water", "wood"],
+      "years": [1924, 1984, 2044]
+    },
+    {
+      "id": 2,
+      "name": "을축",
+      "heavenly_stem": "을(乙)",
+      "earthly_branch": "축(丑)",
+      "stem_element": "wood",
+      "branch_element": "earth",
+      "stem_yinyang": "음",
+      "branch_yinyang": "음",
+      "zodiac": "ox",
+      "personality_traits": [
+        "차분함", "성실함", "끈기", "신뢰감"
+      ],
+      "lucky_numbers": [2, 5, 8],
+      "lucky_colors": ["갈색", "노랑", "초록"],
+      "compatible_elements": ["earth", "wood"],
+      "years": [1925, 1985, 2045]
+    },
+    {
+      "id": 3,
+      "name": "병인",
+      "heavenly_stem": "병(丙)",
+      "earthly_branch": "인(寅)",
+      "stem_element": "fire",
+      "branch_element": "wood",
+      "stem_yinyang": "양",
+      "branch_yinyang": "양",
+      "zodiac": "tiger",
+      "personality_traits": [
+        "용기", "열정", "리더십", "진취적"
+      ],
+      "lucky_numbers": [3, 7, 9],
+      "lucky_colors": ["빨강", "주황", "초록"],
+      "compatible_elements": ["wood", "fire"],
+      "years": [1926, 1986, 2046]
+    },
+    {
+      "id": 4,
+      "name": "정묘",
+      "heavenly_stem": "정(丁)",
+      "earthly_branch": "묘(卯)",
+      "stem_element": "fire",
+      "branch_element": "wood",
+      "stem_yinyang": "음",
+      "branch_yinyang": "음",
+      "zodiac": "rabbit",
+      "personality_traits": [
+        "섬세함", "우아함", "배려심", "조화로움"
+      ],
+      "lucky_numbers": [4, 6, 9],
+      "lucky_colors": ["핑크", "빨강", "연두"],
+      "compatible_elements": ["wood", "fire"],
+      "years": [1927, 1987, 2047]
+    },
+    {
+      "id": 5,
+      "name": "무진",
+      "heavenly_stem": "무(戊)",
+      "earthly_branch": "진(辰)",
+      "stem_element": "earth",
+      "branch_element": "earth",
+      "stem_yinyang": "양",
+      "branch_yinyang": "양",
+      "zodiac": "dragon",
+      "personality_traits": [
+        "당당함", "포부", "카리스마", "변화를 만듦"
+      ],
+      "lucky_numbers": [1, 5, 7],
+      "lucky_colors": ["황금", "흰색", "노랑"],
+      "compatible_elements": ["earth", "metal"],
+      "years": [1928, 1988, 2048]
+    },
+    {
+      "id": 6,
+      "name": "기사",
+      "heavenly_stem": "기(己)",
+      "earthly_branch": "사(巳)",
+      "stem_element": "earth",
+      "branch_element": "fire",
+      "stem_yinyang": "음",
+      "branch_yinyang": "음",
+      "zodiac": "snake",
+      "personality_traits": [
+        "지혜", "직관", "신중함", "통찰력"
+      ],
+      "lucky_numbers": [2, 6, 8],
+      "lucky_colors": ["검정", "빨강", "갈색"],
+      "compatible_elements": ["fire", "earth"],
+      "years": [1929, 1989, 2049]
+    },
+    {
+      "id": 7,
+      "name": "경오",
+      "heavenly_stem": "경(庚)",
+      "earthly_branch": "오(午)",
+      "stem_element": "metal",
+      "branch_element": "fire",
+      "stem_yinyang": "양",
+      "branch_yinyang": "양",
+      "zodiac": "horse",
+      "personality_traits": [
+        "활발함", "자유로움", "열정", "추진력"
+      ],
+      "lucky_numbers": [3, 7, 8],
+      "lucky_colors": ["흰색", "빨강", "황금"],
+      "compatible_elements": ["fire", "earth"],
+      "years": [1930, 1990, 2050]
+    },
+    {
+      "id": 8,
+      "name": "신미",
+      "heavenly_stem": "신(辛)",
+      "earthly_branch": "미(未)",
+      "stem_element": "metal",
+      "branch_element": "earth",
+      "stem_yinyang": "음",
+      "branch_yinyang": "음",
+      "zodiac": "goat",
+      "personality_traits": [
+        "온화함", "예술적", "평화로움", "감수성"
+      ],
+      "lucky_numbers": [2, 5, 7],
+      "lucky_colors": ["흰색", "베이지", "갈색"],
+      "compatible_elements": ["earth", "metal"],
+      "years": [1931, 1991, 2051]
+    },
+    {
+      "id": 9,
+      "name": "임신",
+      "heavenly_stem": "임(壬)",
+      "earthly_branch": "신(申)",
+      "stem_element": "water",
+      "branch_element": "metal",
+      "stem_yinyang": "양",
+      "branch_yinyang": "양",
+      "zodiac": "monkey",
+      "personality_traits": [
+        "영리함", "재치", "호기심", "다재다능함"
+      ],
+      "lucky_numbers": [1, 4, 8],
+      "lucky_colors": ["흰색", "파랑", "황금"],
+      "compatible_elements": ["metal", "water"],
+      "years": [1932, 1992, 2052]
+    },
+    {
+      "id": 10,
+      "name": "계유",
+      "heavenly_stem": "계(癸)",
+      "earthly_branch": "유(酉)",
+      "stem_element": "water",
+      "branch_element": "metal",
+      "stem_yinyang": "음",
+      "branch_yinyang": "음",
+      "zodiac": "rooster",
+      "personality_traits": [
+        "정확함", "부지런함", "세심함", "책임감"
+      ],
+      "lucky_numbers": [4, 5, 9],
+      "lucky_colors": ["흰색", "황금", "검정"],
+      "compatible_elements": ["metal", "water"],
+      "years": [1933, 1993, 2053]
+    },
+    {
+      "id": 11,
+      "name": "갑술",
+      "heavenly_stem": "갑(甲)",
+      "earthly_branch": "술(戌)",
+      "stem_element": "wood",
+      "branch_element": "earth",
+      "stem_yinyang": "양",
+      "branch_yinyang": "양",
+      "zodiac": "dog",
+      "personality_traits": [
+        "충성심", "정의로움", "따뜻함", "보호본능"
+      ],
+      "lucky_numbers": [3, 6, 7],
+      "lucky_colors": ["빨강", "갈색", "초록"],
+      "compatible_elements": ["earth", "fire"],
+      "years": [1934, 1994, 2054]
+    },
+    {
+      "id": 12,
+      "name": "을해",
+      "heavenly_stem": "을(乙)",
+      "earthly_branch": "해(亥)",
+      "stem_element": "wood",
+      "branch_element": "water",
+      "stem_yinyang": "음",
+      "branch_yinyang": "음",
+      "zodiac": "pig",
+      "personality_traits": [
+        "성실함", "관대함", "정직함", "풍요로움"
+      ],
+      "lucky_numbers": [2, 5, 8],
+      "lucky_colors": ["파랑", "검정", "초록"],
+      "compatible_elements": ["water", "wood"],
+      "years": [1935, 1995, 2055]
+    },
+    {
+      "id": 13,
+      "name": "병자",
+      "heavenly_stem": "병(丙)",
+      "earthly_branch": "자(子)",
+      "stem_element": "fire",
+      "branch_element": "water",
+      "stem_yinyang": "양",
+      "branch_yinyang": "양",
+      "zodiac": "rat",
+      "personality_traits": [
+        "명석함", "활기", "적응력", "사교적"
+      ],
+      "lucky_numbers": [1, 6, 7],
+      "lucky_colors": ["빨강", "파랑", "주황"],
+      "compatible_elements": ["water", "fire"],
+      "years": [1936, 1996, 2056]
+    },
+    {
+      "id": 14,
+      "name": "정축",
+      "heavenly_stem": "정(丁)",
+      "earthly_branch": "축(丑)",
+      "stem_element": "fire",
+      "branch_element": "earth",
+      "stem_yinyang": "음",
+      "branch_yinyang": "음",
+      "zodiac": "ox",
+      "personality_traits": [
+        "인내심", "신중함", "안정감", "믿음직함"
+      ],
+      "lucky_numbers": [2, 7, 9],
+      "lucky_colors": ["빨강", "노랑", "갈색"],
+      "compatible_elements": ["earth", "fire"],
+      "years": [1937, 1997, 2057]
+    },
+    {
+      "id": 15,
+      "name": "무인",
+      "heavenly_stem": "무(戊)",
+      "earthly_branch": "인(寅)",
+      "stem_element": "earth",
+      "branch_element": "wood",
+      "stem_yinyang": "양",
+      "branch_yinyang": "양",
+      "zodiac": "tiger",
+      "personality_traits": [
+        "대담함", "추진력", "독립심", "활력"
+      ],
+      "lucky_numbers": [3, 5, 8],
+      "lucky_colors": ["노랑", "초록", "주황"],
+      "compatible_elements": ["wood", "earth"],
+      "years": [1938, 1998, 2058]
+    },
+    {
+      "id": 16,
+      "name": "기묘",
+      "heavenly_stem": "기(己)",
+      "earthly_branch": "묘(卯)",
+      "stem_element": "earth",
+      "branch_element": "wood",
+      "stem_yinyang": "음",
+      "branch_yinyang": "음",
+      "zodiac": "rabbit",
+      "personality_traits": [
+        "사려깊음", "온화함", "균형감", "예민함"
+      ],
+      "lucky_numbers": [4, 6, 8],
+      "lucky_colors": ["핑크", "갈색", "연두"],
+      "compatible_elements": ["wood", "earth"],
+      "years": [1939, 1999, 2059]
+    },
+    {
+      "id": 17,
+      "name": "경진",
+      "heavenly_stem": "경(庚)",
+      "earthly_branch": "진(辰)",
+      "stem_element": "metal",
+      "branch_element": "earth",
+      "stem_yinyang": "양",
+      "branch_yinyang": "양",
+      "zodiac": "dragon",
+      "personality_traits": [
+        "결단력", "야망", "지도력", "강인함"
+      ],
+      "lucky_numbers": [1, 7, 9],
+      "lucky_colors": ["흰색", "황금", "노랑"],
+      "compatible_elements": ["earth", "metal"],
+      "years": [1940, 2000, 2060]
+    },
+    {
+      "id": 18,
+      "name": "신사",
+      "heavenly_stem": "신(辛)",
+      "earthly_branch": "사(巳)",
+      "stem_element": "metal",
+      "branch_element": "fire",
+      "stem_yinyang": "음",
+      "branch_yinyang": "음",
+      "zodiac": "snake",
+      "personality_traits": [
+        "섬세함", "분석력", "직관력", "신비로움"
+      ],
+      "lucky_numbers": [2, 6, 9],
+      "lucky_colors": ["흰색", "빨강", "검정"],
+      "compatible_elements": ["fire", "earth"],
+      "years": [1941, 2001, 2061]
+    },
+    {
+      "id": 19,
+      "name": "임오",
+      "heavenly_stem": "임(壬)",
+      "earthly_branch": "오(午)",
+      "stem_element": "water",
+      "branch_element": "fire",
+      "stem_yinyang": "양",
+      "branch_yinyang": "양",
+      "zodiac": "horse",
+      "personality_traits": [
+        "역동적", "열정적", "모험심", "자유분방함"
+      ],
+      "lucky_numbers": [3, 4, 7],
+      "lucky_colors": ["파랑", "빨강", "검정"],
+      "compatible_elements": ["fire", "water"],
+      "years": [1942, 2002, 2062]
+    },
+    {
+      "id": 20,
+      "name": "계미",
+      "heavenly_stem": "계(癸)",
+      "earthly_branch": "미(未)",
+      "stem_element": "water",
+      "branch_element": "earth",
+      "stem_yinyang": "음",
+      "branch_yinyang": "음",
+      "zodiac": "goat",
+      "personality_traits": [
+        "부드러움", "창의적", "감성적", "평온함"
+      ],
+      "lucky_numbers": [2, 5, 8],
+      "lucky_colors": ["파랑", "갈색", "흰색"],
+      "compatible_elements": ["earth", "water"],
+      "years": [1943, 2003, 2063]
+    },
+    {
+      "id": 21,
+      "name": "갑신",
+      "heavenly_stem": "갑(甲)",
+      "earthly_branch": "신(申)",
+      "stem_element": "wood",
+      "branch_element": "metal",
+      "stem_yinyang": "양",
+      "branch_yinyang": "양",
+      "zodiac": "monkey",
+      "personality_traits": [
+        "총명함", "순발력", "융통성", "사교성"
+      ],
+      "lucky_numbers": [1, 4, 7],
+      "lucky_colors": ["초록", "흰색", "황금"],
+      "compatible_elements": ["metal", "water"],
+      "years": [1944, 2004, 2064]
+    },
+    {
+      "id": 22,
+      "name": "을유",
+      "heavenly_stem": "을(乙)",
+      "earthly_branch": "유(酉)",
+      "stem_element": "wood",
+      "branch_element": "metal",
+      "stem_yinyang": "음",
+      "branch_yinyang": "음",
+      "zodiac": "rooster",
+      "personality_traits": [
+        "꼼꼼함", "예리함", "계획적", "성취지향"
+      ],
+      "lucky_numbers": [4, 5, 8],
+      "lucky_colors": ["초록", "흰색", "황금"],
+      "compatible_elements": ["metal", "water"],
+      "years": [1945, 2005, 2065]
+    },
+    {
+      "id": 23,
+      "name": "병술",
+      "heavenly_stem": "병(丙)",
+      "earthly_branch": "술(戌)",
+      "stem_element": "fire",
+      "branch_element": "earth",
+      "stem_yinyang": "양",
+      "branch_yinyang": "양",
+      "zodiac": "dog",
+      "personality_traits": [
+        "의리", "진실함", "열정적", "배려심"
+      ],
+      "lucky_numbers": [3, 6, 9],
+      "lucky_colors": ["빨강", "갈색", "주황"],
+      "compatible_elements": ["earth", "fire"],
+      "years": [1946, 2006, 2066]
+    },
+    {
+      "id": 24,
+      "name": "정해",
+      "heavenly_stem": "정(丁)",
+      "earthly_branch": "해(亥)",
+      "stem_element": "fire",
+      "branch_element": "water",
+      "stem_yinyang": "음",
+      "branch_yinyang": "음",
+      "zodiac": "pig",
+      "personality_traits": [
+        "온순함", "친절함", "너그러움", "순수함"
+      ],
+      "lucky_numbers": [2, 5, 7],
+      "lucky_colors": ["빨강", "파랑", "핑크"],
+      "compatible_elements": ["water", "wood"],
+      "years": [1947, 2007, 2067]
+    },
+    {
+      "id": 25,
+      "name": "무자",
+      "heavenly_stem": "무(戊)",
+      "earthly_branch": "자(子)",
+      "stem_element": "earth",
+      "branch_element": "water",
+      "stem_yinyang": "양",
+      "branch_yinyang": "양",
+      "zodiac": "rat",
+      "personality_traits": [
+        "기민함", "적응력", "유연함", "통찰력"
+      ],
+      "lucky_numbers": [1, 5, 6],
+      "lucky_colors": ["노랑", "파랑", "검정"],
+      "compatible_elements": ["water", "earth"],
+      "years": [1948, 2008, 2068]
+    },
+    {
+      "id": 26,
+      "name": "기축",
+      "heavenly_stem": "기(己)",
+      "earthly_branch": "축(丑)",
+      "stem_element": "earth",
+      "branch_element": "earth",
+      "stem_yinyang": "음",
+      "branch_yinyang": "음",
+      "zodiac": "ox",
+      "personality_traits": [
+        "끈기", "성실함", "신뢰감", "안정감"
+      ],
+      "lucky_numbers": [2, 5, 9],
+      "lucky_colors": ["갈색", "노랑", "베이지"],
+      "compatible_elements": ["earth", "metal"],
+      "years": [1949, 2009, 2069]
+    },
+    {
+      "id": 27,
+      "name": "경인",
+      "heavenly_stem": "경(庚)",
+      "earthly_branch": "인(寅)",
+      "stem_element": "metal",
+      "branch_element": "wood",
+      "stem_yinyang": "양",
+      "branch_yinyang": "양",
+      "zodiac": "tiger",
+      "personality_traits": [
+        "용맹함", "정의감", "추진력", "강직함"
+      ],
+      "lucky_numbers": [3, 7, 8],
+      "lucky_colors": ["흰색", "초록", "황금"],
+      "compatible_elements": ["wood", "fire"],
+      "years": [1950, 2010, 2070]
+    },
+    {
+      "id": 28,
+      "name": "신묘",
+      "heavenly_stem": "신(辛)",
+      "earthly_branch": "묘(卯)",
+      "stem_element": "metal",
+      "branch_element": "wood",
+      "stem_yinyang": "음",
+      "branch_yinyang": "음",
+      "zodiac": "rabbit",
+      "personality_traits": [
+        "우아함", "세련됨", "사교성", "섬세함"
+      ],
+      "lucky_numbers": [4, 6, 7],
+      "lucky_colors": ["흰색", "핑크", "연두"],
+      "compatible_elements": ["wood", "water"],
+      "years": [1951, 2011, 2071]
+    },
+    {
+      "id": 29,
+      "name": "임진",
+      "heavenly_stem": "임(壬)",
+      "earthly_branch": "진(辰)",
+      "stem_element": "water",
+      "branch_element": "earth",
+      "stem_yinyang": "양",
+      "branch_yinyang": "양",
+      "zodiac": "dragon",
+      "personality_traits": [
+        "포부", "리더십", "창의성", "통찰력"
+      ],
+      "lucky_numbers": [1, 6, 9],
+      "lucky_colors": ["파랑", "황금", "노랑"],
+      "compatible_elements": ["earth", "water"],
+      "years": [1952, 2012, 2072]
+    },
+    {
+      "id": 30,
+      "name": "계사",
+      "heavenly_stem": "계(癸)",
+      "earthly_branch": "사(巳)",
+      "stem_element": "water",
+      "branch_element": "fire",
+      "stem_yinyang": "음",
+      "branch_yinyang": "음",
+      "zodiac": "snake",
+      "personality_traits": [
+        "지혜", "신비로움", "직관력", "집중력"
+      ],
+      "lucky_numbers": [2, 6, 8],
+      "lucky_colors": ["파랑", "빨강", "검정"],
+      "compatible_elements": ["fire", "water"],
+      "years": [1953, 2013, 2073]
+    },
+    {
+      "id": 31,
+      "name": "갑오",
+      "heavenly_stem": "갑(甲)",
+      "earthly_branch": "오(午)",
+      "stem_element": "wood",
+      "branch_element": "fire",
+      "stem_yinyang": "양",
+      "branch_yinyang": "양",
+      "zodiac": "horse",
+      "personality_traits": [
+        "활력", "열정", "자유로움", "진취적"
+      ],
+      "lucky_numbers": [3, 4, 9],
+      "lucky_colors": ["초록", "빨강", "주황"],
+      "compatible_elements": ["wood", "fire"],
+      "years": [1954, 2014, 2074]
+    },
+    {
+      "id": 32,
+      "name": "을미",
+      "heavenly_stem": "을(乙)",
+      "earthly_branch": "미(未)",
+      "stem_element": "wood",
+      "branch_element": "earth",
+      "stem_yinyang": "음",
+      "branch_yinyang": "음",
+      "zodiac": "goat",
+      "personality_traits": [
+        "온화함", "예술성", "감성", "평화로움"
+      ],
+      "lucky_numbers": [2, 5, 7],
+      "lucky_colors": ["초록", "베이지", "핑크"],
+      "compatible_elements": ["earth", "wood"],
+      "years": [1955, 2015, 2075]
+    },
+    {
+      "id": 33,
+      "name": "병신",
+      "heavenly_stem": "병(丙)",
+      "earthly_branch": "신(申)",
+      "stem_element": "fire",
+      "branch_element": "metal",
+      "stem_yinyang": "양",
+      "branch_yinyang": "양",
+      "zodiac": "monkey",
+      "personality_traits": [
+        "영리함", "재치", "활발함", "창의성"
+      ],
+      "lucky_numbers": [1, 7, 8],
+      "lucky_colors": ["빨강", "흰색", "황금"],
+      "compatible_elements": ["metal", "earth"],
+      "years": [1956, 2016, 2076]
+    },
+    {
+      "id": 34,
+      "name": "정유",
+      "heavenly_stem": "정(丁)",
+      "earthly_branch": "유(酉)",
+      "stem_element": "fire",
+      "branch_element": "metal",
+      "stem_yinyang": "음",
+      "branch_yinyang": "음",
+      "zodiac": "rooster",
+      "personality_traits": [
+        "세심함", "정확함", "부지런함", "책임감"
+      ],
+      "lucky_numbers": [4, 5, 9],
+      "lucky_colors": ["빨강", "흰색", "황금"],
+      "compatible_elements": ["metal", "earth"],
+      "years": [1957, 2017, 2077]
+    },
+    {
+      "id": 35,
+      "name": "무술",
+      "heavenly_stem": "무(戊)",
+      "earthly_branch": "술(戌)",
+      "stem_element": "earth",
+      "branch_element": "earth",
+      "stem_yinyang": "양",
+      "branch_yinyang": "양",
+      "zodiac": "dog",
+      "personality_traits": [
+        "충성심", "정직함", "따뜻함", "신념"
+      ],
+      "lucky_numbers": [3, 6, 7],
+      "lucky_colors": ["노랑", "갈색", "빨강"],
+      "compatible_elements": ["earth", "fire"],
+      "years": [1958, 2018, 2078]
+    },
+    {
+      "id": 36,
+      "name": "기해",
+      "heavenly_stem": "기(己)",
+      "earthly_branch": "해(亥)",
+      "stem_element": "earth",
+      "branch_element": "water",
+      "stem_yinyang": "음",
+      "branch_yinyang": "음",
+      "zodiac": "pig",
+      "personality_traits": [
+        "성실함", "관대함", "너그러움", "풍요로움"
+      ],
+      "lucky_numbers": [2, 5, 8],
+      "lucky_colors": ["갈색", "파랑", "검정"],
+      "compatible_elements": ["water", "earth"],
+      "years": [1959, 2019, 2079]
+    },
+    {
+      "id": 37,
+      "name": "경자",
+      "heavenly_stem": "경(庚)",
+      "earthly_branch": "자(子)",
+      "stem_element": "metal",
+      "branch_element": "water",
+      "stem_yinyang": "양",
+      "branch_yinyang": "양",
+      "zodiac": "rat",
+      "personality_traits": [
+        "명석함", "결단력", "기민함", "적응력"
+      ],
+      "lucky_numbers": [1, 4, 6],
+      "lucky_colors": ["흰색", "파랑", "황금"],
+      "compatible_elements": ["metal", "water"],
+      "years": [1960, 2020, 2080]
+    },
+    {
+      "id": 38,
+      "name": "신축",
+      "heavenly_stem": "신(辛)",
+      "earthly_branch": "축(丑)",
+      "stem_element": "metal",
+      "branch_element": "earth",
+      "stem_yinyang": "음",
+      "branch_yinyang": "음",
+      "zodiac": "ox",
+      "personality_traits": [
+        "신중함", "끈기", "성실함", "섬세함"
+      ],
+      "lucky_numbers": [2, 5, 8],
+      "lucky_colors": ["흰색", "갈색", "노랑"],
+      "compatible_elements": ["earth", "metal"],
+      "years": [1961, 2021, 2081]
+    },
+    {
+      "id": 39,
+      "name": "임인",
+      "heavenly_stem": "임(壬)",
+      "earthly_branch": "인(寅)",
+      "stem_element": "water",
+      "branch_element": "wood",
+      "stem_yinyang": "양",
+      "branch_yinyang": "양",
+      "zodiac": "tiger",
+      "personality_traits": [
+        "용기", "활력", "모험심", "추진력"
+      ],
+      "lucky_numbers": [3, 4, 7],
+      "lucky_colors": ["파랑", "초록", "검정"],
+      "compatible_elements": ["water", "wood"],
+      "years": [1962, 2022, 2082]
+    },
+    {
+      "id": 40,
+      "name": "계묘",
+      "heavenly_stem": "계(癸)",
+      "earthly_branch": "묘(卯)",
+      "stem_element": "water",
+      "branch_element": "wood",
+      "stem_yinyang": "음",
+      "branch_yinyang": "음",
+      "zodiac": "rabbit",
+      "personality_traits": [
+        "섬세함", "우아함", "사려깊음", "조화로움"
+      ],
+      "lucky_numbers": [4, 6, 8],
+      "lucky_colors": ["파랑", "핑크", "연두"],
+      "compatible_elements": ["water", "wood"],
+      "years": [1963, 2023, 2083]
+    },
+    {
+      "id": 41,
+      "name": "갑진",
+      "heavenly_stem": "갑(甲)",
+      "earthly_branch": "진(辰)",
+      "stem_element": "wood",
+      "branch_element": "earth",
+      "stem_yinyang": "양",
+      "branch_yinyang": "양",
+      "zodiac": "dragon",
+      "personality_traits": [
+        "리더십", "포부", "창의성", "카리스마"
+      ],
+      "lucky_numbers": [1, 5, 7],
+      "lucky_colors": ["초록", "황금", "노랑"],
+      "compatible_elements": ["earth", "wood"],
+      "years": [1964, 2024, 2084]
+    },
+    {
+      "id": 42,
+      "name": "을사",
+      "heavenly_stem": "을(乙)",
+      "earthly_branch": "사(巳)",
+      "stem_element": "wood",
+      "branch_element": "fire",
+      "stem_yinyang": "음",
+      "branch_yinyang": "음",
+      "zodiac": "snake",
+      "personality_traits": [
+        "지혜", "직관력", "신중함", "통찰력"
+      ],
+      "lucky_numbers": [2, 6, 8],
+      "lucky_colors": ["초록", "빨강", "검정"],
+      "compatible_elements": ["wood", "fire"],
+      "years": [1965, 2025, 2085]
+    },
+    {
+      "id": 43,
+      "name": "병오",
+      "heavenly_stem": "병(丙)",
+      "earthly_branch": "오(午)",
+      "stem_element": "fire",
+      "branch_element": "fire",
+      "stem_yinyang": "양",
+      "branch_yinyang": "양",
+      "zodiac": "horse",
+      "personality_traits": [
+        "열정", "활발함", "자유로움", "역동적"
+      ],
+      "lucky_numbers": [3, 7, 9],
+      "lucky_colors": ["빨강", "주황", "자주"],
+      "compatible_elements": ["fire", "earth"],
+      "years": [1966, 2026, 2086]
+    },
+    {
+      "id": 44,
+      "name": "정미",
+      "heavenly_stem": "정(丁)",
+      "earthly_branch": "미(未)",
+      "stem_element": "fire",
+      "branch_element": "earth",
+      "stem_yinyang": "음",
+      "branch_yinyang": "음",
+      "zodiac": "goat",
+      "personality_traits": [
+        "온화함", "예술적", "감성적", "평화로움"
+      ],
+      "lucky_numbers": [2, 5, 7],
+      "lucky_colors": ["빨강", "베이지", "핑크"],
+      "compatible_elements": ["fire", "earth"],
+      "years": [1967, 2027, 2087]
+    },
+    {
+      "id": 45,
+      "name": "무신",
+      "heavenly_stem": "무(戊)",
+      "earthly_branch": "신(申)",
+      "stem_element": "earth",
+      "branch_element": "metal",
+      "stem_yinyang": "양",
+      "branch_yinyang": "양",
+      "zodiac": "monkey",
+      "personality_traits": [
+        "영리함", "재치", "융통성", "다재다능함"
+      ],
+      "lucky_numbers": [1, 4, 8],
+      "lucky_colors": ["노랑", "흰색", "황금"],
+      "compatible_elements": ["earth", "metal"],
+      "years": [1968, 2028, 2088]
+    },
+    {
+      "id": 46,
+      "name": "기유",
+      "heavenly_stem": "기(己)",
+      "earthly_branch": "유(酉)",
+      "stem_element": "earth",
+      "branch_element": "metal",
+      "stem_yinyang": "음",
+      "branch_yinyang": "음",
+      "zodiac": "rooster",
+      "personality_traits": [
+        "정확함", "부지런함", "꼼꼼함", "책임감"
+      ],
+      "lucky_numbers": [4, 5, 9],
+      "lucky_colors": ["갈색", "흰색", "황금"],
+      "compatible_elements": ["earth", "metal"],
+      "years": [1969, 2029, 2089]
+    },
+    {
+      "id": 47,
+      "name": "경술",
+      "heavenly_stem": "경(庚)",
+      "earthly_branch": "술(戌)",
+      "stem_element": "metal",
+      "branch_element": "earth",
+      "stem_yinyang": "양",
+      "branch_yinyang": "양",
+      "zodiac": "dog",
+      "personality_traits": [
+        "충성심", "정의로움", "강직함", "의리"
+      ],
+      "lucky_numbers": [3, 6, 7],
+      "lucky_colors": ["흰색", "갈색", "황금"],
+      "compatible_elements": ["earth", "metal"],
+      "years": [1970, 2030, 2090]
+    },
+    {
+      "id": 48,
+      "name": "신해",
+      "heavenly_stem": "신(辛)",
+      "earthly_branch": "해(亥)",
+      "stem_element": "metal",
+      "branch_element": "water",
+      "stem_yinyang": "음",
+      "branch_yinyang": "음",
+      "zodiac": "pig",
+      "personality_traits": [
+        "성실함", "관대함", "온순함", "풍요로움"
+      ],
+      "lucky_numbers": [2, 5, 8],
+      "lucky_colors": ["흰색", "파랑", "검정"],
+      "compatible_elements": ["metal", "water"],
+      "years": [1971, 2031, 2091]
+    },
+    {
+      "id": 49,
+      "name": "임자",
+      "heavenly_stem": "임(壬)",
+      "earthly_branch": "자(子)",
+      "stem_element": "water",
+      "branch_element": "water",
+      "stem_yinyang": "양",
+      "branch_yinyang": "양",
+      "zodiac": "rat",
+      "personality_traits": [
+        "지혜", "기민함", "적응력", "통찰력"
+      ],
+      "lucky_numbers": [1, 4, 6],
+      "lucky_colors": ["파랑", "검정", "흰색"],
+      "compatible_elements": ["water", "metal"],
+      "years": [1972, 2032, 2092]
+    },
+    {
+      "id": 50,
+      "name": "계축",
+      "heavenly_stem": "계(癸)",
+      "earthly_branch": "축(丑)",
+      "stem_element": "water",
+      "branch_element": "earth",
+      "stem_yinyang": "음",
+      "branch_yinyang": "음",
+      "zodiac": "ox",
+      "personality_traits": [
+        "끈기", "인내", "신뢰감", "안정적"
+      ],
+      "lucky_numbers": [2, 5, 9],
+      "lucky_colors": ["파랑", "갈색", "노랑"],
+      "compatible_elements": ["earth", "water"],
+      "years": [1973, 2033, 2093]
+    },
+    {
+      "id": 51,
+      "name": "갑인",
+      "heavenly_stem": "갑(甲)",
+      "earthly_branch": "인(寅)",
+      "stem_element": "wood",
+      "branch_element": "wood",
+      "stem_yinyang": "양",
+      "branch_yinyang": "양",
+      "zodiac": "tiger",
+      "personality_traits": [
+        "용맹함", "진취적", "성장지향", "활력"
+      ],
+      "lucky_numbers": [3, 7, 8],
+      "lucky_colors": ["초록", "청록", "갈색"],
+      "compatible_elements": ["wood", "fire"],
+      "years": [1974, 2034, 2094]
+    },
+    {
+      "id": 52,
+      "name": "을묘",
+      "heavenly_stem": "을(乙)",
+      "earthly_branch": "묘(卯)",
+      "stem_element": "wood",
+      "branch_element": "wood",
+      "stem_yinyang": "음",
+      "branch_yinyang": "음",
+      "zodiac": "rabbit",
+      "personality_traits": [
+        "섬세함", "우아함", "조화로움", "성장"
+      ],
+      "lucky_numbers": [4, 6, 8],
+      "lucky_colors": ["연두", "초록", "핑크"],
+      "compatible_elements": ["wood", "water"],
+      "years": [1975, 2035, 2095]
+    },
+    {
+      "id": 53,
+      "name": "병진",
+      "heavenly_stem": "병(丙)",
+      "earthly_branch": "진(辰)",
+      "stem_element": "fire",
+      "branch_element": "earth",
+      "stem_yinyang": "양",
+      "branch_yinyang": "양",
+      "zodiac": "dragon",
+      "personality_traits": [
+        "열정", "포부", "리더십", "변화를 만듦"
+      ],
+      "lucky_numbers": [1, 5, 7],
+      "lucky_colors": ["빨강", "황금", "주황"],
+      "compatible_elements": ["fire", "earth"],
+      "years": [1976, 2036, 2096]
+    },
+    {
+      "id": 54,
+      "name": "정사",
+      "heavenly_stem": "정(丁)",
+      "earthly_branch": "사(巳)",
+      "stem_element": "fire",
+      "branch_element": "fire",
+      "stem_yinyang": "음",
+      "branch_yinyang": "음",
+      "zodiac": "snake",
+      "personality_traits": [
+        "지혜", "신비로움", "직관력", "집중력"
+      ],
+      "lucky_numbers": [2, 6, 8],
+      "lucky_colors": ["빨강", "자주", "검정"],
+      "compatible_elements": ["fire", "wood"],
+      "years": [1977, 2037, 2097]
+    },
+    {
+      "id": 55,
+      "name": "무오",
+      "heavenly_stem": "무(戊)",
+      "earthly_branch": "오(午)",
+      "stem_element": "earth",
+      "branch_element": "fire",
+      "stem_yinyang": "양",
+      "branch_yinyang": "양",
+      "zodiac": "horse",
+      "personality_traits": [
+        "활발함", "열정", "안정성", "추진력"
+      ],
+      "lucky_numbers": [3, 4, 9],
+      "lucky_colors": ["노랑", "빨강", "주황"],
+      "compatible_elements": ["fire", "earth"],
+      "years": [1978, 2038, 2098]
+    },
+    {
+      "id": 56,
+      "name": "기미",
+      "heavenly_stem": "기(己)",
+      "earthly_branch": "미(未)",
+      "stem_element": "earth",
+      "branch_element": "earth",
+      "stem_yinyang": "음",
+      "branch_yinyang": "음",
+      "zodiac": "goat",
+      "personality_traits": [
+        "온화함", "예술성", "안정감", "평화로움"
+      ],
+      "lucky_numbers": [2, 5, 7],
+      "lucky_colors": ["갈색", "베이지", "노랑"],
+      "compatible_elements": ["earth", "metal"],
+      "years": [1979, 2039, 2099]
+    },
+    {
+      "id": 57,
+      "name": "경신",
+      "heavenly_stem": "경(庚)",
+      "earthly_branch": "신(申)",
+      "stem_element": "metal",
+      "branch_element": "metal",
+      "stem_yinyang": "양",
+      "branch_yinyang": "양",
+      "zodiac": "monkey",
+      "personality_traits": [
+        "영리함", "결단력", "강직함", "재치"
+      ],
+      "lucky_numbers": [1, 7, 8],
+      "lucky_colors": ["흰색", "황금", "은색"],
+      "compatible_elements": ["metal", "water"],
+      "years": [1980, 2040, 2100]
+    },
+    {
+      "id": 58,
+      "name": "신유",
+      "heavenly_stem": "신(辛)",
+      "earthly_branch": "유(酉)",
+      "stem_element": "metal",
+      "branch_element": "metal",
+      "stem_yinyang": "음",
+      "branch_yinyang": "음",
+      "zodiac": "rooster",
+      "personality_traits": [
+        "정확함", "세심함", "꼼꼼함", "완벽주의"
+      ],
+      "lucky_numbers": [4, 5, 9],
+      "lucky_colors": ["흰색", "황금", "은색"],
+      "compatible_elements": ["metal", "earth"],
+      "years": [1981, 2041, 2101]
+    },
+    {
+      "id": 59,
+      "name": "임술",
+      "heavenly_stem": "임(壬)",
+      "earthly_branch": "술(戌)",
+      "stem_element": "water",
+      "branch_element": "earth",
+      "stem_yinyang": "양",
+      "branch_yinyang": "양",
+      "zodiac": "dog",
+      "personality_traits": [
+        "충성심", "정의로움", "지혜", "신뢰감"
+      ],
+      "lucky_numbers": [3, 6, 7],
+      "lucky_colors": ["파랑", "갈색", "검정"],
+      "compatible_elements": ["earth", "water"],
+      "years": [1982, 2042, 2102]
+    },
+    {
+      "id": 60,
+      "name": "계해",
+      "heavenly_stem": "계(癸)",
+      "earthly_branch": "해(亥)",
+      "stem_element": "water",
+      "branch_element": "water",
+      "stem_yinyang": "음",
+      "branch_yinyang": "음",
+      "zodiac": "pig",
+      "personality_traits": [
+        "성실함", "관대함", "풍요로움", "순수함"
+      ],
+      "lucky_numbers": [2, 5, 8],
+      "lucky_colors": ["파랑", "검정", "흰색"],
+      "compatible_elements": ["water", "wood"],
+      "years": [1923, 1983, 2043]
+    }
+  ],
+  "year_mapping": {
+    "1900": 17, "1901": 18, "1902": 19, "1903": 20, "1904": 21,
+    "1905": 22, "1906": 23, "1907": 24, "1908": 25, "1909": 26,
+    "1910": 27, "1911": 28, "1912": 29, "1913": 30, "1914": 31,
+    "1915": 32, "1916": 33, "1917": 34, "1918": 35, "1919": 36,
+    "1920": 37, "1921": 38, "1922": 39, "1923": 40, "1924": 1,
+    "1925": 2, "1926": 3, "1927": 4, "1928": 5, "1929": 6,
+    "1930": 7, "1931": 8, "1932": 9, "1933": 10, "1934": 11,
+    "1935": 12, "1936": 13, "1937": 14, "1938": 15, "1939": 16,
+    "1940": 17, "1941": 18, "1942": 19, "1943": 20, "1944": 21,
+    "1945": 22, "1946": 23, "1947": 24, "1948": 25, "1949": 26,
+    "1950": 27, "1951": 28, "1952": 29, "1953": 30, "1954": 31,
+    "1955": 32, "1956": 33, "1957": 34, "1958": 35, "1959": 36,
+    "1960": 37, "1961": 38, "1962": 39, "1963": 40, "1964": 41,
+    "1965": 42, "1966": 43, "1967": 44, "1968": 45, "1969": 46,
+    "1970": 47, "1971": 48, "1972": 49, "1973": 50, "1974": 51,
+    "1975": 52, "1976": 53, "1977": 54, "1978": 55, "1979": 56,
+    "1980": 57, "1981": 58, "1982": 59, "1983": 60, "1984": 1,
+    "1985": 2, "1986": 3, "1987": 4, "1988": 5, "1989": 6,
+    "1990": 7, "1991": 8, "1992": 9, "1993": 10, "1994": 11,
+    "1995": 12, "1996": 13, "1997": 14, "1998": 15, "1999": 16,
+    "2000": 17, "2001": 18, "2002": 19, "2003": 20, "2004": 21,
+    "2005": 22, "2006": 23, "2007": 24, "2008": 25, "2009": 26,
+    "2010": 27, "2011": 28, "2012": 29, "2013": 30, "2014": 31,
+    "2015": 32, "2016": 33, "2017": 34, "2018": 35, "2019": 36,
+    "2020": 37, "2021": 38, "2022": 39, "2023": 40, "2024": 41,
+    "2025": 42, "2026": 43, "2027": 44, "2028": 45, "2029": 46,
+    "2030": 47, "2031": 48, "2032": 49, "2033": 50, "2034": 51,
+    "2035": 52, "2036": 53, "2037": 54, "2038": 55, "2039": 56,
+    "2040": 57, "2041": 58, "2042": 59, "2043": 60, "2044": 1,
+    "2045": 2, "2046": 3, "2047": 4, "2048": 5, "2049": 6,
+    "2050": 7, "2051": 8, "2052": 9, "2053": 10, "2054": 11,
+    "2055": 12, "2056": 13, "2057": 14, "2058": 15, "2059": 16,
+    "2060": 17, "2061": 18, "2062": 19, "2063": 20, "2064": 21,
+    "2065": 22, "2066": 23, "2067": 24, "2068": 25, "2069": 26,
+    "2070": 27, "2071": 28, "2072": 29, "2073": 30, "2074": 31,
+    "2075": 32, "2076": 33, "2077": 34, "2078": 35, "2079": 36,
+    "2080": 37, "2081": 38, "2082": 39, "2083": 40, "2084": 41,
+    "2085": 42, "2086": 43, "2087": 44, "2088": 45, "2089": 46,
+    "2090": 47, "2091": 48, "2092": 49, "2093": 50, "2094": 51,
+    "2095": 52, "2096": 53, "2097": 54, "2098": 55, "2099": 56,
+    "2100": 57
+  }
+}

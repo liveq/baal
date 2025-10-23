@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>디버그 테스트 (Same Origin)</title>
+</head>
+<body>
+<h1>Same Origin 테스트</h1>
+<button onclick="runTest()">테스트 실행</button>
+<pre id="log" style="background:#000; color:#0f0; padding:20px; font-family:monospace; white-space:pre-wrap;"></pre>
+
+<script src="api/zodiac-api-real.js?v=20251015-iife-path"></script>
+
+<script>
+const logEl = document.getElementById('log');
+const originalLog = console.log;
+const originalError = console.error;
+
+console.log = function(...args) {
+    originalLog.apply(console, args);
+    logEl.textContent += args.map(a => typeof a === 'object' ? JSON.stringify(a, null, 2) : String(a)).join(' ') + '\n';
+};
+
+console.error = function(...args) {
+    originalError.apply(console, args);
+    logEl.textContent += '[ERROR] ' + args.map(a => typeof a === 'object' ? JSON.stringify(a, null, 2) : String(a)).join(' ') + '\n';
+};
+
+async function runTest() {
+    logEl.textContent = '=== 테스트 시작 (Same Origin) ===\n\n';
+
+    console.log('zodiacAPI 전역 인스턴스:', zodiacAPI ? 'EXISTS' : 'NULL');
+    console.log('basePath:', zodiacAPI.basePath);
+
+    await new Promise(r => setTimeout(r, 3000));
+
+    console.log('\n=== 3초 후 데이터 확인 ===');
+    console.log('fortuneData:', zodiacAPI.fortuneData ? 'EXISTS' : 'NULL');
+
+    if (zodiacAPI.fortuneData) {
+        console.log('daily:', zodiacAPI.fortuneData.daily ? 'EXISTS' : 'NULL');
+
+        if (zodiacAPI.fortuneData.daily) {
+            const keys = Object.keys(zodiacAPI.fortuneData.daily);
+            console.log('daily 키 개수:', keys.length);
+            console.log('첫 5개 키:', keys.slice(0, 5));
+            console.log('2025-10-15 존재:', '2025-10-15' in zodiacAPI.fortuneData.daily);
+
+            if (zodiacAPI.fortuneData.daily['2025-10-15']) {
+                console.log('2025-10-15["2"] 존재:', zodiacAPI.fortuneData.daily['2025-10-15']['2'] ? 'YES' : 'NO');
+
+                if (zodiacAPI.fortuneData.daily['2025-10-15']['2']) {
+                    const data = zodiacAPI.fortuneData.daily['2025-10-15']['2'];
+                    console.log('샘플 데이터:', {
+                        overall: data.overall,
+                        love: data.fortunes?.love?.substring(0, 50)
+                    });
+                }
+            }
+        }
+    }
+
+    console.log('\n=== getDailyFortune(2) 테스트 ===');
+    const fortune = await zodiacAPI.getDailyFortune(2);
+
+    console.log('\n결과:');
+    console.log('overall:', fortune.overall);
+    console.log('love:', fortune.fortunes.love);
+    console.log('love 길이:', fortune.fortunes.love.length);
+    console.log('source:', fortune.source);
+
+    if (fortune.fortunes.love.length >= 20 && fortune.source !== 'generated-fallback-filtered') {
+        console.log('\n✅✅✅ 성공! ✅✅✅');
+    } else {
+        console.log('\n❌ 실패 - 폴백 사용 중');
+    }
+}
+
+// 자동 실행
+window.addEventListener('load', () => {
+    setTimeout(runTest, 500);
+});
+</script>
+</body>
+</html>
