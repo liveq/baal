@@ -21,7 +21,7 @@
 
         .services-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(3, 1fr);
             gap: 24px;
             margin-top: 20px;
         }
@@ -121,6 +121,14 @@
         .contact-info { font-weight: 500; margin-bottom: 12px; }
         .contact-email { font-size: 0.85em; color: #6c757d; }
         
+        /* 태블릿 최적화 */
+        @media (max-width: 1024px) {
+            .services-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
+        }
+
         /* 모바일 최적화 */
         @media (max-width: 768px) {
             body { padding: 15px; }
@@ -181,6 +189,22 @@
                     <span class="feature-tag">💰 100% 무료</span>
                 </div>
                 <button class="service-button" onclick="event.stopPropagation(); window.open('https://split.baal.co.kr', '_blank')">무료로 사용하기 →</button>
+            </div>
+
+            <div class="service-card" onclick="window.open('https://pdf.baal.co.kr', '_blank')">
+                <h3 class="service-title">📄 PDF 변환</h3>
+                <p class="service-subtitle">PDF를 JPEG로 변환하거나 분할</p>
+                <p class="service-description">PDF를 고품질 JPEG 이미지로 변환하거나 여러 개의 PDF로 분할하는 도구입니다. 페이지 선택, 품질 조절, 그레이스케일 등 다양한 옵션을 제공합니다.</p>
+                <div class="service-features">
+                    <span class="feature-tag">📄 PDF → JPEG</span>
+                    <span class="feature-tag">✂️ PDF 분할</span>
+                    <span class="feature-tag">🎨 품질 선택</span>
+                    <span class="feature-tag">⚫ 그레이스케일</span>
+                    <span class="feature-tag">📦 ZIP 다운로드</span>
+                    <span class="feature-tag">🔒 안전 처리</span>
+                    <span class="feature-tag">💰 100% 무료</span>
+                </div>
+                <button class="service-button" onclick="event.stopPropagation(); window.open('https://pdf.baal.co.kr', '_blank')">무료로 사용하기 →</button>
             </div>
         </div>
     </div>
