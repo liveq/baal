@@ -298,6 +298,114 @@
             0%, 90% { color: #4a4a4a; }
             91%, 100% { color: #8b4444; font-weight: 600; }
         }
+
+        /* 철학 모달 (팔괘에서 복사) */
+        .philosophy-modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .philosophy-modal.show {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .philosophy-modal-content {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            padding: 80px;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 700px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+            animation: slideUp 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .philosophy-modal-close {
+            position: absolute;
+            top: 30px;
+            right: 35px;
+            font-size: 32px;
+            color: #9ca3af;
+            cursor: pointer;
+            transition: color 0.2s;
+            background: none;
+            border: none;
+            font-weight: 300;
+        }
+
+        .philosophy-modal-close:hover {
+            color: #6b7280;
+        }
+
+        .philosophy-modal-header {
+            margin-bottom: 50px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .philosophy-modal-title {
+            font-family: 'Inter', sans-serif;
+            font-size: 4em;
+            font-weight: 900;
+            color: #1a1a1a;
+            letter-spacing: -1px;
+            line-height: 1;
+            cursor: default;
+        }
+
+        .philosophy-modal-subtitle {
+            position: absolute;
+            right: -60px;
+            bottom: 0;
+            font-size: 1.2em;
+            color: #9ca3af;
+            font-weight: 400;
+            opacity: 0;
+            transition: opacity 0.6s ease;
+        }
+
+        .philosophy-modal-subtitle.show {
+            opacity: 1;
+        }
+
+        .philosophy-modal-text {
+            font-size: 1.15em;
+            line-height: 2;
+            color: #4a5568;
+            margin-bottom: 12px;
+            font-weight: 400;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
     </style>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2886185075996969"
      crossorigin="anonymous"></script>
@@ -312,7 +420,7 @@
 
     <!-- 사이드바 -->
     <aside class="sidebar" id="sidebar">
-        <div class="sidebar-logo" onclick="window.scrollTo({top:0,behavior:'smooth'})">BAAL</div>
+        <div class="sidebar-logo" onclick="showPhilosophyModal()">BAAL</div>
 
         <nav class="sidebar-nav">
             <div class="nav-section-title">Services</div>
@@ -484,6 +592,22 @@
 
     <button class="floating-button" onclick="openModal()">+</button>
 
+    <!-- 철학 모달 (팔괘에서 복사) -->
+    <div id="philosophyModal" class="philosophy-modal" onclick="if(event.target.id==='philosophyModal') closePhilosophyModal()">
+        <div class="philosophy-modal-content">
+            <button class="philosophy-modal-close" onclick="closePhilosophyModal()">&times;</button>
+            <div class="philosophy-modal-header" onmouseover="showKoreanText()" onmouseout="">
+                <h2 class="philosophy-modal-title">BAAL</h2>
+                <span class="philosophy-modal-subtitle" id="koreanText" onclick="openMainModal()" style="cursor: pointer;">바알</span>
+            </div>
+            <div>
+                <p class="philosophy-modal-text">사람은 무엇으로 갈증을 채우는가</p>
+                <p class="philosophy-modal-text">잃어야 얻고, 끝나야 시작된다</p>
+                <p class="philosophy-modal-text">가치 있는 자만이 가치를 얻는 법</p>
+            </div>
+        </div>
+    </div>
+
     <div id="baalModal" class="modal" onclick="if(event.target.id==='baalModal') closeModal()">
         <div class="modal-content">
             <button class="modal-close" onclick="closeModal()">&times;</button>
@@ -542,6 +666,27 @@
         function openPrivacyModal() { document.getElementById('privacyModal').classList.add('show'); }
         function closePrivacyModal() { document.getElementById('privacyModal').classList.remove('show'); }
 
+        // 철학 모달 함수들 (팔괘에서 복사)
+        function showPhilosophyModal() {
+            document.getElementById('philosophyModal').classList.add('show');
+        }
+
+        function closePhilosophyModal() {
+            document.getElementById('philosophyModal').classList.remove('show');
+            // 모달 닫을 때 한글 텍스트 초기화
+            document.getElementById('koreanText').classList.remove('show');
+        }
+
+        function showKoreanText() {
+            document.getElementById('koreanText').classList.add('show');
+        }
+
+        // "바알" 클릭 시 철학 모달 닫고 메인 모달 열기
+        function openMainModal() {
+            closePhilosophyModal();
+            openModal();
+        }
+
         function toggleSidebar() {
             document.getElementById('sidebar').classList.toggle('active');
         }
@@ -550,6 +695,7 @@
             if(e.key === 'Escape') {
                 closeModal();
                 closePrivacyModal();
+                closePhilosophyModal();
                 document.getElementById('sidebar').classList.remove('active');
             }
         });
