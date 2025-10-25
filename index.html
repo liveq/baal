@@ -115,6 +115,7 @@
             box-shadow: 0 10px 40px rgba(0,0,0,0.06); cursor: pointer;
             transition: all 0.3s; position: relative; overflow: hidden;
             word-break: keep-all; word-wrap: break-word;
+            display: flex; flex-direction: column;
         }
         .service-card::before {
             content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
@@ -135,7 +136,7 @@
             color: #4a4a4a; line-height: 1.6; margin-bottom: 16px;
             word-break: keep-all; word-wrap: break-word;
         }
-        .service-features { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+        .service-features { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; flex: 1; align-content: flex-start; }
         .feature-tag {
             padding: 4px 12px; background: #f8f9fa; border-radius: 20px;
             font-size: 0.75em; color: #495057; border: 1px solid #e9ecef;
