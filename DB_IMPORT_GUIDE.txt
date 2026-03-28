@@ -1,0 +1,89 @@
+========================================
+  BAAL 운세 데이터 DB 임포트 가이드
+========================================
+
+Supabase SQL Editor가 열려있는 상태에서 진행.
+URL: https://supabase.com/dashboard/project/pfgfxvgbnkrbvyzdaeel/sql/new
+
+총 9개 파일을 순서대로 붙여넣고 Run.
+한번에 하나씩! (크기 제한 때문)
+
+========================================
+순서 1: 주간 운세 Q1 (21KB)
+========================================
+파일: C:\aicode\agent_workspace\024_ai_baal\reference\sql\weekly_fortunes_2025_q1.sql
+
+1. 위 파일을 메모장으로 열기
+2. Ctrl+A로 전체 선택 → Ctrl+C 복사
+3. Supabase SQL Editor에 Ctrl+V 붙여넣기
+4. 우측 하단 [Run CTRL+J] 클릭
+5. 성공 확인 후 에디터 내용 지우기
+
+========================================
+순서 2: 주간 운세 Q2 (14KB)
+========================================
+파일: C:\aicode\agent_workspace\024_ai_baal\reference\sql\weekly_fortunes_2025_q2.sql
+→ 같은 방법으로
+
+========================================
+순서 3: 주간 운세 Q3 (15KB)
+========================================
+파일: C:\aicode\agent_workspace\024_ai_baal\reference\sql\weekly_fortunes_2025_q3.sql
+
+========================================
+순서 4: 주간 운세 Q4 (11KB)
+========================================
+파일: C:\aicode\agent_workspace\024_ai_baal\reference\sql\weekly_fortunes_2025_q4.sql
+
+========================================
+순서 5: 월간 운세 (8KB)
+========================================
+파일: C:\aicode\agent_workspace\024_ai_baal\reference\sql\monthly_fortunes_2025_full.sql
+
+========================================
+순서 6: 궁합 (35KB)
+========================================
+파일: C:\aicode\agent_workspace\024_ai_baal\reference\sql\compatibility_fortunes_insert_final.sql
+
+========================================
+순서 7: 일간 운세 1월 (237KB) ← 큼
+========================================
+파일: C:\aicode\agent_workspace\024_ai_baal\reference\sql\daily_fortunes_2025_january_complete.sql
+
+========================================
+순서 8: 일간 운세 2월 (210KB) ← 큼
+========================================
+파일: C:\aicode\agent_workspace\024_ai_baal\reference\sql\daily_fortunes_2025_february_complete.sql
+
+========================================
+순서 9: 일간 운세 3월 (234KB) ← 큼
+========================================
+파일: C:\aicode\agent_workspace\024_ai_baal\reference\sql\daily_fortunes_2025_march_complete.sql
+
+
+========================================
+에러 나면?
+========================================
+- "column does not exist" → 테이블 스키마 불일치. 나한테 알려줘.
+- "syntax error" → 파일 내용이 잘렸을 수 있음. 다시 복사해봐.
+- "duplicate key" → 이미 데이터가 있는 것. 무시해도 됨.
+
+========================================
+완료 확인
+========================================
+아래 쿼리를 SQL Editor에 넣고 Run:
+
+SELECT
+  'weekly' as type, COUNT(*) FROM weekly_fortunes_data
+UNION ALL
+SELECT 'monthly', COUNT(*) FROM monthly_fortunes_data
+UNION ALL
+SELECT 'daily', COUNT(*) FROM daily_fortunes
+UNION ALL
+SELECT 'compatibility', COUNT(*) FROM compatibility_fortunes_data;
+
+예상 결과:
+- weekly: ~624 (12별자리 × 52주)
+- monthly: ~144 (12 × 12)
+- daily: ~1,080+ (12 × 90일)
+- compatibility: ~66 (12C2 조합)

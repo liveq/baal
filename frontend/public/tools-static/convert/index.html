@@ -1,0 +1,1280 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="무료 이미지 압축, 리사이즈, 변환, 업스케일 도구. 브라우저에서 바로 처리. 개인정보 안전.">
+    <meta name="keywords" content="이미지 압축, 사진 용량 줄이기, 이미지 리사이즈, 이미지 변환, AI 업스케일">
+    <meta name="author" content="BAAL">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://convert.baal.co.kr/">
+    <meta property="og:title" content="이미지 변환 - 무료 온라인 도구">
+    <meta property="og:description" content="JPG↔PNG↔WebP 포맷을 빠르게 변환하세요. 일괄 처리 지원.">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://convert.baal.co.kr/">
+    <meta property="twitter:title" content="이미지 변환 - 무료 온라인 도구">
+    <meta property="twitter:description" content="JPG↔PNG↔WebP 포맷을 빠르게 변환하세요.">
+
+    <title>이미지 변환 - BAAL</title>
+
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2886185075996969"
+     crossorigin="anonymous"></script>
+
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-XXXXXXXXXX');
+    </script>
+
+    <!-- 라이브러리 -->
+    <script src="https://cdn.jsdelivr.net/npm/browser-image-compression@2.0.2/dist/browser-image-compression.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pica@9.0.1/dist/pica.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+
+    <!-- Playfair Display 폰트 (Privacy Modal용) -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+
+    <!-- 공통 스타일 -->
+    <link rel="stylesheet" href="_common/common.css">
+    <style>
+        /* 탭 스타일 */
+        .mode-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--border-color);
+            overflow-x: auto;
+        }
+
+        .mode-tabs .tab {
+            padding: 12px 24px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-weight: 600;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+            box-shadow: none;
+        }
+
+        .mode-tabs .tab:hover {
+            color: var(--gold-primary);
+            transform: none;
+            box-shadow: none;
+        }
+
+        .mode-tabs .tab.active {
+            color: var(--gold-primary);
+            border-bottom-color: var(--gold-primary);
+            background: transparent;
+        }
+
+        /* 도구 컨테이너 */
+        .tool-container {
+            margin-top: 30px;
+        }
+
+        /* 옵션 그룹 */
+        .options-group {
+            background: var(--bg-accent);
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius-lg);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .option-row {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .option-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .option-label {
+            font-weight: 600;
+            color: var(--text-primary);
+            min-width: 100px;
+        }
+
+        .option-control {
+            flex: 1;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        /* 슬라이더 */
+        input[type="range"] {
+            flex: 1;
+            height: 6px;
+            border-radius: 3px;
+            background: var(--border-color);
+            outline: none;
+            padding: 0;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--gold-primary);
+            cursor: pointer;
+        }
+
+        /* 버튼 그룹 */
+        .btn-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 0.9em;
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            color: var(--text-primary);
+            box-shadow: none;
+        }
+
+        .btn-small:hover {
+            border-color: var(--gold-primary);
+            background: var(--bg-accent);
+        }
+
+        .btn-small.active {
+            background: var(--gold-gradient);
+            color: white;
+            border-color: var(--gold-primary);
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* 파일 리스트 */
+        .file-list {
+            margin-top: 20px;
+        }
+
+        .file-item {
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius-md);
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .file-preview {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: var(--border-radius-sm);
+        }
+
+        .file-info {
+            flex: 1;
+        }
+
+        .file-name {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 5px;
+        }
+
+        .file-size {
+            color: var(--text-secondary);
+            font-size: 0.9em;
+        }
+
+        .file-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        /* 진행률 */
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--border-color);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--gold-gradient);
+            transition: width 0.3s;
+        }
+
+        /* 소셜 미디어 프리셋 */
+        .preset-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .preset-btn {
+            padding: 12px;
+            text-align: left;
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius-md);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9em;
+        }
+
+        .preset-btn:hover {
+            border-color: var(--gold-primary);
+            background: var(--bg-accent);
+        }
+
+        .preset-btn.active {
+            border-color: var(--gold-primary);
+            background: var(--bg-accent);
+        }
+
+        .preset-name {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .preset-size {
+            color: var(--text-secondary);
+            font-size: 0.85em;
+        }
+
+        /* 툴팁 */
+        .tooltip-icon {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            line-height: 18px;
+            text-align: center;
+            background: var(--gold-primary);
+            color: white;
+            border-radius: 50%;
+            font-size: 0.75em;
+            font-weight: 700;
+            cursor: help;
+            margin-left: 6px;
+            position: relative;
+        }
+
+        .tooltip-icon:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            left: 50%;
+            bottom: 130%;
+            transform: translateX(-50%);
+            background: rgba(26, 26, 26, 0.95);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            animation: tooltipFadeIn 0.2s ease;
+        }
+
+        .tooltip-icon:hover::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: 120%;
+            transform: translateX(-50%);
+            border: 6px solid transparent;
+            border-top-color: rgba(26, 26, 26, 0.95);
+            z-index: 1000;
+        }
+
+        @keyframes tooltipFadeIn {
+            from { opacity: 0; transform: translateX(-50%) translateY(-5px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+
+        /* 반응형 */
+        @media (max-width: 768px) {
+            .option-row {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .option-label {
+                min-width: auto;
+            }
+
+            .option-control {
+                width: 100%;
+            }
+        }
+
+        /* Privacy Modal Styles (from baal.co.kr) */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(10px);
+        }
+
+        .modal.show {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: rgba(255,255,255,0.95);
+            padding: 50px 40px;
+            border-radius: 20px;
+            max-width: 700px;
+            width: 90%;
+            position: relative;
+            text-align: center;
+            word-break: keep-all;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            font-size: 32px;
+            color: #9ca3af;
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .modal-close:hover {
+            color: var(--gold-primary);
+        }
+
+        .modal-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2em;
+            margin-bottom: 25px;
+            background: linear-gradient(-45deg, #d4af37, #ffd700, #b8860b);
+            background-size: 300% 300%;
+            animation: modalGradientFlow 4s ease-in-out infinite;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            word-break: keep-all;
+        }
+
+        @keyframes modalGradientFlow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .privacy-content {
+            text-align: left;
+            color: #4a4a4a;
+            line-height: 1.8;
+            max-height: 60vh;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .privacy-content h3 {
+            color: #2c3e50;
+            margin-top: 20px;
+            font-size: 1.1em;
+        }
+
+        .privacy-content h3:first-of-type {
+            margin-top: 0;
+        }
+
+        .privacy-content p {
+            margin-bottom: 15px;
+        }
+
+        .privacy-content ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .privacy-content a {
+            color: var(--gold-primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .privacy-content a:hover {
+            text-decoration: underline;
+        }
+
+        .privacy-content strong {
+            color: #2c3e50;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+    <!-- 다크모드 토글 -->
+    <div class="theme-toggle">
+        <button id="themeToggle" aria-label="다크모드 전환">
+            <span class="icon-light">☀️</span>
+            <span class="icon-dark">🌙</span>
+        </button>
+    </div>
+
+    <!-- 언어 전환 -->
+    <div class="lang-toggle">
+        <button id="langToggle" data-lang="ko">
+            <span class="lang-ko">EN</span>
+            <span class="lang-en">KO</span>
+        </button>
+            <button id="toolsToggle" title="더 많은 도구">
+                🧰
+            </button>
+    </div>
+
+    <!-- 메인 컨테이너 -->
+    <div class="container">
+        <header>
+            <h1 id="pageTitle" data-ko="이미지 압축 도구" data-en="Image Compression Tool">이미지 압축 도구</h1>
+            <p class="subtitle" data-ko="압축, 리사이즈, 변환, 업스케일 - 한 곳에서 모두" data-en="Compress, Resize, Convert, Upscale - All in One">압축, 리사이즈, 변환, 업스케일 - 한 곳에서 모두</p>
+        </header>
+
+        <!-- 모드 탭 -->
+        <div class="mode-tabs">
+            <button class="tab active" data-mode="compress" data-ko="압축" data-en="Compress">압축</button>
+            <button class="tab" data-mode="resize" data-ko="리사이즈" data-en="Resize">리사이즈</button>
+            <button class="tab" data-mode="convert" data-ko="변환" data-en="Convert">변환</button>
+            <button class="tab" data-mode="upscale" data-ko="업스케일" data-en="Upscale">업스케일</button>
+        </div>
+
+        <main>
+            <!-- 도구 컨테이너 (동적으로 변경됨) -->
+            <div class="tool-container" id="toolContainer">
+                <!-- JavaScript로 렌더링 -->
+            </div>
+
+            <!-- 드롭존 (공통) -->
+            <div style="position: relative;">
+                <div class="dropzone" id="dropzone">
+                    <p data-ko="이미지를 드래그하거나 클릭하여 업로드 (최대 20개)" data-en="Drag & drop images or click to upload (Max 20)">
+                        이미지를 드래그하거나 클릭하여 업로드 (최대 20개)
+                    </p>
+                    <input type="file" id="fileInput" multiple accept="image/*" style="display: none;">
+                </div>
+
+                <!-- Auto 체크박스 (드롭존 좌측 하단 바깥) -->
+                <label style="position: absolute; left: 0; bottom: -35px; display: flex; align-items: center; gap: 8px; cursor: pointer; user-select: none; font-size: 0.9em;">
+                    <input type="checkbox" id="autoProcessCheck" style="width: 16px; height: 16px; cursor: pointer;">
+                    <span style="color: var(--text-secondary);" data-ko="Auto Start" data-en="Auto Start">Auto Start</span>
+                    <span class="tooltip-icon" style="width: 16px; height: 16px; line-height: 16px; font-size: 0.7em;" data-tooltip="이미지 업로드 즉시 작업을 시작합니다">?</span>
+                </label>
+            </div>
+
+            <!-- 파일 리스트 -->
+            <div class="file-list" id="fileList" style="display: none;">
+                <!-- JavaScript로 렌더링 -->
+            </div>
+
+            <!-- 작업 시작 컨트롤 -->
+            <div id="processControl" style="display: none; margin-top: 50px; text-align: center;">
+                <button id="startProcessBtn" class="btn-primary" style="padding: 12px 32px; font-size: 1.1em; background: var(--gold-primary); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;" data-ko="작업 시작" data-en="Start Processing">
+                    작업 시작
+                </button>
+            </div>
+
+            <!-- 다운로드 버튼 -->
+            <div id="downloadButtons" style="display: none; margin-top: 20px;">
+                <div class="btn-group">
+                    <button id="downloadAllBtn" data-ko="전체 ZIP 다운로드" data-en="Download All as ZIP">전체 ZIP 다운로드</button>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <div class="footer-content">
+                <p class="footer-brand">
+                    Made by <a href="https://baal.co.kr" target="_blank">BAAL</a>
+                </p>
+                <p class="footer-contact">
+                    <a href="mailto:summon@baal.co.kr">summon@baal.co.kr</a>
+                </p>
+                <p class="footer-links">
+                    <a href="#" onclick="event.preventDefault(); openPrivacyModal();" data-ko="개인정보처리방침" data-en="Privacy Policy">개인정보처리방침</a>
+                </p>
+                <p class="footer-copyright">&copy; 2025 BAAL. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- 공통 스크립트 -->
+    <script src="_common/common.js"></script>
+    <script>
+        // 기본 탭 설정 (도메인별로 다름)
+        const DEFAULT_TAB = 'convert';
+
+        // 현재 모드
+        let currentMode = DEFAULT_TAB;
+
+        // 파일 저장소
+        let files = [];
+        let processedFiles = [];
+
+        // 모드별 설정
+        const modeSettings = {
+            compress: {
+                quality: 0.8,
+                maxSizeMB: 1,
+                maxWidthOrHeight: 1920
+            },
+            resize: {
+                mode: 'pixel', // pixel, percent, preset
+                width: 1920,
+                height: 1080,
+                maintainRatio: true,
+                quality: 0.9,
+                preset: null
+            },
+            convert: {
+                format: 'image/jpeg',
+                quality: 0.9
+            },
+            upscale: {
+                mode: 'speed', // speed, quality, ultra
+                scale: 2
+            }
+        };
+
+        // 소셜 미디어 프리셋
+        const SOCIAL_PRESETS = {
+            instagram_square: { width: 1080, height: 1080, name: 'Instagram 정사각형' },
+            instagram_portrait: { width: 1080, height: 1350, name: 'Instagram 세로' },
+            instagram_story: { width: 1080, height: 1920, name: 'Instagram 스토리' },
+            facebook_cover: { width: 820, height: 312, name: 'Facebook 커버' },
+            facebook_post: { width: 1200, height: 630, name: 'Facebook 게시물' },
+            youtube_thumbnail: { width: 1280, height: 720, name: 'YouTube 썸네일' },
+            twitter_header: { width: 1500, height: 500, name: 'Twitter 헤더' }
+        };
+
+        // 탭 클릭 이벤트
+        document.querySelectorAll('.mode-tabs .tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                const mode = tab.dataset.mode;
+                switchMode(mode);
+            });
+        });
+
+        // 모드 전환
+        function switchMode(mode) {
+            currentMode = mode;
+
+            // 탭 활성화
+            document.querySelectorAll('.mode-tabs .tab').forEach(t => {
+                t.classList.toggle('active', t.dataset.mode === mode);
+            });
+
+            // UI 렌더링
+            renderModeUI();
+
+            // 파일 초기화
+            files = [];
+            processedFiles = [];
+            document.getElementById('fileList').style.display = 'none';
+            document.getElementById('downloadButtons').style.display = 'none';
+        }
+
+        // 모드별 UI 렌더링
+        function renderModeUI() {
+            const container = document.getElementById('toolContainer');
+
+            if (currentMode === 'compress') {
+                container.innerHTML = `
+                    <div class="options-group">
+                        <div class="option-row">
+                            <span class="option-label" data-ko="품질" data-en="Quality">품질</span>
+                            <div class="option-control">
+                                <input type="range" id="qualitySlider" min="10" max="100" value="80" step="5">
+                                <span id="qualityValue">80%</span>
+                            </div>
+                        </div>
+                        <div class="option-row">
+                            <span class="option-label" data-ko="최대 크기" data-en="Max Size">최대 크기</span>
+                            <div class="option-control">
+                                <div class="btn-group">
+                                    <button class="btn-small" onclick="setMaxSize(0.5, this)">500KB</button>
+                                    <button class="btn-small active" onclick="setMaxSize(1, this)">1MB</button>
+                                    <button class="btn-small" onclick="setMaxSize(2, this)">2MB</button>
+                                    <button class="btn-small" onclick="setMaxSize(5, this)">5MB</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                document.getElementById('qualitySlider').addEventListener('input', (e) => {
+                    const value = e.target.value;
+                    document.getElementById('qualityValue').textContent = value + '%';
+                    modeSettings.compress.quality = value / 100;
+                });
+            } else if (currentMode === 'resize') {
+                container.innerHTML = `
+                    <div class="options-group">
+                        <div class="option-row">
+                            <span class="option-label" data-ko="방식" data-en="Mode">방식</span>
+                            <div class="option-control">
+                                <div class="btn-group">
+                                    <button class="btn-small active" onclick="setResizeMode('pixel', this)" data-ko="픽셀" data-en="Pixel">픽셀</button>
+                                    <button class="btn-small" onclick="setResizeMode('percent', this)" data-ko="비율" data-en="Percent">비율</button>
+                                    <button class="btn-small" onclick="setResizeMode('preset', this)" data-ko="프리셋" data-en="Preset">프리셋</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="resizeOptions">
+                            <!-- 동적으로 변경 -->
+                        </div>
+                    </div>
+                `;
+                setResizeMode('pixel');
+            } else if (currentMode === 'convert') {
+                container.innerHTML = `
+                    <div class="options-group">
+                        <div class="option-row">
+                            <span class="option-label" data-ko="출력 포맷" data-en="Output Format">출력 포맷</span>
+                            <div class="option-control">
+                                <div class="btn-group">
+                                    <button class="btn-small active" onclick="setConvertFormat('image/jpeg', this)">JPEG</button>
+                                    <button class="btn-small" onclick="setConvertFormat('image/png', this)">PNG</button>
+                                    <button class="btn-small" onclick="setConvertFormat('image/webp', this)">WebP</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="option-row">
+                            <span class="option-label" data-ko="품질" data-en="Quality">품질</span>
+                            <div class="option-control">
+                                <input type="range" id="convertQualitySlider" min="10" max="100" value="90" step="5">
+                                <span id="convertQualityValue">90%</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                document.getElementById('convertQualitySlider').addEventListener('input', (e) => {
+                    const value = e.target.value;
+                    document.getElementById('convertQualityValue').textContent = value + '%';
+                    modeSettings.convert.quality = value / 100;
+                });
+            } else if (currentMode === 'upscale') {
+                container.innerHTML = `
+                    <div class="options-group">
+                        <div class="option-row">
+                            <span class="option-label" data-ko="모드" data-en="Mode">모드</span>
+                            <div class="option-control">
+                                <div class="btn-group">
+                                    <button class="btn-small active" onclick="setUpscaleMode('speed', this)">🚀 <span data-ko="스피드" data-en="Speed">스피드</span></button>
+                                    <button class="btn-small" onclick="setUpscaleMode('quality', this)">🤖 <span data-ko="고품질" data-en="Quality">고품질</span></button>
+                                    <button class="btn-small" onclick="setUpscaleMode('ultra', this)">⚡ <span data-ko="울트라" data-en="Ultra">울트라</span></button>
+                                    <span class="tooltip-icon" data-tooltip="스피드: 빠름 | 고품질: 높은 선명도 | 울트라: 최고 품질 (느림)">?</span>
+                                </div>
+                                <small style="color: var(--text-secondary); display: block; margin-top: 8px;">
+                                    <span data-ko="이미지 크기가 클수록 처리 시간이 오래 걸립니다" data-en="Larger images take longer to process">이미지 크기가 클수록 처리 시간이 오래 걸립니다</span>
+                                </small>
+                            </div>
+                        </div>
+                        <div class="option-row">
+                            <span class="option-label" data-ko="배율" data-en="Scale">배율</span>
+                            <div class="option-control">
+                                <div class="btn-group">
+                                    <button class="btn-small active" onclick="setUpscaleScale(2, this)">2x</button>
+                                    <button class="btn-small" onclick="setUpscaleScale(3, this)">3x</button>
+                                    <button class="btn-small" onclick="setUpscaleScale(4, this)">4x</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // 언어 업데이트
+            window.BaalUtils && updateLanguage(document.body.getAttribute('data-lang') || 'ko');
+        }
+
+        // 압축 설정
+        function setMaxSize(mb, element) {
+            modeSettings.compress.maxSizeMB = mb;
+            document.querySelectorAll('.options-group .btn-small').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            element.classList.add('active');
+        }
+
+        // 리사이즈 모드 설정
+        function setResizeMode(mode, element) {
+            modeSettings.resize.mode = mode;
+
+            // 버튼 활성화
+            document.querySelectorAll('.options-group .btn-small').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            element.classList.add('active');
+
+            const container = document.getElementById('resizeOptions');
+
+            if (mode === 'pixel') {
+                container.innerHTML = `
+                    <div class="option-row">
+                        <span class="option-label" data-ko="너비" data-en="Width">너비</span>
+                        <div class="option-control">
+                            <input type="number" id="widthInput" value="1920" min="1" max="10000" style="width: 120px;"> px
+                        </div>
+                    </div>
+                    <div class="option-row">
+                        <span class="option-label" data-ko="높이" data-en="Height">높이</span>
+                        <div class="option-control">
+                            <input type="number" id="heightInput" value="1080" min="1" max="10000" style="width: 120px;"> px
+                            <label><input type="checkbox" id="maintainRatio" checked> <span data-ko="비율 유지" data-en="Keep ratio">비율 유지</span></label>
+                        </div>
+                    </div>
+                `;
+            } else if (mode === 'percent') {
+                container.innerHTML = `
+                    <div class="option-row">
+                        <span class="option-label" data-ko="배율" data-en="Scale">배율</span>
+                        <div class="option-control">
+                            <input type="number" id="percentInput" value="50" min="1" max="500" style="width: 120px;"> %
+                        </div>
+                    </div>
+                `;
+            } else if (mode === 'preset') {
+                const presetsHTML = Object.entries(SOCIAL_PRESETS).map(([key, preset]) => `
+                    <div class="preset-btn" onclick="selectPreset('${key}', this)">
+                        <div class="preset-name">${preset.name}</div>
+                        <div class="preset-size">${preset.width} × ${preset.height}</div>
+                    </div>
+                `).join('');
+
+                container.innerHTML = `
+                    <div class="preset-grid">
+                        ${presetsHTML}
+                    </div>
+                `;
+            }
+
+            // 언어 업데이트
+            updateLanguage(document.body.getAttribute('data-lang') || 'ko');
+        }
+
+        // 프리셋 선택
+        function selectPreset(key, element) {
+            modeSettings.resize.preset = SOCIAL_PRESETS[key];
+            document.querySelectorAll('.preset-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            element.closest('.preset-btn').classList.add('active');
+        }
+
+        // 변환 포맷 설정
+        function setConvertFormat(format, element) {
+            modeSettings.convert.format = format;
+            document.querySelectorAll('.options-group .btn-small').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            element.classList.add('active');
+        }
+
+        // 업스케일 모드 설정
+        function setUpscaleMode(mode, element) {
+            modeSettings.upscale.mode = mode;
+            document.querySelectorAll('.options-group .btn-group .btn-small').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            element.classList.add('active');
+        }
+
+        // 업스케일 배율 설정
+        function setUpscaleScale(scale, element) {
+            modeSettings.upscale.scale = scale;
+            const buttons = document.querySelectorAll('.option-row:nth-child(2) .btn-small');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            element.classList.add('active');
+        }
+
+        // 파일 업로드 초기화
+        window.BaalUtils.initDropzone('dropzone', 'fileInput', handleFiles, {
+            accept: 'image/*',
+            maxFiles: 20,
+            maxSize: 20 * 1024 * 1024
+        });
+
+        // 파일 처리
+        async function handleFiles(fileArray) {
+            files = fileArray;
+            processedFiles = [];
+
+            document.getElementById('fileList').style.display = 'block';
+            document.getElementById('processControl').style.display = 'block';
+            document.getElementById('downloadButtons').style.display = 'none';
+
+            // 파일 리스트 렌더링
+            renderFileList();
+
+            // Auto 체크 시 자동 처리
+            const autoCheck = document.getElementById('autoProcessCheck');
+            if (autoCheck && autoCheck.checked) {
+                await startProcessing();
+            }
+        }
+
+        // 실제 처리 시작
+        async function startProcessing() {
+            if (files.length === 0) {
+                window.BaalUtils.showToast('처리할 파일이 없습니다.', 'error', 3000);
+                return;
+            }
+
+            // 버튼 비활성화
+            const startBtn = document.getElementById('startProcessBtn');
+            if (startBtn) {
+                startBtn.disabled = true;
+                startBtn.style.opacity = '0.6';
+                startBtn.style.cursor = 'not-allowed';
+            }
+
+            window.BaalUtils.showLoading();
+
+            for (let i = 0; i < files.length; i++) {
+                try {
+                    const result = await processImage(files[i], i);
+                    processedFiles.push(result);
+                    updateFileItem(i, result);
+                } catch (error) {
+                    console.error('Image processing error:', error);
+                    window.BaalUtils.showToast(`${files[i].name} 처리 실패: ${error.message}`, 'error', 5000);
+                }
+            }
+
+            window.BaalUtils.hideLoading();
+            document.getElementById('downloadButtons').style.display = 'block';
+            window.BaalUtils.showToast('모든 이미지 처리 완료!', 'success', 5000);
+
+            // 버튼 다시 활성화
+            if (startBtn) {
+                startBtn.disabled = false;
+                startBtn.style.opacity = '1';
+                startBtn.style.cursor = 'pointer';
+            }
+        }
+
+        // 이미지 처리 (모드별)
+        async function processImage(file, index) {
+            if (currentMode === 'compress') {
+                return await compressImage(file);
+            } else if (currentMode === 'resize') {
+                return await resizeImage(file);
+            } else if (currentMode === 'convert') {
+                return await convertImage(file);
+            } else if (currentMode === 'upscale') {
+                return await upscaleImage(file);
+            }
+        }
+
+        // 압축
+        async function compressImage(file) {
+            const options = {
+                maxSizeMB: modeSettings.compress.maxSizeMB,
+                maxWidthOrHeight: modeSettings.compress.maxWidthOrHeight,
+                useWebWorker: true,
+                initialQuality: modeSettings.compress.quality
+            };
+
+            const compressed = await imageCompression(file, options);
+
+            // 압축 후 오히려 크면 원본 사용
+            if (compressed.size >= file.size) {
+                return {
+                    originalFile: file,
+                    processedBlob: file,
+                    originalSize: file.size,
+                    processedSize: file.size,
+                    savings: 0
+                };
+            }
+
+            return {
+                originalFile: file,
+                processedBlob: compressed,
+                originalSize: file.size,
+                processedSize: compressed.size,
+                savings: Math.round((1 - compressed.size / file.size) * 100)
+            };
+        }
+
+        // 리사이즈
+        async function resizeImage(file) {
+            const img = await loadImage(file);
+            let newWidth, newHeight;
+
+            if (modeSettings.resize.mode === 'pixel') {
+                const width = parseInt(document.getElementById('widthInput')?.value || 1920);
+                const height = parseInt(document.getElementById('heightInput')?.value || 1080);
+                const maintainRatio = document.getElementById('maintainRatio')?.checked ?? true;
+
+                if (maintainRatio) {
+                    const ratio = img.width / img.height;
+                    newWidth = width;
+                    newHeight = Math.round(width / ratio);
+                } else {
+                    newWidth = width;
+                    newHeight = height;
+                }
+            } else if (modeSettings.resize.mode === 'percent') {
+                const percent = parseInt(document.getElementById('percentInput')?.value || 50) / 100;
+                newWidth = Math.round(img.width * percent);
+                newHeight = Math.round(img.height * percent);
+            } else if (modeSettings.resize.mode === 'preset') {
+                if (modeSettings.resize.preset) {
+                    newWidth = modeSettings.resize.preset.width;
+                    newHeight = modeSettings.resize.preset.height;
+                } else {
+                    throw new Error('프리셋을 선택하세요');
+                }
+            }
+
+            const canvas = document.createElement('canvas');
+            canvas.width = newWidth;
+            canvas.height = newHeight;
+
+            const ctx = canvas.getContext('2d', { alpha: true });
+            ctx.imageSmoothingEnabled = true;
+            ctx.imageSmoothingQuality = 'high';
+            ctx.drawImage(img, 0, 0, newWidth, newHeight);
+
+            const blob = await new Promise(resolve => {
+                canvas.toBlob(resolve, file.type, modeSettings.resize.quality);
+            });
+
+            return {
+                originalFile: file,
+                processedBlob: blob,
+                originalSize: file.size,
+                processedSize: blob.size,
+                info: `${img.width}×${img.height} → ${newWidth}×${newHeight}`
+            };
+        }
+
+        // 변환
+        async function convertImage(file) {
+            const img = await loadImage(file);
+            const canvas = document.createElement('canvas');
+            canvas.width = img.width;
+            canvas.height = img.height;
+
+            const ctx = canvas.getContext('2d', { alpha: true });
+
+            // JPEG는 투명 배경 미지원 → 흰색 배경 추가
+            if (modeSettings.convert.format === 'image/jpeg') {
+                ctx.fillStyle = '#FFFFFF';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+            }
+
+            ctx.drawImage(img, 0, 0);
+
+            const blob = await new Promise(resolve => {
+                canvas.toBlob(resolve, modeSettings.convert.format, modeSettings.convert.quality);
+            });
+
+            const formatNames = {
+                'image/jpeg': 'JPG',
+                'image/png': 'PNG',
+                'image/webp': 'WebP'
+            };
+
+            return {
+                originalFile: file,
+                processedBlob: blob,
+                originalSize: file.size,
+                processedSize: blob.size,
+                info: `${formatNames[modeSettings.convert.format]} 변환`
+            };
+        }
+
+        // 업스케일
+        async function upscaleImage(file) {
+            const img = await loadImage(file);
+            const scale = modeSettings.upscale.scale;
+            const mode = modeSettings.upscale.mode;
+
+            // 모든 모드에서 pica 사용 (품질 설정만 차별화)
+            const picaInstance = pica();
+            const sourceCanvas = document.createElement('canvas');
+            sourceCanvas.width = img.width;
+            sourceCanvas.height = img.height;
+            sourceCanvas.getContext('2d').drawImage(img, 0, 0);
+
+            const destCanvas = document.createElement('canvas');
+            destCanvas.width = img.width * scale;
+            destCanvas.height = img.height * scale;
+
+            // 모드별 품질 설정
+            let picaOptions;
+            if (mode === 'speed') {
+                // 스피드: 빠른 처리, 기본 선명도
+                picaOptions = {
+                    quality: 2,
+                    alpha: true,
+                    unsharpAmount: 60,
+                    unsharpRadius: 0.5,
+                    unsharpThreshold: 2
+                };
+            } else if (mode === 'quality') {
+                // 고품질: 느린 처리, 높은 선명도
+                picaOptions = {
+                    quality: 3,
+                    alpha: true,
+                    unsharpAmount: 100,
+                    unsharpRadius: 0.6,
+                    unsharpThreshold: 2
+                };
+            } else { // ultra
+                // 울트라: 최고 품질, 최대 선명도
+                picaOptions = {
+                    quality: 3,
+                    alpha: true,
+                    unsharpAmount: 160,
+                    unsharpRadius: 0.8,
+                    unsharpThreshold: 1
+                };
+            }
+
+            await picaInstance.resize(sourceCanvas, destCanvas, picaOptions);
+
+            const blob = await new Promise(resolve => {
+                destCanvas.toBlob(resolve, file.type, 0.95);
+            });
+
+            const modeLabel = mode === 'quality' ? '고품질' : mode === 'ultra' ? '울트라' : '스피드';
+
+            return {
+                originalFile: file,
+                processedBlob: blob,
+                originalSize: file.size,
+                processedSize: blob.size,
+                info: `${img.width}×${img.height} → ${destCanvas.width}×${destCanvas.height} (${modeLabel})`
+            };
+        }
+
+        // 이미지 로드 헬퍼
+        function loadImage(file) {
+            return new Promise((resolve, reject) => {
+                const img = new Image();
+                img.onload = () => resolve(img);
+                img.onerror = reject;
+                img.src = URL.createObjectURL(file);
+            });
+        }
+
+        // 파일 리스트 렌더링
+        function renderFileList() {
+            const container = document.getElementById('fileList');
+            container.innerHTML = files.map((file, index) => `
+                <div class="file-item" id="file-${index}">
+                    <img class="file-preview" id="preview-${index}" src="" alt="preview">
+                    <div class="file-info">
+                        <div class="file-name">${file.name}</div>
+                        <div class="file-size" id="size-${index}">${window.BaalUtils.formatFileSize(file.size)}</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progress-${index}" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="file-actions">
+                        <button class="btn-small" id="download-${index}" style="display: none;" onclick="downloadSingle(${index})" data-ko="다운로드" data-en="Download">다운로드</button>
+                    </div>
+                </div>
+            `).join('');
+
+            // 미리보기 이미지 로드
+            files.forEach((file, index) => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    document.getElementById(`preview-${index}`).src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // 파일 아이템 업데이트
+        function updateFileItem(index, result) {
+            const sizeEl = document.getElementById(`size-${index}`);
+            const progressEl = document.getElementById(`progress-${index}`);
+            const downloadBtn = document.getElementById(`download-${index}`);
+
+            if (result.savings !== undefined) {
+                sizeEl.innerHTML = `${window.BaalUtils.formatFileSize(result.originalSize)} → ${window.BaalUtils.formatFileSize(result.processedSize)} <span style="color: var(--gold-primary);">(${result.savings}% 절약)</span>`;
+            } else if (result.info) {
+                sizeEl.innerHTML = `${window.BaalUtils.formatFileSize(result.originalSize)} → ${window.BaalUtils.formatFileSize(result.processedSize)} <br><small>${result.info}</small>`;
+            } else {
+                sizeEl.innerHTML = `${window.BaalUtils.formatFileSize(result.originalSize)} → ${window.BaalUtils.formatFileSize(result.processedSize)}`;
+            }
+
+            progressEl.style.width = '100%';
+            downloadBtn.style.display = 'inline-block';
+        }
+
+        // 개별 다운로드
+        function downloadSingle(index) {
+            const result = processedFiles[index];
+            const ext = result.processedBlob.type.split('/')[1];
+            const nameWithoutExt = result.originalFile.name.replace(/\.[^/.]+$/, '');
+            const filename = `${nameWithoutExt}_${currentMode}.${ext}`;
+
+            window.BaalUtils.downloadFile(result.processedBlob, filename);
+        }
+
+        // 전체 ZIP 다운로드
+        document.getElementById('downloadAllBtn').addEventListener('click', async () => {
+            if (processedFiles.length === 0) return;
+
+            window.BaalUtils.showLoading();
+
+            const zip = new JSZip();
+
+            processedFiles.forEach((result, index) => {
+                const ext = result.processedBlob.type.split('/')[1];
+                const nameWithoutExt = result.originalFile.name.replace(/\.[^/.]+$/, '');
+                const filename = `${nameWithoutExt}_${currentMode}.${ext}`;
+                zip.file(filename, result.processedBlob);
+            });
+
+            const content = await zip.generateAsync({ type: 'blob' });
+            window.BaalUtils.downloadFile(content, `images_${currentMode}.zip`);
+
+            window.BaalUtils.hideLoading();
+            window.BaalUtils.showToast('ZIP 다운로드 완료!', 'success', 5000);
+        });
+
+        // 작업 시작 버튼
+        document.getElementById('startProcessBtn').addEventListener('click', () => {
+            startProcessing();
+        });
+
+        // 페이지 제목 설정
+        function setPageTitle() {
+            const titleElement = document.getElementById('pageTitle');
+            const titles = {
+                compress: {
+                    ko: '이미지 압축 도구',
+                    en: 'Image Compression Tool'
+                },
+                resize: {
+                    ko: '이미지 리사이즈 도구',
+                    en: 'Image Resize Tool'
+                },
+                convert: {
+                    ko: '이미지 변환 도구',
+                    en: 'Image Conversion Tool'
+                },
+                upscale: {
+                    ko: '이미지 업스케일 도구',
+                    en: 'Image Upscale Tool'
+                }
+            };
+
+            const currentLang = document.body.getAttribute('data-lang') || 'ko';
+            const title = titles[DEFAULT_TAB];
+
+            if (titleElement && title) {
+                titleElement.setAttribute('data-ko', title.ko);
+                titleElement.setAttribute('data-en', title.en);
+                titleElement.textContent = title[currentLang];
+            }
+        }
+
+        // 초기화
+        document.addEventListener('DOMContentLoaded', () => {
+            setPageTitle();
+            switchMode(DEFAULT_TAB);
+        });
+
+        // Privacy Modal Functions
+        function openPrivacyModal() {
+            document.getElementById('privacyModal').classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closePrivacyModal() {
+            document.getElementById('privacyModal').classList.remove('show');
+            document.body.style.overflow = '';
+        }
+
+        // ESC key to close modal
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closePrivacyModal();
+            }
+        });
+    </script>
+
+    <!-- Privacy Policy Modal (from baal.co.kr) -->
+    <div id="privacyModal" class="modal" onclick="if(event.target.id==='privacyModal') closePrivacyModal()">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closePrivacyModal()">&times;</button>
+            <h1 class="modal-title">개인정보처리방침</h1>
+
+            <div class="privacy-content">
+                <h3>1. 개인정보의 처리 목적</h3>
+                <p>BAAL(이하 "회사")은 사용자가 브라우저에서 직접 파일을 처리하는 무료 온라인 도구를 제공합니다. 회사는 <strong>어떠한 개인정보도 수집하지 않습니다.</strong></p>
+
+                <h3>2. 처리하는 개인정보 항목</h3>
+                <p><strong>없음</strong> - 모든 파일 처리는 사용자의 브라우저 내에서만 이루어지며, 서버로 전송되지 않습니다.</p>
+
+                <h3>3. 개인정보의 처리 및 보유기간</h3>
+                <p>회사는 개인정보를 수집하지 않으므로 보유하지 않습니다.</p>
+
+                <h3>4. 쿠키(Cookie) 사용</h3>
+                <p>본 웹사이트는 Google AdSense 광고 서비스를 사용합니다. Google은 사용자의 관심사에 맞는 광고를 제공하기 위해 쿠키를 사용할 수 있습니다.</p>
+                <ul>
+                    <li>Google의 광고 쿠키 정책: <a href="https://policies.google.com/technologies/ads" target="_blank">링크</a></li>
+                    <li>쿠키 설정은 브라우저에서 관리하실 수 있습니다.</li>
+                </ul>
+
+                <h3>5. 개인정보 보호책임자</h3>
+                <p>
+                    이메일: <a href="mailto:summon@baal.co.kr">summon@baal.co.kr</a><br>
+                    사용자는 회사의 서비스를 이용하며 발생한 모든 개인정보 보호 관련 문의를 위 연락처로 하실 수 있습니다.
+                </p>
+
+                <h3>6. 개인정보처리방침 변경</h3>
+                <p>본 개인정보처리방침은 법령, 정책 또는 보안기술의 변경에 따라 내용이 추가, 삭제 및 수정될 수 있으며, 변경 시 웹사이트를 통해 공지합니다.</p>
+
+                <p style="margin-top: 30px; text-align: center; color: #7f8c8d; font-size: 0.9em;">
+                    시행일자: 2025년 1월 24일
+                </p>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

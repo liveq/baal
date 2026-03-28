@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="텍스트와 이미지를 Base64로 인코딩/디코딩. UTF-8 완벽 지원. URL-safe 옵션">
+    <meta name="keywords" content="Base64 인코딩, Base64 디코딩, 이미지 Base64, Data URL, Base64 변환기">
+    <meta name="author" content="BAAL">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://base64.baal.co.kr/">
+    <meta property="og:title" content="Base64 인코더/디코더 - BAAL">
+    <meta property="og:description" content="텍스트와 이미지를 Base64로 인코딩/디코딩. UTF-8 완벽 지원. URL-safe 옵션">
+    <meta property="og:image" content="https://base64.baal.co.kr/og-image.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://base64.baal.co.kr/">
+    <meta property="twitter:title" content="Base64 인코더/디코더 - BAAL">
+    <meta property="twitter:description" content="텍스트와 이미지를 Base64로 인코딩/디코딩. UTF-8 완벽 지원. URL-safe 옵션">
+    <meta property="twitter:image" content="https://base64.baal.co.kr/og-image.png">
+
+    <title>Base64 인코더/디코더 - BAAL</title>
+
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2886185075996969"
+     crossorigin="anonymous"></script>
+
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-XXXXXXXXXX');
+    </script>
+
+    <!-- 공통 스타일 -->
+    <link rel="stylesheet" href="_common/common.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+
+    <style>
+        .mode-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .mode-tab {
+            flex: 1;
+            padding: 15px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .mode-tab:hover,
+        .mode-tab.active {
+            background: var(--gold-gradient);
+            color: white;
+            border-color: var(--gold-primary);
+        }
+
+        .mode-content {
+            display: none;
+        }
+
+        .mode-content.active {
+            display: block;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 15px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+            resize: vertical;
+            margin-bottom: 15px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            background: var(--gold-gradient);
+            color: white;
+            border: 2px solid var(--gold-primary);
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-secondary {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 2px solid var(--border-color);
+        }
+
+        .option-check {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 0;
+        }
+
+        .option-check input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .dropzone {
+            border: 3px dashed var(--border-color);
+            border-radius: 12px;
+            padding: 60px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 20px;
+        }
+
+        .dropzone:hover,
+        .dropzone.dragover {
+            border-color: var(--primary-color);
+            background: var(--bg-secondary);
+        }
+
+        .image-preview {
+            max-width: 100%;
+            max-height: 400px;
+            border-radius: 12px;
+            margin: 20px 0;
+            display: none;
+        }
+
+        .image-preview.active {
+            display: block;
+        }
+
+        .file-info {
+            background: var(--bg-secondary);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .file-info.active {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .mode-tabs {
+                flex-direction: column;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+        /* Privacy Modal Styles (from baal.co.kr) */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(10px);
+        }
+
+        .modal.show {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: rgba(255,255,255,0.95);
+            padding: 50px 40px;
+            border-radius: 20px;
+            max-width: 700px;
+            width: 90%;
+            position: relative;
+            text-align: center;
+            word-break: keep-all;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            font-size: 32px;
+            color: #9ca3af;
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .modal-close:hover {
+            color: var(--gold-primary);
+        }
+
+        .modal-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2em;
+            margin-bottom: 25px;
+            background: linear-gradient(-45deg, #d4af37, #ffd700, #b8860b);
+            background-size: 300% 300%;
+            animation: modalGradientFlow 4s ease-in-out infinite;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            word-break: keep-all;
+        }
+
+        @keyframes modalGradientFlow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .privacy-content {
+            text-align: left;
+            color: #4a4a4a;
+            line-height: 1.8;
+            max-height: 60vh;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .privacy-content h3 {
+            color: #2c3e50;
+            margin-top: 20px;
+            font-size: 1.1em;
+        }
+
+        .privacy-content h3:first-of-type {
+            margin-top: 0;
+        }
+
+        .privacy-content p {
+            margin-bottom: 15px;
+        }
+
+        .privacy-content ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .privacy-content a {
+            color: var(--gold-primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .privacy-content a:hover {
+            text-decoration: underline;
+        }
+
+        .privacy-content strong {
+            color: #2c3e50;
+            font-weight: 700;
+        }
+
+
+    </style>
+</head>
+<body>
+    <!-- 다크모드 토글 -->
+    <div class="theme-toggle">
+        <button id="themeToggle" aria-label="다크모드 전환">
+            <span class="icon-light">☀️</span>
+            <span class="icon-dark">🌙</span>
+        </button>
+    </div>
+
+    <!-- 언어 전환 -->
+    <div class="lang-toggle">
+        <button id="langToggle" data-lang="ko">
+            <span class="lang-ko">EN</span>
+            <span class="lang-en">KO</span>
+        </button>
+    </div>
+
+    <!-- 도구 버튼 -->
+    <div class="tools-toggle">
+        <button id="toolsToggle">
+            <span class="tooltip" data-ko="더 많은 도구" data-en="More Tools"></span>
+            🧰
+        </button>
+    </div>
+
+    <!-- 메인 컨테이너 -->
+    <div class="container">
+        <header>
+            <h1 data-ko="Base64 인코더/디코더" data-en="Base64 Encoder/Decoder">Base64 인코더/디코더</h1>
+            <p class="subtitle" data-ko="텍스트와 이미지를 Base64로 변환" data-en="Convert text and images to Base64">텍스트와 이미지를 Base64로 변환</p>
+        </header>
+
+        <main>
+            <!-- 모드 선택 -->
+            <div class="mode-tabs">
+                <div class="mode-tab active" data-mode="text" data-ko="텍스트" data-en="Text">텍스트</div>
+                <div class="mode-tab" data-mode="image" data-ko="이미지" data-en="Image">이미지</div>
+            </div>
+
+            <!-- 텍스트 모드 -->
+            <div class="mode-content active" id="textMode">
+                <label data-ko="원본 텍스트:" data-en="Original Text:">원본 텍스트:</label>
+                <textarea id="textInput" placeholder="Hello World! 안녕하세요!"></textarea>
+
+                <div class="action-buttons">
+                    <button class="btn" onclick="encodeText()" data-ko="인코딩" data-en="Encode">인코딩</button>
+                    <button class="btn" onclick="decodeText()" data-ko="디코딩" data-en="Decode">디코딩</button>
+                    <label class="option-check">
+                        <input type="checkbox" id="urlSafeOption">
+                        <span data-ko="URL-safe (+ / = → - _ ~)" data-en="URL-safe (+ / = → - _ ~)">URL-safe (+ / = → - _ ~)</span>
+                    </label>
+                </div>
+
+                <label data-ko="Base64 결과:" data-en="Base64 Result:">Base64 결과:</label>
+                <textarea id="textOutput" placeholder="SGVsbG8gV29ybGQh..." readonly></textarea>
+
+                <div class="action-buttons">
+                    <button class="btn btn-secondary" onclick="copyText()" data-ko="복사" data-en="Copy">복사</button>
+                    <button class="btn btn-secondary" onclick="downloadText()" data-ko="다운로드 TXT" data-en="Download TXT">다운로드 TXT</button>
+                </div>
+            </div>
+
+            <!-- 이미지 모드 -->
+            <div class="mode-content" id="imageMode">
+                <div class="dropzone" id="dropzone">
+                    <p data-ko="📤 이미지를 드래그하거나 클릭하여 업로드" data-en="📤 Drag & drop image or click to upload">📤 이미지를 드래그하거나 클릭하여 업로드</p>
+                    <input type="file" id="imageInput" accept="image/*" style="display: none;">
+                </div>
+
+                <div class="file-info" id="fileInfo"></div>
+
+                <img id="imagePreview" class="image-preview">
+
+                <label data-ko="Base64 Data URL:" data-en="Base64 Data URL:">Base64 Data URL:</label>
+                <textarea id="imageOutput" placeholder="data:image/png;base64,iVBORw0KGgo..." readonly></textarea>
+
+                <div class="action-buttons">
+                    <button class="btn btn-secondary" onclick="copyImage()" data-ko="복사" data-en="Copy">복사</button>
+                    <button class="btn btn-secondary" onclick="downloadImage()" data-ko="다운로드 이미지" data-en="Download Image">다운로드 이미지</button>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <div class="footer-content">
+                <p class="footer-brand">
+                    Made by <a href="https://baal.co.kr" target="_blank">BAAL</a>
+                </p>
+                <p class="footer-contact">
+                    <a href="mailto:summon@baal.co.kr">summon@baal.co.kr</a>
+                </p>
+                <p class="footer-links">
+                    <a href="#" onclick="event.preventDefault(); openPrivacyModal();" data-ko="개인정보처리방침" data-en="Privacy Policy">개인정보처리방침</a>
+                </p>
+                <p class="footer-copyright">&copy; 2025 BAAL. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+    <!-- Privacy Policy Modal (from baal.co.kr) -->
+    <div id="privacyModal" class="modal" onclick="if(event.target.id==='privacyModal') closePrivacyModal()">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closePrivacyModal()">&times;</button>
+            <h1 class="modal-title">개인정보처리방침</h1>
+
+            <div class="privacy-content">
+                <h3>1. 개인정보의 처리 목적</h3>
+                <p>BAAL(이하 "회사")은 사용자가 브라우저에서 직접 파일을 처리하는 무료 온라인 도구를 제공합니다. 회사는 <strong>어떠한 개인정보도 수집하지 않습니다.</strong></p>
+
+                <h3>2. 처리하는 개인정보 항목</h3>
+                <p><strong>없음</strong> - 모든 파일 처리는 사용자의 브라우저 내에서만 이루어지며, 서버로 전송되지 않습니다.</p>
+
+                <h3>3. 개인정보의 처리 및 보유기간</h3>
+                <p>회사는 개인정보를 수집하지 않으므로 보유하지 않습니다.</p>
+
+                <h3>4. 쿠키(Cookie) 사용</h3>
+                <p>본 웹사이트는 Google AdSense 광고 서비스를 사용합니다. Google은 사용자의 관심사에 맞는 광고를 제공하기 위해 쿠키를 사용할 수 있습니다.</p>
+                <ul>
+                    <li>Google의 광고 쿠키 정책: <a href="https://policies.google.com/technologies/ads" target="_blank">링크</a></li>
+                    <li>쿠키 설정은 브라우저에서 관리하실 수 있습니다.</li>
+                </ul>
+
+                <h3>5. 개인정보 보호책임자</h3>
+                <p>
+                    이메일: <a href="mailto:summon@baal.co.kr">summon@baal.co.kr</a><br>
+                    사용자는 회사의 서비스를 이용하며 발생한 모든 개인정보 보호 관련 문의를 위 연락처로 하실 수 있습니다.
+                </p>
+
+                <h3>6. 개인정보처리방침 변경</h3>
+                <p>본 개인정보처리방침은 법령, 정책 또는 보안기술의 변경에 따라 내용이 추가, 삭제 및 수정될 수 있으며, 변경 시 웹사이트를 통해 공지합니다.</p>
+
+                <p style="margin-top: 30px; text-align: center; color: #7f8c8d; font-size: 0.9em;">
+                    시행일자: 2025년 1월 24일
+                </p>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- 공통 스크립트 -->
+    <script src="_common/common.js"></script>
+    <script>
+        const MAX_IMAGE_SIZE = 2 * 1024 * 1024; // 2MB
+        let currentImageFile = null;
+
+        // Mode switching
+        document.querySelectorAll('.mode-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                const mode = tab.dataset.mode;
+
+                document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.mode-content').forEach(c => c.classList.remove('active'));
+
+                tab.classList.add('active');
+                document.getElementById(mode + 'Mode').classList.add('active');
+            });
+        });
+
+        // UTF-8 Base64 functions
+        function encodeBase64Utf8(text) {
+            const utf8Bytes = new TextEncoder().encode(text);
+            const binaryString = Array.from(utf8Bytes, byte => String.fromCharCode(byte)).join('');
+            return btoa(binaryString);
+        }
+
+        function decodeBase64Utf8(base64) {
+            const binaryString = atob(base64);
+            const utf8Bytes = Uint8Array.from(binaryString, char => char.charCodeAt(0));
+            return new TextDecoder().decode(utf8Bytes);
+        }
+
+        function toUrlSafe(base64) {
+            return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '~');
+        }
+
+        function fromUrlSafe(urlSafe) {
+            return urlSafe.replace(/-/g, '+').replace(/_/g, '/').replace(/~/g, '=');
+        }
+
+        // Text encoding/decoding
+        function encodeText() {
+            const text = document.getElementById('textInput').value;
+            if (!text) {
+                alert(document.body.getAttribute('data-lang') === 'ko' ? '텍스트를 입력하세요' : 'Enter text');
+                return;
+            }
+
+            try {
+                let base64 = encodeBase64Utf8(text);
+
+                if (document.getElementById('urlSafeOption').checked) {
+                    base64 = toUrlSafe(base64);
+                }
+
+                document.getElementById('textOutput').value = base64;
+            } catch (error) {
+                alert('Encoding error: ' + error.message);
+            }
+        }
+
+        function decodeText() {
+            let base64 = document.getElementById('textOutput').value;
+            if (!base64) {
+                alert(document.body.getAttribute('data-lang') === 'ko' ? 'Base64를 입력하세요' : 'Enter Base64');
+                return;
+            }
+
+            try {
+                if (document.getElementById('urlSafeOption').checked) {
+                    base64 = fromUrlSafe(base64);
+                }
+
+                const text = decodeBase64Utf8(base64);
+                document.getElementById('textInput').value = text;
+            } catch (error) {
+                alert('Decoding error: ' + error.message);
+            }
+        }
+
+        function copyText() {
+            const output = document.getElementById('textOutput');
+            output.select();
+            document.execCommand('copy');
+
+            const lang = document.body.getAttribute('data-lang') || 'ko';
+            alert(lang === 'ko' ? '복사되었습니다!' : 'Copied!');
+        }
+
+        function downloadText() {
+            const output = document.getElementById('textOutput').value;
+            if (!output) return;
+
+            const blob = new Blob([output], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'base64.txt';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Image handling
+        const dropzone = document.getElementById('dropzone');
+        const imageInput = document.getElementById('imageInput');
+
+        dropzone.addEventListener('click', () => imageInput.click());
+
+        dropzone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropzone.classList.add('dragover');
+        });
+
+        dropzone.addEventListener('dragleave', () => {
+            dropzone.classList.remove('dragover');
+        });
+
+        dropzone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropzone.classList.remove('dragover');
+
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleImageFile(files[0]);
+            }
+        });
+
+        imageInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleImageFile(e.target.files[0]);
+            }
+        });
+
+        function handleImageFile(file) {
+            if (!file.type.startsWith('image/')) {
+                alert(document.body.getAttribute('data-lang') === 'ko' ? '이미지 파일만 지원합니다' : 'Only image files are supported');
+                return;
+            }
+
+            if (file.size > MAX_IMAGE_SIZE) {
+                alert(`${document.body.getAttribute('data-lang') === 'ko' ? '이미지가 너무 큽니다' : 'Image is too large'} (max 2MB, current ${(file.size / 1024 / 1024).toFixed(2)}MB)`);
+                return;
+            }
+
+            currentImageFile = file;
+
+            // Show file info
+            const fileInfo = document.getElementById('fileInfo');
+            fileInfo.innerHTML = `<strong>${file.name}</strong> (${(file.size / 1024).toFixed(2)}KB, ${file.type})`;
+            fileInfo.classList.add('active');
+
+            // Preview
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const preview = document.getElementById('imagePreview');
+                preview.src = e.target.result;
+                preview.classList.add('active');
+
+                document.getElementById('imageOutput').value = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function copyImage() {
+            const output = document.getElementById('imageOutput');
+            output.select();
+            document.execCommand('copy');
+
+            const lang = document.body.getAttribute('data-lang') || 'ko';
+            alert(lang === 'ko' ? '복사되었습니다!' : 'Copied!');
+        }
+
+        function downloadImage() {
+            if (!currentImageFile) return;
+
+            const dataUrl = document.getElementById('imageOutput').value;
+            const a = document.createElement('a');
+            a.href = dataUrl;
+            a.download = currentImageFile.name;
+            a.click();
+        }
+        // Privacy Modal Functions
+        function openPrivacyModal() {
+            document.getElementById('privacyModal').classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closePrivacyModal() {
+            document.getElementById('privacyModal').classList.remove('show');
+            document.body.style.overflow = '';
+        }
+
+        // ESC key to close modal
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closePrivacyModal();
+            }
+        });
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://json.baal.co.kr/sitemap.xml
+Crawl-delay: 1

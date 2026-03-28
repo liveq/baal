@@ -1,0 +1,1551 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="무료 OCR 텍스트 추출 도구. 이미지에서 텍스트를 자동으로 인식합니다. 한글, 영어, 일본어, 중국어 등 90+ 언어 지원.">
+    <meta name="keywords" content="OCR, 텍스트 추출, 이미지 텍스트 인식, 한글 OCR, 무료 OCR, Tesseract">
+    <meta name="author" content="BAAL">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://ocr.baal.co.kr/">
+    <meta property="og:title" content="OCR 텍스트 추출 - 무료 온라인 도구">
+    <meta property="og:description" content="이미지에서 텍스트를 자동으로 인식합니다. 90+ 언어 지원.">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://ocr.baal.co.kr/">
+    <meta property="twitter:title" content="OCR 텍스트 추출 - 무료 온라인 도구">
+    <meta property="twitter:description" content="AI OCR 도구. 한글, 영어, 일본어, 중국어 지원.">
+
+    <title>OCR 텍스트 추출 - BAAL</title>
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#d4af37">
+
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2886185075996969"
+     crossorigin="anonymous"></script>
+
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-XXXXXXXXXX');
+    </script>
+
+    <!-- Tesseract.js -->
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5"></script>
+
+    <!-- PDF.js -->
+    <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
+    <script>
+        if (typeof pdfjsLib !== 'undefined') {
+            pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
+        }
+    </script>
+
+    <!-- 공통 스타일 -->
+    <link rel="stylesheet" href="_common/common.css">
+    <style>
+        /* 언어 선택 */
+        .language-section {
+            background: var(--bg-accent);
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius-lg);
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .language-label {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .language-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 10px;
+        }
+
+        .language-btn {
+            padding: 12px 16px;
+            border: 2px solid var(--border-color);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border-radius: var(--border-radius-sm);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9em;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .language-btn:hover {
+            border-color: var(--gold-primary);
+            background: var(--bg-accent);
+        }
+
+        .language-btn.active {
+            background: var(--gold-gradient);
+            color: white;
+            border-color: var(--gold-primary);
+        }
+
+        /* 진행률 */
+        .progress-container {
+            margin: 20px 0;
+            display: none;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--border-color);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--gold-gradient);
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .progress-text {
+            text-align: center;
+            color: var(--text-secondary);
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+
+        /* 결과 영역 */
+        .result-section {
+            background: var(--bg-accent);
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius-lg);
+            padding: 25px;
+            margin-bottom: 25px;
+            display: none;
+        }
+
+        .result-label {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .result-text {
+            width: 100%;
+            min-height: 200px;
+            padding: 15px;
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius-md);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+            line-height: 1.6;
+            resize: vertical;
+        }
+
+        .result-stats {
+            margin-top: 15px;
+            color: var(--text-secondary);
+            font-size: 0.9em;
+        }
+
+        /* 버튼 */
+        .btn-process {
+            padding: 16px 48px;
+            background: var(--gold-gradient);
+            color: white;
+            border: 2px solid var(--gold-primary);
+            border-radius: var(--border-radius-md);
+            font-weight: 700;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .btn-process:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-process:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-copy {
+            padding: 12px 24px;
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            color: var(--text-primary);
+            border-radius: var(--border-radius-md);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-copy:hover {
+            border-color: var(--gold-primary);
+            background: var(--bg-accent);
+        }
+
+        .btn-download {
+            padding: 12px 24px;
+            background: var(--gold-gradient);
+            color: white;
+            border: 2px solid var(--gold-primary);
+            border-radius: var(--border-radius-md);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-download:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .result-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        /* 이미지 미리보기 */
+        .preview-container {
+            background: var(--bg-accent);
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius-lg);
+            padding: 30px;
+            margin-bottom: 25px;
+            text-align: center;
+            min-height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .preview-container img {
+            max-width: 100%;
+            max-height: 400px;
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-md);
+        }
+
+        .preview-placeholder {
+            color: var(--text-secondary);
+            font-size: 1.1em;
+        }
+
+        /* 반응형 */
+        @media (max-width: 768px) {
+            .language-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .result-buttons {
+                flex-direction: column;
+            }
+
+            .btn-copy,
+            .btn-download {
+                width: 100%;
+            }
+        }
+
+        /* Privacy Modal Styles (from baal.co.kr) */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(10px);
+        }
+
+        .modal.show {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: rgba(255,255,255,0.95);
+            padding: 50px 40px;
+            border-radius: 20px;
+            max-width: 700px;
+            width: 90%;
+            position: relative;
+            text-align: center;
+            word-break: keep-all;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            font-size: 32px;
+            color: #9ca3af;
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .modal-close:hover {
+            color: var(--gold-primary);
+        }
+
+        .modal-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2em;
+            margin-bottom: 25px;
+            background: linear-gradient(-45deg, #d4af37, #ffd700, #b8860b);
+            background-size: 300% 300%;
+            animation: modalGradientFlow 4s ease-in-out infinite;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            word-break: keep-all;
+        }
+
+        @keyframes modalGradientFlow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .privacy-content {
+            text-align: left;
+            color: #4a4a4a;
+            line-height: 1.8;
+            max-height: 60vh;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .privacy-content h3 {
+            color: #2c3e50;
+            margin-top: 20px;
+            font-size: 1.1em;
+        }
+
+        .privacy-content h3:first-of-type {
+            margin-top: 0;
+        }
+
+        .privacy-content p {
+            margin-bottom: 15px;
+        }
+
+        .privacy-content ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .privacy-content a {
+            color: var(--gold-primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .privacy-content a:hover {
+            text-decoration: underline;
+        }
+
+        .privacy-content strong {
+            color: #2c3e50;
+            font-weight: 700;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- 다크모드 토글 -->
+    <div class="theme-toggle">
+        <button id="themeToggle" aria-label="다크모드 전환">
+            <span class="icon-light">☀️</span>
+            <span class="icon-dark">🌙</span>
+        </button>
+    </div>
+
+    <!-- 언어 전환 & 도구 버튼 -->
+    <div class="lang-toggle">
+        <button id="langToggle" data-lang="ko">
+            <span class="lang-ko">EN</span>
+            <span class="lang-en">KO</span>
+        </button>
+        <button id="toolsToggle">
+            <span class="tooltip" data-ko="더 많은 도구" data-en="More Tools">더 많은 도구</span>
+            🧰
+        </button>
+    </div>
+
+    <!-- 메인 컨테이너 -->
+    <div class="container">
+        <header>
+            <h1 data-ko="OCR 텍스트 추출" data-en="OCR Text Extraction">OCR 텍스트 추출</h1>
+            <p class="subtitle" data-ko="이미지에서 텍스트를 자동으로 인식하고 추출합니다" data-en="Automatically recognize and extract text from images">이미지에서 텍스트를 자동으로 인식하고 추출합니다</p>
+        </header>
+
+        <main>
+            <!-- 🌐 언어 선택 -->
+            <div class="language-section">
+                <label class="language-label">
+                    <span data-ko="🌐 인식 언어 선택" data-en="🌐 Select Recognition Language">🌐 인식 언어 선택</span>
+                </label>
+                <div class="language-grid">
+                    <button class="language-btn active" data-lang="kor+eng" data-ko="한글+영어" data-en="Korean+English">한글+영어</button>
+                    <button class="language-btn" data-lang="eng" data-ko="영어" data-en="English">영어</button>
+                    <button class="language-btn" data-lang="jpn" data-ko="일본어" data-en="Japanese">일본어</button>
+                    <button class="language-btn" data-lang="chi_sim" data-ko="중국어 간체" data-en="Chinese Simplified">중국어 간체</button>
+                    <button class="language-btn" data-lang="chi_tra" data-ko="중국어 번체" data-en="Chinese Traditional">중국어 번체</button>
+                    <button class="language-btn" data-lang="fra" data-ko="프랑스어" data-en="French">프랑스어</button>
+                    <button class="language-btn" data-lang="deu" data-ko="독일어" data-en="German">독일어</button>
+                    <button class="language-btn" data-lang="spa" data-ko="스페인어" data-en="Spanish">스페인어</button>
+                </div>
+            </div>
+
+            <!-- 📤 이미지/PDF 업로드 -->
+            <div class="dropzone" id="dropzone">
+                <p>
+                    <span data-ko="📤 이미지 또는 PDF를 드래그하거나 클릭하여 업로드 (다중 선택 가능)" data-en="📤 Drag & drop images/PDFs or click to upload (multiple files)">📤 이미지 또는 PDF를 드래그하거나 클릭하여 업로드 (다중 선택 가능)</span>
+                </p>
+                <input type="file" id="fileInput" accept="image/*,application/pdf" multiple style="display: none;">
+            </div>
+
+            <!-- 업로드된 파일 목록 -->
+            <div id="fileListSection" style="display: none; margin-bottom: 25px;">
+                <label class="data-label">
+                    <span data-ko="📋 업로드된 파일" data-en="📋 Uploaded Files">📋 업로드된 파일</span>
+                </label>
+                <div id="fileList" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px;"></div>
+                <button id="startBtn" class="btn-primary" style="width: 100%; padding: 15px; font-size: 16px; font-weight: 600; background: var(--gold-gradient); border: none; border-radius: var(--border-radius-lg); cursor: pointer; transition: all 0.2s;">
+                    <span data-ko="🚀 텍스트 추출 시작" data-en="🚀 Start Text Extraction">🚀 텍스트 추출 시작</span>
+                </button>
+            </div>
+
+            <!-- 이미지 미리보기 -->
+            <div class="preview-container" id="previewContainer">
+                <p class="preview-placeholder" id="placeholder" data-ko="파일을 업로드하고 시작 버튼을 눌러주세요" data-en="Upload files and click start button">파일을 업로드하고 시작 버튼을 눌러주세요</p>
+            </div>
+
+            <!-- PDF 페이지 썸네일 네비게이션 -->
+            <div id="pdfNavigation" style="display: none; margin-top: 15px;">
+                <!-- 네비게이션 버튼 (중앙 정렬) -->
+                <div style="display: flex; justify-content: center; margin-bottom: 10px;">
+                    <div style="display: flex; align-items: center; gap: 8px; background: var(--bg-secondary); padding: 4px; border-radius: var(--border-radius-md); border: 1px solid var(--border-color);">
+                        <button id="prevPageBtn" class="nav-btn" style="padding: 8px 12px; background: white; color: var(--text-primary); border: 1px solid var(--border-color); border-radius: var(--border-radius-sm); cursor: pointer; font-weight: 600; transition: all 0.2s;">
+                            <span data-ko="←" data-en="←">←</span>
+                        </button>
+                        <span id="pageInfo" style="font-weight: 700; color: var(--text-primary); font-size: 14px; min-width: 60px; text-align: center;"></span>
+                        <button id="nextPageBtn" class="nav-btn" style="padding: 8px 12px; background: white; color: var(--text-primary); border: 1px solid var(--border-color); border-radius: var(--border-radius-sm); cursor: pointer; font-weight: 600; transition: all 0.2s;">
+                            <span data-ko="→" data-en="→">→</span>
+                        </button>
+                    </div>
+                </div>
+                <!-- 썸네일 리스트 -->
+                <div id="thumbnailList" style="display: flex; gap: 10px; overflow-x: auto; padding: 10px 0; background: var(--bg-secondary); border-radius: var(--border-radius-md); padding: 10px; scroll-behavior: smooth;"></div>
+            </div>
+
+            <!-- 진행률 -->
+            <div class="progress-container" id="progressContainer">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <p class="progress-text" id="progressText">처리 중...</p>
+                <button id="stopBtn" style="display: none; margin-top: 10px; padding: 10px 20px; background: #dc3545; color: white; border: none; border-radius: var(--border-radius-md); cursor: pointer; font-weight: 600;">
+                    <span data-ko="⏹️ 작업 중단" data-en="⏹️ Stop">⏹️ 작업 중단</span>
+                </button>
+            </div>
+
+            <!-- 📝 추출된 텍스트 -->
+            <div class="result-section" id="resultSection">
+                <label class="result-label">
+                    <span data-ko="📝 추출된 텍스트" data-en="📝 Extracted Text">📝 추출된 텍스트</span>
+                </label>
+
+                <!-- 개별/전체 보기 탭 -->
+                <div id="resultTabs" style="display: none; margin-bottom: 15px; gap: 10px; flex-wrap: wrap;"></div>
+
+                <textarea id="resultText" class="result-text" readonly></textarea>
+                <div class="result-stats" id="resultStats"></div>
+                <div class="result-buttons" style="display: flex; justify-content: space-between; align-items: center;">
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <button class="btn-copy" id="copyBtn" data-ko="텍스트 복사" data-en="Copy Text">텍스트 복사</button>
+                        <button class="btn-download" id="downloadBtn" data-ko="TXT 다운로드" data-en="Download TXT">TXT 다운로드</button>
+                        <!-- 이미지 저장 버튼 (PDF 페이지용) -->
+                        <div id="pdfDownloadBtnContainer" style="position: relative; display: none;">
+                            <button id="downloadPageBtn" class="btn-download" style="padding: 12px 20px; background: var(--gold-gradient); color: white; border: none; border-radius: var(--border-radius-md); cursor: pointer; font-weight: 600; transition: all 0.2s;">
+                                <span data-ko="📥 이미지 저장" data-en="📥 Save Image">📥 이미지 저장</span>
+                            </button>
+                            <!-- 호버 시 표시되는 옵션 메뉴 -->
+                            <div id="downloadOptions" style="display: none; position: absolute; top: 100%; left: 0; margin-top: 4px; background: white; border: 1px solid var(--border-color); border-radius: var(--border-radius-md); box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 100; min-width: 140px;">
+                                <button id="downloadCurrentBtn" style="width: 100%; padding: 10px 16px; background: white; color: var(--text-primary); border: none; border-bottom: 1px solid var(--border-color); text-align: left; cursor: pointer; font-size: 13px; font-weight: 500; transition: background 0.2s;">
+                                    <span data-ko="📄 개별 저장" data-en="📄 Current">📄 개별 저장</span>
+                                </button>
+                                <button id="downloadAllBtn" style="width: 100%; padding: 10px 16px; background: white; color: var(--text-primary); border: none; text-align: left; cursor: pointer; font-size: 13px; font-weight: 500; transition: background 0.2s; border-radius: 0 0 var(--border-radius-md) var(--border-radius-md);">
+                                    <span data-ko="📚 전체 저장" data-en="📚 All Pages">📚 전체 저장</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn-reset" id="resetBtn" style="padding: 12px 20px; background: #dc3545; color: white; border: none; border-radius: var(--border-radius-md); cursor: pointer; font-weight: 600; transition: all 0.2s;">
+                        <span data-ko="🔄 처음부터" data-en="🔄 Reset">🔄 처음부터</span>
+                    </button>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <div class="footer-content">
+                <p class="footer-brand">
+                    Made by <a href="https://baal.co.kr" target="_blank">BAAL</a>
+                </p>
+                <p class="footer-contact">
+                    <a href="mailto:summon@baal.co.kr">summon@baal.co.kr</a>
+                </p>
+                <p class="footer-links">
+                    <a href="#" onclick="event.preventDefault(); openPrivacyModal();" data-ko="개인정보처리방침" data-en="Privacy Policy">개인정보처리방침</a>
+                </p>
+                <p class="footer-copyright">&copy; 2025 BAAL. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Privacy Policy Modal (from baal.co.kr) -->
+    <div id="privacyModal" class="modal" onclick="if(event.target.id==='privacyModal') closePrivacyModal()">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closePrivacyModal()">&times;</button>
+            <h1 class="modal-title">개인정보처리방침</h1>
+
+            <div class="privacy-content">
+                <h3>1. 개인정보의 처리 목적</h3>
+                <p>BAAL(이하 "회사")은 사용자가 브라우저에서 직접 파일을 처리하는 무료 온라인 도구를 제공합니다. 회사는 <strong>어떠한 개인정보도 수집하지 않습니다.</strong></p>
+
+                <h3>2. 처리하는 개인정보 항목</h3>
+                <p><strong>없음</strong> - 모든 파일 처리는 사용자의 브라우저 내에서만 이루어지며, 서버로 전송되지 않습니다.</p>
+
+                <h3>3. 개인정보의 처리 및 보유기간</h3>
+                <p>회사는 개인정보를 수집하지 않으므로 보유하지 않습니다.</p>
+
+                <h3>4. 쿠키(Cookie) 사용</h3>
+                <p>본 웹사이트는 Google AdSense 광고 서비스를 사용합니다. Google은 사용자의 관심사에 맞는 광고를 제공하기 위해 쿠키를 사용할 수 있습니다.</p>
+                <ul>
+                    <li>Google의 광고 쿠키 정책: <a href="https://policies.google.com/technologies/ads" target="_blank">링크</a></li>
+                    <li>쿠키 설정은 브라우저에서 관리하실 수 있습니다.</li>
+                </ul>
+
+                <h3>5. 개인정보 보호책임자</h3>
+                <p>
+                    이메일: <a href="mailto:summon@baal.co.kr">summon@baal.co.kr</a><br>
+                    사용자는 회사의 서비스를 이용하며 발생한 모든 개인정보 보호 관련 문의를 위 연락처로 하실 수 있습니다.
+                </p>
+
+                <h3>6. 개인정보처리방침 변경</h3>
+                <p>본 개인정보처리방침은 법령, 정책 또는 보안기술의 변경에 따라 내용이 추가, 삭제 및 수정될 수 있으며, 변경 시 웹사이트를 통해 공지합니다.</p>
+
+                <p style="margin-top: 30px; text-align: center; color: #7f8c8d; font-size: 0.9em;">
+                    시행일자: 2025년 1월 24일
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 공통 스크립트 -->
+    <script src="_common/common.js"></script>
+    <script>
+        // 강제로 스크롤 맨 위로 (즉시 실행)
+        if ('scrollRestoration' in history) {
+            history.scrollRestoration = 'manual';
+        }
+        window.scrollTo(0, 0);
+
+        // 페이지 로드 시에도 다시 한번
+        window.addEventListener('load', () => {
+            window.scrollTo(0, 0);
+        });
+
+        // DOMContentLoaded에도
+        document.addEventListener('DOMContentLoaded', () => {
+            window.scrollTo(0, 0);
+
+            // 입력값 초기화 (새로고침 시)
+            document.querySelectorAll('input[type="text"], input[type="number"], textarea').forEach(el => {
+                el.value = '';
+            });
+        });
+
+        let selectedLang = 'kor+eng';
+        let uploadedFiles = [];
+        let extractedTexts = [];
+        let pdfPages = []; // PDF의 모든 페이지 이미지
+        let currentPageIndex = 0;
+        let currentTasks = new Map(); // 진행 중인 작업들
+        let taskIdCounter = 0;
+
+        // Service Worker 언레지스터 (Web Worker로 전환)
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(registrations => {
+                registrations.forEach(registration => {
+                    registration.unregister();
+                    console.log('[Cleanup] Service Worker unregistered');
+                });
+            });
+        }
+
+        // Web Worker 초기화
+        let ocrWorker = null;
+
+        try {
+            ocrWorker = new Worker('ocr-worker.js');
+            console.log('✅ OCR Web Worker 초기화 완료');
+
+            // Web Worker 메시지 핸들러
+            ocrWorker.addEventListener('message', (event) => {
+                const { type, data } = event.data;
+
+                switch (type) {
+                    case 'OCR_PROGRESS':
+                        if (data.progress) {
+                            document.getElementById('progressFill').style.width = data.progress + '%';
+                            document.getElementById('progressText').textContent = `처리 중: ${data.current}/${data.total} - ${data.filename} (${data.progress}%)`;
+                        } else if (data.status === 'loading language data') {
+                            document.getElementById('progressText').textContent = `언어 데이터 로딩 중... (${data.current}/${data.total})`;
+                        }
+                        break;
+
+                    case 'COMPLETE':
+                        // COMPLETE 메시지는 processImageWithWorker에서 처리
+                        // 전역 핸들러에서는 무시 (중복 방지)
+                        break;
+
+                    case 'ERROR':
+                        console.error('[Worker] OCR 에러:', data.error);
+                        break;
+                }
+            });
+
+            ocrWorker.addEventListener('error', (error) => {
+                console.error('[Worker] 에러:', error);
+            });
+
+        } catch (error) {
+            console.error('❌ Web Worker 초기화 실패:', error);
+        }
+
+        // 언어 선택
+        document.querySelectorAll('.language-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                selectedLang = btn.dataset.lang;
+                document.querySelectorAll('.language-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            });
+        });
+
+        // 파일 업로드 (다중 파일 + PDF 지원)
+        window.BaalUtils.initDropzone('dropzone', 'fileInput', handleFiles, {
+            accept: 'image/*,application/pdf',
+            multiple: true,
+            maxFiles: 100,
+            maxSize: 20 * 1024 * 1024
+        });
+
+        function handleFiles(files) {
+            if (files.length === 0) return;
+
+            uploadedFiles = Array.from(files);
+
+            // placeholder 먼저 숨김
+            const placeholder = document.getElementById('placeholder');
+            if (placeholder) {
+                placeholder.style.display = 'none';
+            }
+
+            displayFileList();
+            showFirstFilePreview();
+
+            document.getElementById('fileListSection').style.display = 'block';
+        }
+
+        // PDF 네비게이션 버튼 이벤트
+        const prevPageBtn = document.getElementById('prevPageBtn');
+        const nextPageBtn = document.getElementById('nextPageBtn');
+
+        prevPageBtn.addEventListener('click', () => {
+            if (currentPageIndex > 0) {
+                showPDFPage(currentPageIndex - 1);
+            }
+        });
+
+        nextPageBtn.addEventListener('click', () => {
+            if (currentPageIndex < pdfPages.length - 1) {
+                showPDFPage(currentPageIndex + 1);
+            }
+        });
+
+        // 네비게이션 버튼 호버 효과
+        prevPageBtn.addEventListener('mouseenter', () => {
+            prevPageBtn.style.background = 'var(--gold-gradient)';
+            prevPageBtn.style.color = 'white';
+            prevPageBtn.style.borderColor = 'var(--gold-primary)';
+        });
+        prevPageBtn.addEventListener('mouseleave', () => {
+            prevPageBtn.style.background = 'white';
+            prevPageBtn.style.color = 'var(--text-primary)';
+            prevPageBtn.style.borderColor = 'var(--border-color)';
+        });
+        nextPageBtn.addEventListener('mouseenter', () => {
+            nextPageBtn.style.background = 'var(--gold-gradient)';
+            nextPageBtn.style.color = 'white';
+            nextPageBtn.style.borderColor = 'var(--gold-primary)';
+        });
+        nextPageBtn.addEventListener('mouseleave', () => {
+            nextPageBtn.style.background = 'white';
+            nextPageBtn.style.color = 'var(--text-primary)';
+            nextPageBtn.style.borderColor = 'var(--border-color)';
+        });
+
+        // 다운로드 버튼 호버 메뉴
+        const downloadPageBtn = document.getElementById('downloadPageBtn');
+        const downloadOptions = document.getElementById('downloadOptions');
+        const downloadCurrentBtn = document.getElementById('downloadCurrentBtn');
+        const downloadAllBtn = document.getElementById('downloadAllBtn');
+
+        let hideMenuTimeout;
+
+        // 호버 시 메뉴 표시
+        downloadPageBtn.addEventListener('mouseenter', () => {
+            clearTimeout(hideMenuTimeout);
+            downloadOptions.style.display = 'block';
+        });
+
+        // 메뉴에서 마우스 나가면 약간의 딜레이 후 숨김
+        downloadPageBtn.parentElement.addEventListener('mouseleave', () => {
+            hideMenuTimeout = setTimeout(() => {
+                downloadOptions.style.display = 'none';
+            }, 200);
+        });
+
+        // 메뉴 호버 시 숨김 취소
+        downloadOptions.addEventListener('mouseenter', () => {
+            clearTimeout(hideMenuTimeout);
+        });
+
+        // 메인 버튼 클릭 - 개별 저장 (성질 급한 사람용)
+        downloadPageBtn.addEventListener('click', (e) => {
+            if (pdfPages.length === 0 || currentPageIndex < 0) return;
+
+            // 메뉴 표시 중이 아니면 바로 개별 저장
+            if (downloadOptions.style.display === 'none') {
+                downloadCurrentPage();
+            }
+        });
+
+        // 개별 저장 버튼
+        downloadCurrentBtn.addEventListener('click', () => {
+            downloadCurrentPage();
+            downloadOptions.style.display = 'none';
+        });
+
+        // 전체 저장 버튼
+        downloadAllBtn.addEventListener('click', () => {
+            downloadAllPages();
+            downloadOptions.style.display = 'none';
+        });
+
+        // 개별 페이지 다운로드 함수
+        function downloadCurrentPage() {
+            if (pdfPages.length === 0 || currentPageIndex < 0) return;
+
+            const page = pdfPages[currentPageIndex];
+            const link = document.createElement('a');
+            link.href = page.dataUrl;
+            link.download = `page-${page.pageNum}.jpg`;
+            link.click();
+
+            window.BaalUtils.showToast(`페이지 ${page.pageNum} 이미지 저장 완료`, 'success', 3000);
+        }
+
+        // 전체 페이지 다운로드 함수
+        async function downloadAllPages() {
+            if (pdfPages.length === 0) return;
+
+            window.BaalUtils.showToast(`${pdfPages.length}개 페이지 다운로드 시작...`, 'info', 3000);
+
+            for (let i = 0; i < pdfPages.length; i++) {
+                const page = pdfPages[i];
+                const link = document.createElement('a');
+                link.href = page.dataUrl;
+                link.download = `page-${page.pageNum}.jpg`;
+                link.click();
+
+                // 브라우저가 다운로드를 처리할 시간 확보
+                await new Promise(resolve => setTimeout(resolve, 100));
+            }
+
+            window.BaalUtils.showToast(`${pdfPages.length}개 페이지 저장 완료`, 'success', 5000);
+        }
+
+        // 버튼 호버 효과 추가
+        downloadCurrentBtn.addEventListener('mouseenter', (e) => {
+            e.target.style.background = 'var(--bg-accent)';
+        });
+        downloadCurrentBtn.addEventListener('mouseleave', (e) => {
+            e.target.style.background = 'white';
+        });
+        downloadAllBtn.addEventListener('mouseenter', (e) => {
+            e.target.style.background = 'var(--bg-accent)';
+        });
+        downloadAllBtn.addEventListener('mouseleave', (e) => {
+            e.target.style.background = 'white';
+        });
+
+        // 중단 버튼
+        document.getElementById('stopBtn').addEventListener('click', () => {
+            console.log('[Main] 작업 중단 요청');
+
+            // Web Worker 종료 및 재시작
+            if (ocrWorker) {
+                ocrWorker.terminate();
+                console.log('[Main] Web Worker 종료');
+
+                // Worker 재초기화
+                ocrWorker = new Worker('ocr-worker.js');
+                ocrWorker.addEventListener('message', (event) => {
+                    const { type, data } = event.data;
+                    switch (type) {
+                        case 'OCR_PROGRESS':
+                            if (data.progress) {
+                                document.getElementById('progressFill').style.width = data.progress + '%';
+                                document.getElementById('progressText').textContent = `처리 중: ${data.current}/${data.total} - ${data.filename} (${data.progress}%)`;
+                            } else if (data.status === 'loading language data') {
+                                document.getElementById('progressText').textContent = `언어 데이터 로딩 중... (${data.current}/${data.total})`;
+                            }
+                            break;
+                        case 'COMPLETE':
+                            break;
+                        case 'ERROR':
+                            console.error('[Worker] OCR 에러:', data.error);
+                            break;
+                    }
+                });
+            }
+
+            // 대기 중인 모든 Promise reject
+            currentTasks.forEach((task, taskId) => {
+                task.reject(new Error('사용자가 작업을 중단했습니다'));
+            });
+            currentTasks.clear();
+
+            // UI 초기화
+            document.getElementById('progressContainer').style.display = 'none';
+            document.getElementById('stopBtn').style.display = 'none';
+            document.getElementById('startBtn').disabled = false;
+
+            window.BaalUtils.showToast('작업이 중단되었습니다', 'warning', 3000);
+        });
+
+        async function showFirstFilePreview() {
+            const container = document.getElementById('previewContainer');
+            container.innerHTML = '';
+
+            if (uploadedFiles.length === 0) {
+                container.innerHTML = '<p class="preview-placeholder">파일을 업로드하고 시작 버튼을 눌러주세요</p>';
+                document.getElementById('pdfNavigation').style.display = 'none';
+                return;
+            }
+
+            const firstFile = uploadedFiles[0];
+
+            // PDF 파일인 경우 - 전체 페이지 처리
+            if (firstFile.type === 'application/pdf') {
+                try {
+                    container.innerHTML = '<p class="preview-placeholder">PDF 로딩 중...</p>';
+
+                    await loadAllPDFPages(firstFile);
+
+                    if (pdfPages.length > 0) {
+                        showPDFPage(0);
+                        document.getElementById('pdfNavigation').style.display = 'block';
+                        updatePDFNavigation();
+                    }
+                } catch (error) {
+                    console.error('PDF 미리보기 오류:', error);
+                    container.innerHTML = '<p class="preview-placeholder">PDF 미리보기를 표시할 수 없습니다.</p>';
+                    document.getElementById('pdfNavigation').style.display = 'none';
+                }
+                return;
+            }
+
+            // 이미지 파일인 경우
+            if (firstFile.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    container.innerHTML = `<img src="${e.target.result}" alt="Preview" style="max-width: 100%; border-radius: var(--border-radius-md);">`;
+                };
+                reader.readAsDataURL(firstFile);
+                document.getElementById('pdfNavigation').style.display = 'none';
+                return;
+            }
+
+            container.innerHTML = '<p class="preview-placeholder">미리보기를 지원하지 않는 파일 형식입니다.</p>';
+            document.getElementById('pdfNavigation').style.display = 'none';
+        }
+
+        // PDF의 모든 페이지를 이미지로 변환
+        async function loadAllPDFPages(file) {
+            pdfPages = [];
+            currentPageIndex = 0;
+
+            const arrayBuffer = await file.arrayBuffer();
+            const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+            const totalPages = pdf.numPages;
+
+            console.log(`PDF 전체 페이지 로드 시작: ${totalPages}페이지`);
+
+            for (let pageNum = 1; pageNum <= totalPages; pageNum++) {
+                const page = await pdf.getPage(pageNum);
+                const viewport = page.getViewport({ scale: 2 }); // 고해상도
+
+                const canvas = document.createElement('canvas');
+                const context = canvas.getContext('2d', { willReadFrequently: true });
+                canvas.width = viewport.width;
+                canvas.height = viewport.height;
+
+                await page.render({ canvasContext: context, viewport: viewport }).promise;
+
+                // Canvas를 Blob으로 변환
+                const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.95));
+
+                pdfPages.push({
+                    pageNum,
+                    blob,
+                    canvas,
+                    dataUrl: await blobToDataURL(blob)
+                });
+
+                console.log(`페이지 ${pageNum}/${totalPages} 변환 완료`);
+            }
+
+            console.log('PDF 전체 페이지 로드 완료');
+        }
+
+        // Blob을 Data URL로 변환
+        function blobToDataURL(blob) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(blob);
+            });
+        }
+
+        // 특정 PDF 페이지 표시
+        function showPDFPage(pageIndex) {
+            if (pageIndex < 0 || pageIndex >= pdfPages.length) return;
+
+            currentPageIndex = pageIndex;
+            const container = document.getElementById('previewContainer');
+            const page = pdfPages[pageIndex];
+
+            container.innerHTML = `<img src="${page.dataUrl}" alt="Page ${page.pageNum}" style="max-width: 100%; border-radius: var(--border-radius-md);">`;
+
+            updatePDFNavigation();
+
+            // 이미지 저장 버튼 표시
+            const downloadContainer = document.getElementById('pdfDownloadBtnContainer');
+            if (downloadContainer) {
+                downloadContainer.style.display = 'block';
+            }
+
+            // 추출된 텍스트로 스크롤
+            scrollToPageText(pageIndex);
+        }
+
+        // PDF 네비게이션 업데이트
+        function updatePDFNavigation() {
+            if (pdfPages.length === 0) return;
+
+            document.getElementById('pageInfo').textContent = `${currentPageIndex + 1} / ${pdfPages.length}`;
+            document.getElementById('prevPageBtn').disabled = currentPageIndex === 0;
+            document.getElementById('nextPageBtn').disabled = currentPageIndex === pdfPages.length - 1;
+
+            // 썸네일 리스트 업데이트
+            updateThumbnails();
+        }
+
+        // 썸네일 리스트 업데이트
+        function updateThumbnails() {
+            const thumbnailList = document.getElementById('thumbnailList');
+            thumbnailList.innerHTML = '';
+
+            // 썸네일 개수가 적으면 중앙 정렬, 많으면 왼쪽 정렬
+            const shouldCenterAlign = pdfPages.length <= 5;
+            if (shouldCenterAlign) {
+                thumbnailList.style.justifyContent = 'center';
+            } else {
+                thumbnailList.style.justifyContent = 'flex-start';
+            }
+
+            pdfPages.forEach((page, index) => {
+                const thumbnail = document.createElement('div');
+                thumbnail.setAttribute('data-page-index', index);
+                thumbnail.style.cssText = `
+                    position: relative;
+                    cursor: pointer;
+                    border: 3px solid ${index === currentPageIndex ? 'var(--gold-primary)' : 'var(--border-color)'};
+                    border-radius: var(--border-radius-sm);
+                    overflow: hidden;
+                    flex-shrink: 0;
+                    width: 120px;
+                    transition: all 0.2s;
+                `;
+
+                thumbnail.innerHTML = `
+                    <img src="${page.dataUrl}" style="width: 100%; display: block;">
+                    <div style="position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.7); color: white; text-align: center; padding: 4px; font-size: 12px; font-weight: 600;">
+                        ${page.pageNum}
+                    </div>
+                `;
+
+                thumbnail.addEventListener('click', () => showPDFPage(index));
+                thumbnail.addEventListener('mouseenter', () => {
+                    if (index !== currentPageIndex) {
+                        thumbnail.style.borderColor = 'var(--gold-primary)';
+                        thumbnail.style.opacity = '0.8';
+                    }
+                });
+                thumbnail.addEventListener('mouseleave', () => {
+                    if (index !== currentPageIndex) {
+                        thumbnail.style.borderColor = 'var(--border-color)';
+                        thumbnail.style.opacity = '1';
+                    }
+                });
+
+                thumbnailList.appendChild(thumbnail);
+            });
+
+            // 썸네일이 많을 때만 선택된 썸네일을 중앙으로 스크롤
+            if (!shouldCenterAlign) {
+                scrollThumbnailToCenter(currentPageIndex);
+            }
+        }
+
+        function displayFileList() {
+            const fileListDiv = document.getElementById('fileList');
+            fileListDiv.innerHTML = '';
+
+            uploadedFiles.forEach((file, index) => {
+                const fileItem = document.createElement('div');
+                fileItem.style.cssText = 'display: flex; align-items: center; justify-content: space-between; padding: 12px; background: var(--bg-accent); border-radius: var(--border-radius-md); border: 1px solid var(--border-color);';
+
+                const fileInfo = document.createElement('div');
+                const fileType = file.type.includes('pdf') ? '📄' : '🖼️';
+                fileInfo.textContent = `${fileType} ${file.name} (${window.BaalUtils.formatFileSize(file.size)})`;
+                fileInfo.style.cssText = 'flex: 1; font-size: 14px; color: var(--text-primary);';
+
+                const removeBtn = document.createElement('button');
+                removeBtn.textContent = '❌';
+                removeBtn.style.cssText = 'background: none; border: none; cursor: pointer; font-size: 18px; padding: 4px 8px;';
+                removeBtn.onclick = () => {
+                    uploadedFiles.splice(index, 1);
+                    displayFileList();
+                    if (uploadedFiles.length === 0) {
+                        document.getElementById('fileListSection').style.display = 'none';
+                        document.getElementById('placeholder').style.display = 'block';
+                    }
+                };
+
+                fileItem.appendChild(fileInfo);
+                fileItem.appendChild(removeBtn);
+                fileListDiv.appendChild(fileItem);
+            });
+        }
+
+        // 시작 버튼
+        document.getElementById('startBtn').addEventListener('click', async () => {
+            if (uploadedFiles.length === 0) {
+                window.BaalUtils.showToast('파일을 먼저 업로드해주세요.', 'error', 5000);
+                return;
+            }
+
+            extractedTexts = [];
+            document.getElementById('progressContainer').style.display = 'block';
+            document.getElementById('stopBtn').style.display = 'block';
+            document.getElementById('resultSection').style.display = 'none';
+            document.getElementById('startBtn').disabled = true;
+
+            // 모든 파일 처리
+            for (let i = 0; i < uploadedFiles.length; i++) {
+                const file = uploadedFiles[i];
+                const fileNum = i + 1;
+                const totalFiles = uploadedFiles.length;
+
+                try {
+                    document.getElementById('progressText').textContent = `처리 중: ${fileNum}/${totalFiles} - ${file.name}`;
+
+                    let text = '';
+
+                    if (file.type === 'application/pdf') {
+                        // PDF: 이미 변환된 페이지들 사용
+                        if (pdfPages.length > 0) {
+                            console.log(`📄 PDF 페이지 OCR 처리 시작: ${pdfPages.length}페이지`);
+                            text = await processPDFPages(file.name, fileNum, totalFiles);
+                        } else {
+                            throw new Error('PDF 페이지 로드 실패');
+                        }
+                    } else {
+                        // 이미지: Web Worker 사용
+                        if (ocrWorker) {
+                            console.log('🔧 Web Worker로 이미지 처리:', file.name);
+                            text = await processImageWithWorker(file, fileNum, totalFiles);
+                        } else {
+                            console.log('⚠️ 기본 방식으로 이미지 처리:', file.name);
+                            text = await processImage(file, fileNum, totalFiles);
+                        }
+                    }
+
+                    extractedTexts.push({
+                        filename: file.name,
+                        text: text
+                    });
+
+                } catch (error) {
+                    console.error(`Error processing ${file.name}:`, error);
+                    extractedTexts.push({
+                        filename: file.name,
+                        text: `[오류: ${error.message}]`
+                    });
+                }
+            }
+
+            // 진행률 숨김
+            document.getElementById('progressContainer').style.display = 'none';
+            document.getElementById('stopBtn').style.display = 'none';
+            document.getElementById('startBtn').disabled = false;
+
+            // 결과 표시
+            displayResults();
+
+            window.BaalUtils.showToast(`${uploadedFiles.length}개 파일 텍스트 추출 완료!`, 'success', 5000);
+        });
+
+        // Web Worker로 이미지 처리
+        async function processImageWithWorker(file, fileNum, totalFiles) {
+            return new Promise(async (resolve, reject) => {
+                try {
+                    // ArrayBuffer 변환
+                    const arrayBuffer = await file.arrayBuffer();
+
+                    // Worker 메시지 핸들러 (일회성)
+                    const handleMessage = (event) => {
+                        const { type, data } = event.data;
+
+                        if (type === 'COMPLETE') {
+                            ocrWorker.removeEventListener('message', handleMessage);
+                            resolve(data.text);
+                        } else if (type === 'ERROR') {
+                            ocrWorker.removeEventListener('message', handleMessage);
+                            reject(new Error(data.error || 'OCR processing failed'));
+                        }
+                    };
+
+                    ocrWorker.addEventListener('message', handleMessage);
+
+                    // Web Worker에 전송
+                    ocrWorker.postMessage({
+                        type: 'PROCESS_IMAGE',
+                        data: {
+                            imageData: {
+                                buffer: arrayBuffer,
+                                type: file.type
+                            },
+                            language: selectedLang,
+                            filename: file.name,
+                            fileIndex: fileNum,
+                            totalFiles: totalFiles
+                        }
+                    });
+
+                    console.log(`[Main] Web Worker에 전송: ${file.name}`);
+
+                } catch (error) {
+                    reject(error);
+                }
+            });
+        }
+
+        // PDF 페이지들 OCR 처리 (이미 변환된 이미지 사용)
+        async function processPDFPages(filename, fileNum, totalFiles) {
+            let fullText = '';
+
+            for (let i = 0; i < pdfPages.length; i++) {
+                const page = pdfPages[i];
+                const pageNum = page.pageNum;
+
+                document.getElementById('progressText').textContent =
+                    `PDF 처리 중: ${fileNum}/${totalFiles} - 페이지 ${pageNum}/${pdfPages.length}`;
+
+                try {
+                    let pageText = '';
+
+                    // Web Worker 사용
+                    if (ocrWorker) {
+                        pageText = await processPageWithWorker(page, pageNum, pdfPages.length);
+                    } else {
+                        // 기본 방식
+                        pageText = await processPageDirectly(page.blob);
+                    }
+
+                    fullText += `\n\n=== 페이지 ${pageNum} ===\n\n${pageText}`;
+
+                    console.log(`페이지 ${pageNum}/${pdfPages.length} OCR 완료`);
+
+                } catch (error) {
+                    console.error(`페이지 ${pageNum} OCR 에러:`, error);
+                    fullText += `\n\n=== 페이지 ${pageNum} ===\n\n[오류: ${error.message}]`;
+                }
+            }
+
+            return fullText.trim();
+        }
+
+        // PDF 페이지를 Web Worker로 처리
+        async function processPageWithWorker(page, pageNum, totalPages) {
+            return new Promise(async (resolve, reject) => {
+                try {
+                    // Blob을 ArrayBuffer로 변환
+                    const arrayBuffer = await page.blob.arrayBuffer();
+
+                    // Worker 메시지 핸들러 (일회성)
+                    const handleMessage = (event) => {
+                        const { type, data } = event.data;
+
+                        if (type === 'COMPLETE') {
+                            ocrWorker.removeEventListener('message', handleMessage);
+                            resolve(data.text);
+                        } else if (type === 'ERROR') {
+                            ocrWorker.removeEventListener('message', handleMessage);
+                            reject(new Error(data.error || 'OCR processing failed'));
+                        }
+                    };
+
+                    ocrWorker.addEventListener('message', handleMessage);
+
+                    // Web Worker에 전송
+                    ocrWorker.postMessage({
+                        type: 'PROCESS_IMAGE',
+                        data: {
+                            imageData: {
+                                buffer: arrayBuffer,
+                                type: 'image/jpeg'
+                            },
+                            language: selectedLang,
+                            filename: `Page ${pageNum}`,
+                            fileIndex: pageNum,
+                            totalFiles: totalPages
+                        }
+                    });
+
+                } catch (error) {
+                    reject(error);
+                }
+            });
+        }
+
+        // PDF 페이지를 직접 처리 (Web Worker 미사용 시)
+        async function processPageDirectly(blob) {
+            const { data } = await Tesseract.recognize(
+                blob,
+                selectedLang,
+                {
+                    logger: (m) => {
+                        if (m.status === 'recognizing text') {
+                            const progress = Math.round(m.progress * 100);
+                            document.getElementById('progressFill').style.width = progress + '%';
+                        }
+                    }
+                }
+            );
+
+            return data.text;
+        }
+
+        async function processImage(file, fileNum, totalFiles) {
+            const { data } = await Tesseract.recognize(
+                file,
+                selectedLang,
+                {
+                    logger: (m) => {
+                        if (m.status === 'recognizing text') {
+                            const progress = Math.round(m.progress * 100);
+                            document.getElementById('progressFill').style.width = progress + '%';
+                            document.getElementById('progressText').textContent = `처리 중: ${fileNum}/${totalFiles} - ${file.name} (${progress}%)`;
+                        } else if (m.status === 'loading language traineddata') {
+                            document.getElementById('progressText').textContent = `언어 데이터 로딩 중... (${fileNum}/${totalFiles})`;
+                        } else if (m.status === 'initializing tesseract') {
+                            document.getElementById('progressText').textContent = `Tesseract 초기화 중... (${fileNum}/${totalFiles})`;
+                        }
+                    }
+                }
+            );
+
+            return data.text;
+        }
+
+
+        function displayResults() {
+            // 미리보기는 유지 (지우지 않음)
+            // const container = document.getElementById('previewContainer');
+            // container.innerHTML = ''; // 제거됨 - 미리보기 유지
+
+            // 개별 파일 탭 생성 (2개 이상일 때만)
+            const tabsDiv = document.getElementById('resultTabs');
+            tabsDiv.innerHTML = '';
+            tabsDiv.style.display = 'none'; // 기본적으로 숨김
+
+            if (extractedTexts.length > 1) {
+                // 전체 보기 버튼
+                const allBtn = document.createElement('button');
+                allBtn.className = 'result-tab active';
+                allBtn.dataset.view = 'all';
+                allBtn.style.cssText = 'padding: 8px 16px; background: var(--gold-gradient); color: white; border: none; border-radius: var(--border-radius-md); cursor: pointer; font-weight: 600;';
+                allBtn.textContent = '전체 보기';
+                allBtn.onclick = () => showAllText();
+                tabsDiv.appendChild(allBtn);
+
+                // 개별 파일 버튼
+                extractedTexts.forEach((item, index) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'result-tab';
+                    btn.dataset.view = index;
+                    btn.style.cssText = 'padding: 8px 16px; background: var(--bg-accent); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: var(--border-radius-md); cursor: pointer;';
+                    btn.textContent = item.filename;
+                    btn.onclick = () => showIndividualText(index);
+                    tabsDiv.appendChild(btn);
+                });
+
+                // 2개 이상일 때만 탭 표시
+                tabsDiv.style.display = 'flex';
+            }
+
+            // 전체 텍스트 표시
+            showAllText();
+
+            document.getElementById('resultSection').style.display = 'block';
+
+            // 스크롤
+            document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function showAllText() {
+            let allText = '';
+            extractedTexts.forEach(({ filename, text }) => {
+                allText += `\n\n========== ${filename} ==========\n\n${text}`;
+            });
+
+            document.getElementById('resultText').value = allText.trim();
+
+            // 통계 정보
+            const charCount = allText.length;
+            const wordCount = allText.trim().split(/\s+/).filter(w => w.length > 0).length;
+            const lineCount = allText.split('\n').length;
+
+            const currentLang = document.body.getAttribute('data-lang') || 'ko';
+            const statsText = currentLang === 'ko'
+                ? `파일: ${extractedTexts.length}개 | 단어: ${wordCount}개 | 문자: ${charCount}개 | 줄: ${lineCount}개`
+                : `Files: ${extractedTexts.length} | Words: ${wordCount} | Characters: ${charCount} | Lines: ${lineCount}`;
+
+            document.getElementById('resultStats').textContent = statsText;
+
+            // 탭 활성화 상태 변경
+            document.querySelectorAll('.result-tab').forEach(btn => btn.classList.remove('active'));
+            const allBtn = document.querySelector('.result-tab[data-view="all"]');
+            if (allBtn) {
+                allBtn.classList.add('active');
+                allBtn.style.background = 'var(--gold-gradient)';
+                allBtn.style.color = 'white';
+                allBtn.style.border = 'none';
+            }
+        }
+
+        function showIndividualText(index) {
+            const item = extractedTexts[index];
+            document.getElementById('resultText').value = item.text;
+
+            // 통계 정보
+            const charCount = item.text.length;
+            const wordCount = item.text.trim().split(/\s+/).filter(w => w.length > 0).length;
+            const lineCount = item.text.split('\n').length;
+
+            const currentLang = document.body.getAttribute('data-lang') || 'ko';
+            const statsText = currentLang === 'ko'
+                ? `파일: ${item.filename} | 단어: ${wordCount}개 | 문자: ${charCount}개 | 줄: ${lineCount}개`
+                : `File: ${item.filename} | Words: ${wordCount} | Characters: ${charCount} | Lines: ${lineCount}`;
+
+            document.getElementById('resultStats').textContent = statsText;
+
+            // 탭 활성화 상태 변경
+            document.querySelectorAll('.result-tab').forEach(btn => {
+                btn.classList.remove('active');
+                btn.style.background = 'var(--bg-accent)';
+                btn.style.color = 'var(--text-primary)';
+                btn.style.border = '1px solid var(--border-color)';
+            });
+            const activeBtn = document.querySelector(`.result-tab[data-view="${index}"]`);
+            if (activeBtn) {
+                activeBtn.classList.add('active');
+                activeBtn.style.background = 'var(--gold-gradient)';
+                activeBtn.style.color = 'white';
+                activeBtn.style.border = 'none';
+            }
+        }
+
+        // 텍스트 복사
+        document.getElementById('copyBtn').addEventListener('click', () => {
+            const textArea = document.getElementById('resultText');
+            textArea.select();
+            document.execCommand('copy');
+            window.BaalUtils.showToast('텍스트가 복사되었습니다!', 'success', 5000);
+        });
+
+        // TXT 다운로드
+        document.getElementById('downloadBtn').addEventListener('click', () => {
+            const allText = document.getElementById('resultText').value;
+            const blob = new Blob([allText], { type: 'text/plain;charset=utf-8' });
+            window.BaalUtils.downloadFile(blob, 'extracted-text.txt');
+            window.BaalUtils.showToast('TXT 다운로드 완료!', 'success', 5000);
+        });
+
+        // 썸네일 클릭 시 해당 페이지 텍스트로 스크롤
+        function scrollToPageText(pageIndex) {
+            const resultText = document.getElementById('resultText');
+            if (!resultText || !resultText.value) return;
+
+            const pageNum = pageIndex + 1;
+            const pageMarker = `=== 페이지 ${pageNum} ===`;
+            const textValue = resultText.value;
+            const markerIndex = textValue.indexOf(pageMarker);
+
+            if (markerIndex !== -1) {
+                // textarea에서 해당 위치로 스크롤
+                const beforeText = textValue.substring(0, markerIndex);
+                const lineNumber = beforeText.split('\n').length;
+                const lineHeight = 20; // 대략적인 라인 높이
+                const scrollPosition = (lineNumber - 1) * lineHeight;
+
+                resultText.scrollTop = scrollPosition;
+
+                // 잠깐 하이라이트 효과 (선택)
+                const endIndex = textValue.indexOf('\n\n', markerIndex);
+                if (endIndex !== -1) {
+                    resultText.setSelectionRange(markerIndex, endIndex);
+                    setTimeout(() => {
+                        resultText.setSelectionRange(markerIndex, markerIndex);
+                    }, 1000);
+                }
+            }
+        }
+
+        // 선택된 썸네일을 중앙으로 스크롤
+        function scrollThumbnailToCenter(pageIndex) {
+            const thumbnailList = document.getElementById('thumbnailList');
+            const thumbnail = thumbnailList.querySelector(`[data-page-index="${pageIndex}"]`);
+
+            if (thumbnail && thumbnailList) {
+                // 썸네일의 위치 계산
+                const thumbnailLeft = thumbnail.offsetLeft;
+                const thumbnailWidth = thumbnail.offsetWidth;
+                const listWidth = thumbnailList.offsetWidth;
+
+                // 중앙으로 스크롤할 위치 계산
+                const scrollPosition = thumbnailLeft - (listWidth / 2) + (thumbnailWidth / 2);
+
+                thumbnailList.scrollTo({
+                    left: scrollPosition,
+                    behavior: 'smooth'
+                });
+            }
+        }
+
+        // 초기화 버튼
+        document.getElementById('resetBtn').addEventListener('click', () => {
+            // 확인 대화상자
+            if (!confirm('모든 파일과 결과를 초기화하시겠습니까?')) {
+                return;
+            }
+
+            // 업로드된 파일 초기화
+            uploadedFiles = [];
+            extractedTexts = [];
+            pdfPages = [];
+            currentPageIndex = 0;
+
+            // UI 초기화
+            document.getElementById('fileListSection').style.display = 'none';
+            document.getElementById('previewContainer').innerHTML = '<p class="preview-placeholder">파일을 업로드하고 시작 버튼을 눌러주세요</p>';
+            document.getElementById('pdfNavigation').style.display = 'none';
+            document.getElementById('resultSection').style.display = 'none';
+            document.getElementById('placeholder').style.display = 'block';
+            document.getElementById('fileInput').value = '';
+
+            // PDF 다운로드 버튼 숨김
+            const pdfDownloadContainer = document.getElementById('pdfDownloadBtnContainer');
+            if (pdfDownloadContainer) {
+                pdfDownloadContainer.style.display = 'none';
+            }
+
+            window.BaalUtils.showToast('초기화 완료! 새로운 파일을 업로드해주세요.', 'success', 5000);
+        });
+
+        // 초기화 버튼 호버 효과
+        const resetBtn = document.getElementById('resetBtn');
+        resetBtn.addEventListener('mouseenter', () => {
+            resetBtn.style.background = '#bb2d3b';
+            resetBtn.style.transform = 'scale(1.05)';
+        });
+        resetBtn.addEventListener('mouseleave', () => {
+            resetBtn.style.background = '#dc3545';
+            resetBtn.style.transform = 'scale(1)';
+        });
+
+        // Privacy Modal Functions
+        function openPrivacyModal() {
+            document.getElementById('privacyModal').classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closePrivacyModal() {
+            document.getElementById('privacyModal').classList.remove('show');
+            document.body.style.overflow = '';
+        }
+
+        // ESC key to close modal
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closePrivacyModal();
+            }
+        });
+    </script>
+</body>
+</html>

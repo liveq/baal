@@ -1,0 +1,37 @@
+========================================
+  BAAL 운세 DB 통합 임포트 가이드
+========================================
+기존 데이터 전부 초기화 완료.
+아래 순서대로 Supabase SQL Editor에 붙여넣고 Run.
+
+한번에 하나씩! 순서 지킬 것!
+URL: https://supabase.com/dashboard/project/pfgfxvgbnkrbvyzdaeel/sql/new
+
+========================================
+1. 주간 운세 (28KB) — 1_weekly_master.sql
+   Q1~Q4 통합, 12별자리 x 52주
+========================================
+
+2. 월간 운세 (22KB) — 2_monthly_master.sql
+   12별자리 x 12개월
+========================================
+
+3. 일간 운세 1월 (235KB) — 3_daily_1_*.sql
+4. 일간 운세 2월 (210KB) — 3_daily_2_*.sql
+5. 일간 운세 3월 (233KB) — 3_daily_3_*.sql
+6. 일간 운세 Q3 (37KB)  — 3_daily_4_*.sql
+7. 일간 운세 Q2 (28KB)  — 3_daily_5_*.sql
+========================================
+
+8. 궁합 (53KB) — 4_compatibility_master.sql
+   66쌍 궁합 데이터
+========================================
+
+에러 나면 "Run this query" 눌러 (DELETE 경고).
+apostrophe 에러나면 알려줘.
+
+완료 후 확인 쿼리:
+SELECT 'weekly' as t, COUNT(*) as c FROM weekly_fortunes_data
+UNION ALL SELECT 'monthly', COUNT(*) FROM monthly_fortunes_data
+UNION ALL SELECT 'daily', COUNT(*) FROM daily_fortunes
+UNION ALL SELECT 'compat', COUNT(*) FROM compatibility_fortunes_data;

@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="HEX, RGB, HSL 색상 코드 변환기. 색상 팔레트 생성 및 WCAG 접근성 검사 지원">
+    <meta name="keywords" content="색상 변환기, HEX RGB 변환, 컬러 피커, RGB to HEX, HEX to RGB, 색상 팔레트, Color Converter">
+    <meta name="author" content="BAAL">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://color.baal.co.kr/">
+    <meta property="og:title" content="색상 변환기 - BAAL">
+    <meta property="og:description" content="HEX, RGB, HSL 색상 코드 변환기. 색상 팔레트 생성 및 WCAG 접근성 검사 지원">
+    <meta property="og:image" content="https://color.baal.co.kr/og-image.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://color.baal.co.kr/">
+    <meta property="twitter:title" content="색상 변환기 - BAAL">
+    <meta property="twitter:description" content="HEX, RGB, HSL 색상 코드 변환기. 색상 팔레트 생성 및 WCAG 접근성 검사 지원">
+    <meta property="twitter:image" content="https://color.baal.co.kr/og-image.png">
+
+    <title>색상 변환기 - BAAL</title>
+
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2886185075996969"
+     crossorigin="anonymous"></script>
+
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-XXXXXXXXXX');
+    </script>
+
+    <!-- 공통 스타일 -->
+    <link rel="stylesheet" href="_common/common.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+
+    <style>
+        .color-preview {
+            width: 100%;
+            height: 200px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            font-weight: 600;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+        }
+
+        .color-inputs {
+            display: grid;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .input-group label {
+            min-width: 60px;
+            font-weight: 600;
+        }
+
+        .input-group input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Courier New', monospace;
+        }
+
+        .copy-btn {
+            padding: 12px 20px;
+            background: var(--gold-gradient);
+            color: white;
+            border: 2px solid var(--gold-primary);
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .copy-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .color-picker-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .color-picker-wrapper input[type="color"] {
+            width: 60px;
+            height: 60px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .palette-section {
+            margin-top: 30px;
+        }
+
+        .palette-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .palette-btn {
+            padding: 10px 20px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .palette-btn:hover,
+        .palette-btn.active {
+            background: var(--gold-gradient);
+            color: white;
+            border-color: var(--gold-primary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .palette-display {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .palette-color {
+            aspect-ratio: 1;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: var(--shadow-sm);
+            padding: 10px;
+        }
+
+        .palette-color:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .palette-color span {
+            font-size: 0.85em;
+            font-weight: 600;
+            background: rgba(0,0,0,0.6);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin-top: 8px;
+        }
+
+        .accessibility-section {
+            background: var(--bg-secondary);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .contrast-check {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background: var(--bg-primary);
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+
+        .contrast-check .rating {
+            font-weight: 700;
+            padding: 6px 12px;
+            border-radius: 6px;
+        }
+
+        .rating.aaa {
+            background: #22c55e;
+            color: white;
+        }
+
+        .rating.aa {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .rating.fail {
+            background: #ef4444;
+            color: white;
+        }
+
+        .history-section {
+            margin-top: 30px;
+        }
+
+        .history-colors {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .history-color {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: var(--shadow-sm);
+            border: 2px solid var(--border-color);
+        }
+
+        .history-color:hover {
+            transform: scale(1.1);
+            box-shadow: var(--shadow-md);
+        }
+
+        @media (max-width: 768px) {
+            .input-group {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .input-group label {
+                min-width: auto;
+            }
+
+            .palette-buttons {
+                justify-content: center;
+            }
+
+            .palette-display {
+                grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            }
+        }
+        /* Privacy Modal Styles (from baal.co.kr) */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(10px);
+        }
+
+        .modal.show {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: rgba(255,255,255,0.95);
+            padding: 50px 40px;
+            border-radius: 20px;
+            max-width: 700px;
+            width: 90%;
+            position: relative;
+            text-align: center;
+            word-break: keep-all;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            font-size: 32px;
+            color: #9ca3af;
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .modal-close:hover {
+            color: var(--gold-primary);
+        }
+
+        .modal-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2em;
+            margin-bottom: 25px;
+            background: linear-gradient(-45deg, #d4af37, #ffd700, #b8860b);
+            background-size: 300% 300%;
+            animation: modalGradientFlow 4s ease-in-out infinite;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            word-break: keep-all;
+        }
+
+        @keyframes modalGradientFlow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .privacy-content {
+            text-align: left;
+            color: #4a4a4a;
+            line-height: 1.8;
+            max-height: 60vh;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .privacy-content h3 {
+            color: #2c3e50;
+            margin-top: 20px;
+            font-size: 1.1em;
+        }
+
+        .privacy-content h3:first-of-type {
+            margin-top: 0;
+        }
+
+        .privacy-content p {
+            margin-bottom: 15px;
+        }
+
+        .privacy-content ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .privacy-content a {
+            color: var(--gold-primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .privacy-content a:hover {
+            text-decoration: underline;
+        }
+
+        .privacy-content strong {
+            color: #2c3e50;
+            font-weight: 700;
+        }
+
+
+    </style>
+</head>
+<body>
+    <!-- 다크모드 토글 -->
+    <div class="theme-toggle">
+        <button id="themeToggle" aria-label="다크모드 전환">
+            <span class="icon-light">☀️</span>
+            <span class="icon-dark">🌙</span>
+        </button>
+    </div>
+
+    <!-- 언어 전환 -->
+    <div class="lang-toggle">
+        <button id="langToggle" data-lang="ko">
+            <span class="lang-ko">EN</span>
+            <span class="lang-en">KO</span>
+        </button>
+    </div>
+
+    <!-- 도구 버튼 -->
+    <div class="tools-toggle">
+        <button id="toolsToggle">
+            <span class="tooltip" data-ko="더 많은 도구" data-en="More Tools"></span>
+            🧰
+        </button>
+    </div>
+
+    <!-- 메인 컨테이너 -->
+    <div class="container">
+        <header>
+            <h1 data-ko="색상 변환기" data-en="Color Converter">색상 변환기</h1>
+            <p class="subtitle" data-ko="HEX, RGB, HSL 변환 및 팔레트 생성" data-en="HEX, RGB, HSL conversion and palette generation">HEX, RGB, HSL 변환 및 팔레트 생성</p>
+        </header>
+
+        <main>
+            <!-- 색상 미리보기 -->
+            <div class="color-preview" id="colorPreview">
+                #d4af37
+            </div>
+
+            <!-- 색상 입력 -->
+            <div class="color-inputs">
+                <div class="color-picker-wrapper">
+                    <input type="color" id="colorPicker" value="#d4af37">
+                    <span data-ko="색상 피커로 선택" data-en="Pick a color">색상 피커로 선택</span>
+                </div>
+
+                <div class="input-group">
+                    <label>HEX:</label>
+                    <input type="text" id="hexInput" value="#d4af37" placeholder="#RRGGBB">
+                    <button class="copy-btn" onclick="copyToClipboard('hex')" data-ko="복사" data-en="Copy">복사</button>
+                </div>
+
+                <div class="input-group">
+                    <label>RGB:</label>
+                    <input type="text" id="rgbInput" value="rgb(212, 175, 55)" placeholder="rgb(R, G, B)" readonly>
+                    <button class="copy-btn" onclick="copyToClipboard('rgb')" data-ko="복사" data-en="Copy">복사</button>
+                </div>
+
+                <div class="input-group">
+                    <label>HSL:</label>
+                    <input type="text" id="hslInput" value="hsl(14°, 100%, 60%)" placeholder="hsl(H°, S%, L%)" readonly>
+                    <button class="copy-btn" onclick="copyToClipboard('hsl')" data-ko="복사" data-en="Copy">복사</button>
+                </div>
+            </div>
+
+            <!-- 팔레트 생성 -->
+            <div class="palette-section">
+                <h2 data-ko="팔레트 생성" data-en="Generate Palette">팔레트 생성</h2>
+                <div class="palette-buttons">
+                    <button class="palette-btn" onclick="generatePalette('analogous')" data-ko="유사색" data-en="Analogous">유사색</button>
+                    <button class="palette-btn" onclick="generatePalette('complementary')" data-ko="보색" data-en="Complementary">보색</button>
+                    <button class="palette-btn" onclick="generatePalette('triadic')" data-ko="삼각색" data-en="Triadic">삼각색</button>
+                    <button class="palette-btn" onclick="generatePalette('tetradic')" data-ko="사각색" data-en="Tetradic">사각색</button>
+                    <button class="palette-btn" onclick="generatePalette('monochromatic')" data-ko="단색" data-en="Monochromatic">단색</button>
+                </div>
+                <div class="palette-display" id="paletteDisplay"></div>
+            </div>
+
+            <!-- WCAG 접근성 -->
+            <div class="accessibility-section">
+                <h2 data-ko="WCAG 접근성 대비" data-en="WCAG Contrast">WCAG 접근성 대비</h2>
+                <div class="contrast-check">
+                    <span data-ko="흰색 텍스트" data-en="White text">흰색 텍스트</span>
+                    <span class="rating" id="whiteRating">AA</span>
+                </div>
+                <div class="contrast-check">
+                    <span data-ko="검은색 텍스트" data-en="Black text">검은색 텍스트</span>
+                    <span class="rating" id="blackRating">AAA</span>
+                </div>
+                <p style="font-size: 0.9em; color: var(--text-secondary); margin-top: 15px;" data-ko="※ AAA: 최고 수준(7:1 이상), AA: 표준 수준(4.5:1 이상), Fail: 기준 미달(3:1 미만)" data-en="※ AAA: Highest level (7:1+), AA: Standard level (4.5:1+), Fail: Below standard (<3:1)">
+    ※ AAA: 최고 수준(7:1 이상), AA: 표준 수준(4.5:1 이상), Fail: 기준 미달(3:1 미만)
+</p>
+            </div>
+
+            <!-- 최근 사용 색상 -->
+            <div class="history-section">
+                <h2 data-ko="최근 사용 색상" data-en="Recent Colors">최근 사용 색상</h2>
+                <div class="history-colors" id="historyColors"></div>
+            </div>
+        </main>
+
+        <footer>
+            <div class="footer-content">
+                <p class="footer-brand">
+                    Made by <a href="https://baal.co.kr" target="_blank">BAAL</a>
+                </p>
+                <p class="footer-contact">
+                    <a href="mailto:summon@baal.co.kr">summon@baal.co.kr</a>
+                </p>
+                <p class="footer-links">
+                    <a href="#" onclick="event.preventDefault(); openPrivacyModal();" data-ko="개인정보처리방침" data-en="Privacy Policy">개인정보처리방침</a>
+                </p>
+                <p class="footer-copyright">&copy; 2025 BAAL. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+    <!-- Privacy Policy Modal (from baal.co.kr) -->
+    <div id="privacyModal" class="modal" onclick="if(event.target.id==='privacyModal') closePrivacyModal()">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closePrivacyModal()">&times;</button>
+            <h1 class="modal-title">개인정보처리방침</h1>
+
+            <div class="privacy-content">
+                <h3>1. 개인정보의 처리 목적</h3>
+                <p>BAAL(이하 "회사")은 사용자가 브라우저에서 직접 파일을 처리하는 무료 온라인 도구를 제공합니다. 회사는 <strong>어떠한 개인정보도 수집하지 않습니다.</strong></p>
+
+                <h3>2. 처리하는 개인정보 항목</h3>
+                <p><strong>없음</strong> - 모든 파일 처리는 사용자의 브라우저 내에서만 이루어지며, 서버로 전송되지 않습니다.</p>
+
+                <h3>3. 개인정보의 처리 및 보유기간</h3>
+                <p>회사는 개인정보를 수집하지 않으므로 보유하지 않습니다.</p>
+
+                <h3>4. 쿠키(Cookie) 사용</h3>
+                <p>본 웹사이트는 Google AdSense 광고 서비스를 사용합니다. Google은 사용자의 관심사에 맞는 광고를 제공하기 위해 쿠키를 사용할 수 있습니다.</p>
+                <ul>
+                    <li>Google의 광고 쿠키 정책: <a href="https://policies.google.com/technologies/ads" target="_blank">링크</a></li>
+                    <li>쿠키 설정은 브라우저에서 관리하실 수 있습니다.</li>
+                </ul>
+
+                <h3>5. 개인정보 보호책임자</h3>
+                <p>
+                    이메일: <a href="mailto:summon@baal.co.kr">summon@baal.co.kr</a><br>
+                    사용자는 회사의 서비스를 이용하며 발생한 모든 개인정보 보호 관련 문의를 위 연락처로 하실 수 있습니다.
+                </p>
+
+                <h3>6. 개인정보처리방침 변경</h3>
+                <p>본 개인정보처리방침은 법령, 정책 또는 보안기술의 변경에 따라 내용이 추가, 삭제 및 수정될 수 있으며, 변경 시 웹사이트를 통해 공지합니다.</p>
+
+                <p style="margin-top: 30px; text-align: center; color: #7f8c8d; font-size: 0.9em;">
+                    시행일자: 2025년 1월 24일
+                </p>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- 공통 스크립트 -->
+    <script src="_common/common.js"></script>
+    <script>
+        // Color conversion functions
+        function hexToRgb(hex) {
+            const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            return result ? {
+                r: parseInt(result[1], 16),
+                g: parseInt(result[2], 16),
+                b: parseInt(result[3], 16)
+            } : null;
+        }
+
+        function rgbToHex(r, g, b) {
+            return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase();
+        }
+
+        function rgbToHsl(r, g, b) {
+            r /= 255;
+            g /= 255;
+            b /= 255;
+
+            const max = Math.max(r, g, b);
+            const min = Math.min(r, g, b);
+            let h, s, l = (max + min) / 2;
+
+            if (max === min) {
+                h = s = 0;
+            } else {
+                const d = max - min;
+                s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+
+                switch (max) {
+                    case r: h = ((g - b) / d + (g < b ? 6 : 0)) / 6; break;
+                    case g: h = ((b - r) / d + 2) / 6; break;
+                    case b: h = ((r - g) / d + 4) / 6; break;
+                }
+            }
+
+            return {
+                h: Math.round(h * 360),
+                s: Math.round(s * 100),
+                l: Math.round(l * 100)
+            };
+        }
+
+        function hslToRgb(h, s, l) {
+            h /= 360;
+            s /= 100;
+            l /= 100;
+
+            let r, g, b;
+
+            if (s === 0) {
+                r = g = b = l;
+            } else {
+                const hue2rgb = (p, q, t) => {
+                    if (t < 0) t += 1;
+                    if (t > 1) t -= 1;
+                    if (t < 1/6) return p + (q - p) * 6 * t;
+                    if (t < 1/2) return q;
+                    if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+                    return p;
+                };
+
+                const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+                const p = 2 * l - q;
+
+                r = hue2rgb(p, q, h + 1/3);
+                g = hue2rgb(p, q, h);
+                b = hue2rgb(p, q, h - 1/3);
+            }
+
+            return {
+                r: Math.round(r * 255),
+                g: Math.round(g * 255),
+                b: Math.round(b * 255)
+            };
+        }
+
+        function validateHex(hex) {
+            if (!hex.startsWith('#')) {
+                hex = '#' + hex;
+            }
+
+            if (/^#[0-9A-F]{3}$/i.test(hex)) {
+                hex = '#' + hex[1] + hex[1] + hex[2] + hex[2] + hex[3] + hex[3];
+            }
+
+            if (!/^#[0-9A-F]{6}$/i.test(hex)) {
+                return null;
+            }
+
+            return hex.toUpperCase();
+        }
+
+        // WCAG contrast functions
+        function getLuminance(r, g, b) {
+            const [rs, gs, bs] = [r, g, b].map(val => {
+                val /= 255;
+                return val <= 0.03928 ? val / 12.92 : Math.pow((val + 0.055) / 1.055, 2.4);
+            });
+            return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs;
+        }
+
+        function getContrastRatio(hex1, hex2) {
+            const rgb1 = hexToRgb(hex1);
+            const rgb2 = hexToRgb(hex2);
+            const lum1 = getLuminance(rgb1.r, rgb1.g, rgb1.b);
+            const lum2 = getLuminance(rgb2.r, rgb2.g, rgb2.b);
+
+            const lighter = Math.max(lum1, lum2);
+            const darker = Math.min(lum1, lum2);
+
+            return (lighter + 0.05) / (darker + 0.05);
+        }
+
+        function getAccessibilityRating(ratio) {
+            if (ratio >= 7) return 'AAA';
+            if (ratio >= 4.5) return 'AA';
+            return 'Fail';
+        }
+
+        // Update color display
+        function updateColor(hex) {
+            hex = validateHex(hex);
+            if (!hex) return;
+
+            const rgb = hexToRgb(hex);
+            const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
+
+            document.getElementById('colorPreview').style.backgroundColor = hex;
+            document.getElementById('colorPreview').textContent = hex;
+            document.getElementById('hexInput').value = hex;
+            document.getElementById('rgbInput').value = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
+            document.getElementById('hslInput').value = `hsl(${hsl.h}°, ${hsl.s}%, ${hsl.l}%)`;
+            document.getElementById('colorPicker').value = hex;
+
+            // Update WCAG contrast
+            const whiteRatio = getContrastRatio(hex, '#FFFFFF');
+            const blackRatio = getContrastRatio(hex, '#000000');
+
+            const whiteRating = getAccessibilityRating(whiteRatio);
+            const blackRating = getAccessibilityRating(blackRatio);
+
+            const whiteEl = document.getElementById('whiteRating');
+            const blackEl = document.getElementById('blackRating');
+
+            whiteEl.textContent = `${whiteRating} (${whiteRatio.toFixed(1)}:1)`;
+            whiteEl.className = 'rating ' + whiteRating.toLowerCase();
+
+            blackEl.textContent = `${blackRating} (${blackRatio.toFixed(1)}:1)`;
+            blackEl.className = 'rating ' + blackRating.toLowerCase();
+
+            // Add to history
+            addToHistory(hex);
+        }
+
+        // Palette generation
+        function generatePalette(type) {
+            const hex = document.getElementById('hexInput').value;
+            const rgb = hexToRgb(hex);
+            const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
+            const baseHue = hsl.h;
+            let colors = [];
+
+            switch (type) {
+                case 'analogous':
+                    colors = [
+                        hslToRgb(baseHue, 80, 60),
+                        hslToRgb((baseHue + 30) % 360, 80, 50),
+                        hslToRgb(baseHue, 80, 40),
+                        hslToRgb((baseHue - 30 + 360) % 360, 80, 70),
+                        hslToRgb((baseHue - 30 + 360) % 360, 80, 50)
+                    ];
+                    break;
+                case 'complementary':
+                    colors = [
+                        hslToRgb(baseHue, 80, 60),
+                        hslToRgb((baseHue + 180) % 360, 80, 60),
+                        hslToRgb(baseHue, 60, 50),
+                        hslToRgb((baseHue + 180) % 360, 60, 50),
+                        hslToRgb(baseHue, 90, 70)
+                    ];
+                    break;
+                case 'triadic':
+                    colors = [
+                        hslToRgb(baseHue, 80, 60),
+                        hslToRgb((baseHue + 120) % 360, 80, 60),
+                        hslToRgb((baseHue + 240) % 360, 80, 60),
+                        hslToRgb(baseHue, 60, 50),
+                        hslToRgb((baseHue + 120) % 360, 60, 50)
+                    ];
+                    break;
+                case 'tetradic':
+                    colors = [
+                        hslToRgb(baseHue, 80, 60),
+                        hslToRgb((baseHue + 90) % 360, 80, 60),
+                        hslToRgb((baseHue + 180) % 360, 80, 60),
+                        hslToRgb((baseHue + 270) % 360, 80, 60),
+                        hslToRgb(baseHue, 60, 50)
+                    ];
+                    break;
+                case 'monochromatic':
+                    colors = [
+                        hslToRgb(baseHue, hsl.s, 80),
+                        hslToRgb(baseHue, hsl.s, 60),
+                        hslToRgb(baseHue, hsl.s, 40),
+                        hslToRgb(baseHue, hsl.s, 20),
+                        hslToRgb(baseHue, hsl.s, 10)
+                    ];
+                    break;
+            }
+
+            const paletteDisplay = document.getElementById('paletteDisplay');
+            paletteDisplay.innerHTML = colors.map(rgb => {
+                const colorHex = rgbToHex(rgb.r, rgb.g, rgb.b);
+                return `<div class="palette-color" style="background: ${colorHex}" onclick="updateColor('${colorHex}')">
+                    <span>${colorHex}</span>
+                </div>`;
+            }).join('');
+
+            // Update active button
+            document.querySelectorAll('.palette-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        // History management
+        function addToHistory(hex) {
+            let history = JSON.parse(localStorage.getItem('colorHistory') || '[]');
+            history = history.filter(h => h !== hex);
+            history.unshift(hex);
+            history = history.slice(0, 10);
+            localStorage.setItem('colorHistory', JSON.stringify(history));
+            updateHistoryDisplay();
+        }
+
+        function updateHistoryDisplay() {
+            const history = JSON.parse(localStorage.getItem('colorHistory') || '[]');
+            const historyEl = document.getElementById('historyColors');
+            historyEl.innerHTML = history.map(hex =>
+                `<div class="history-color" style="background: ${hex}" onclick="updateColor('${hex}')" title="${hex}"></div>`
+            ).join('');
+        }
+
+        // Copy to clipboard
+        function copyToClipboard(type) {
+            const input = document.getElementById(type + 'Input');
+            input.select();
+            document.execCommand('copy');
+
+            const lang = document.body.getAttribute('data-lang') || 'ko';
+            const message = lang === 'ko' ? '복사되었습니다!' : 'Copied!';
+            alert(message);
+        }
+
+        // Event listeners
+        document.getElementById('colorPicker').addEventListener('input', (e) => {
+            updateColor(e.target.value);
+        });
+
+        document.getElementById('hexInput').addEventListener('input', (e) => {
+            updateColor(e.target.value);
+        });
+
+        // Initialize
+        updateColor('#d4af37');
+        updateHistoryDisplay();
+        // Privacy Modal Functions
+        function openPrivacyModal() {
+            document.getElementById('privacyModal').classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closePrivacyModal() {
+            document.getElementById('privacyModal').classList.remove('show');
+            document.body.style.overflow = '';
+        }
+
+        // ESC key to close modal
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closePrivacyModal();
+            }
+        });
+
+    </script>
+</body>
+</html>

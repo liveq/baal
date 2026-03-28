@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>GitHub Reinstatement - 복사용</title>
+<style>
+body { font-family: 'Segoe UI', sans-serif; max-width: 700px; margin: 40px auto; padding: 20px; background: #1a1a1a; color: #e5e5e5; }
+h1 { color: #d4af37; font-size: 20px; }
+.item { background: #242424; border: 1px solid #333; border-radius: 8px; padding: 16px; margin: 16px 0; }
+.label { color: #999; font-size: 13px; margin-bottom: 6px; }
+.value { background: #1a1a1a; border: 1px solid #444; border-radius: 4px; padding: 10px 14px; font-size: 14px; line-height: 1.6; white-space: pre-wrap; }
+.copy-btn { margin-top: 8px; background: #d4af37; color: #000; border: none; padding: 6px 16px; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: 600; }
+.copy-btn:hover { background: #c19b2a; }
+.copy-btn.done { background: #059669; color: #fff; }
+.radio { color: #4a90d9; font-weight: 600; margin-top: 4px; }
+.check { color: #059669; font-weight: 600; margin-top: 4px; }
+hr { border: none; border-top: 1px solid #333; margin: 24px 0; }
+</style>
+</head>
+<body>
+<h1>GitHub Reinstatement Request - 복사용</h1>
+<p style="color:#999; font-size:13px;">각 항목의 [복사] 버튼을 누르고 양식에 붙여넣기</p>
+
+<div class="item">
+  <div class="label">제목 *</div>
+  <div class="value" id="v1">Request to unflag my account - cannot authorize third-party apps</div>
+  <button class="copy-btn" onclick="copyText('v1', this)">복사</button>
+</div>
+
+<div class="item">
+  <div class="label">추가 정보 (본문) *</div>
+  <div class="value" id="v2">Hello GitHub Support,
+
+My account (liveq) has been flagged and I am unable to authorize third-party OAuth applications such as Supabase. When I try to sign in via GitHub OAuth, I receive the message: "This account is flagged and cannot approve third-party application access."
+
+I recently enabled two-factor authentication on my account, which may have triggered the flag. I have not violated any GitHub terms of service or community guidelines. My account is in good standing and I use it for personal development projects including open-source tools hosted on GitHub Pages.
+
+I would appreciate it if you could review and remove the flag so I can authorize third-party applications again.
+
+Thank you.</div>
+  <button class="copy-btn" onclick="copyText('v2', this)">복사</button>
+</div>
+
+<div class="item">
+  <div class="label">콘텐츠 관련 *</div>
+  <div class="radio">GitHub 선택</div>
+</div>
+
+<div class="item">
+  <div class="label">사용자 이름/리포지토리 *</div>
+  <div class="value" id="v3">liveq</div>
+  <button class="copy-btn" onclick="copyText('v3', this)">복사</button>
+</div>
+
+<div class="item">
+  <div class="label">왜 복원 요청? *</div>
+  <div class="radio">로그인할 수 있지만 나의 프로필 및 기여가 다른 사람에게 표시되지 않음 선택</div>
+</div>
+
+<div class="item">
+  <div class="label">이전에 GitHub에 문의한 적 있습니까? *</div>
+  <div class="radio">아니오 선택</div>
+</div>
+
+<div class="item">
+  <div class="label">맨 아래 체크박스</div>
+  <div class="check">체크하기</div>
+</div>
+
+<hr>
+<p style="color:#999; font-size:12px;">다 입력하고 [계속] 클릭</p>
+
+<script>
+function copyText(id, btn) {
+  const text = document.getElementById(id).innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '복사됨!';
+    btn.classList.add('done');
+    setTimeout(() => { btn.textContent = '복사'; btn.classList.remove('done'); }, 2000);
+  });
+}
+</script>
+</body>
+</html>

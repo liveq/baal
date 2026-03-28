@@ -1,0 +1,2506 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BAAL 통합 완전 개발 계획서 v2.0 - 최종 완전판</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Malgun Gothic', sans-serif;
+            background: #fafaf8;
+            color: #0a0a0a;
+            line-height: 1.6;
+            padding: 40px 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 60px;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            border: 1px solid #e8dcc8;
+        }
+        
+        h1 {
+            font-size: 42px;
+            font-weight: 500;
+            color: #8a7a5f;
+            margin-bottom: 12px;
+            text-align: center;
+            border-bottom: 3px solid #c9b896;
+            padding-bottom: 20px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 16px;
+            margin-bottom: 50px;
+        }
+        
+        h2 {
+            font-size: 28px;
+            font-weight: 500;
+            color: #8a7a5f;
+            margin: 50px 0 24px 0;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #e8dcc8;
+        }
+        
+        h3 {
+            font-size: 22px;
+            font-weight: 500;
+            color: #2a2a2a;
+            margin: 32px 0 16px 0;
+        }
+        
+        h4 {
+            font-size: 18px;
+            font-weight: 500;
+            color: #2a2a2a;
+            margin: 24px 0 12px 0;
+        }
+        
+        p {
+            margin-bottom: 16px;
+            color: #2a2a2a;
+        }
+        
+        .highlight-box {
+            background: #fffbf0;
+            border-left: 4px solid #c9b896;
+            padding: 20px 24px;
+            margin: 24px 0;
+            border-radius: 6px;
+        }
+        
+        .warning-box {
+            background: #fff5f5;
+            border-left: 4px solid #e57373;
+            padding: 20px 24px;
+            margin: 24px 0;
+            border-radius: 6px;
+        }
+        
+        .critical-box {
+            background: #fff0f0;
+            border: 3px solid #d32f2f;
+            padding: 24px;
+            margin: 32px 0;
+            border-radius: 8px;
+        }
+        
+        .info-box {
+            background: #f0f7ff;
+            border-left: 4px solid #64b5f6;
+            padding: 20px 24px;
+            margin: 24px 0;
+            border-radius: 6px;
+        }
+        
+        .success-box {
+            background: #f1f8f4;
+            border-left: 4px solid #4caf50;
+            padding: 20px 24px;
+            margin: 24px 0;
+            border-radius: 6px;
+        }
+        
+        ul, ol {
+            margin: 16px 0 16px 32px;
+        }
+        
+        li {
+            margin-bottom: 10px;
+            color: #2a2a2a;
+        }
+        
+        code {
+            background: #f5f5f5;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #c9b896;
+        }
+        
+        pre {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+            border: 1px solid #e8dcc8;
+        }
+        
+        pre code {
+            background: none;
+            color: #d4d4d4;
+            padding: 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 24px 0;
+            background: #ffffff;
+        }
+        
+        th {
+            background: #f8f9fa;
+            color: #8a7a5f;
+            font-weight: 500;
+            padding: 14px;
+            text-align: left;
+            border: 1px solid #e8dcc8;
+        }
+        
+        td {
+            padding: 12px 14px;
+            border: 1px solid #e8dcc8;
+            color: #2a2a2a;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 500;
+            margin-right: 8px;
+        }
+        
+        .badge-phase1 {
+            background: #d32f2f;
+            color: #ffffff;
+        }
+        
+        .badge-phase2 {
+            background: #ff9800;
+            color: #ffffff;
+        }
+
+        .section-number {
+            display: inline-block;
+            width: 36px;
+            height: 36px;
+            background: #c9b896;
+            color: #ffffff;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 36px;
+            margin-right: 12px;
+            font-weight: 500;
+        }
+        
+        .file-tree {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e8dcc8;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        .toc {
+            background: #f8f9fa;
+            padding: 24px 32px;
+            border-radius: 8px;
+            margin: 32px 0;
+            border: 1px solid #e8dcc8;
+        }
+        
+        .toc h3 {
+            margin-top: 0;
+            color: #8a7a5f;
+        }
+        
+        .toc ul {
+            margin-left: 20px;
+        }
+        
+        .toc a {
+            color: #2a2a2a;
+            text-decoration: none;
+        }
+        
+        .toc a:hover {
+            color: #8a7a5f;
+            text-decoration: underline;
+        }
+
+        .component-card {
+            background: #fafaf8;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e8dcc8;
+            margin: 16px 0;
+        }
+
+        .step-box {
+            background: #fff;
+            border-left: 4px solid #c9b896;
+            padding: 16px 20px;
+            margin: 12px 0;
+            border-radius: 4px;
+        }
+
+        .pending-box {
+            background: #fffef0;
+            border: 2px dashed #f9a825;
+            padding: 20px;
+            margin: 24px 0;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📋 BAAL 통합 완전 개발 계획서 v2.0</h1>
+        <div class="subtitle">커뮤니티 법정 + 꿀단지 리워드 + 게시판 시스템 - 클로드코드 개발용 최종 완전판</div>
+        
+        <div class="critical-box">
+            <h3 style="margin-top: 0; color: #d32f2f;">🔥 이 문서는 3개 문서의 통합본 + 완전 보강판입니다</h3>
+            <ul style="margin-bottom: 0;">
+                <li>✅ BAAL 전체 계획서 (법정 + 꿀단지)</li>
+                <li>✅ 1차 구현 가이드 (게시판 시스템)</li>
+                <li>✅ 정책 준수 체크리스트</li>
+                <li>✅ v1.5: 보안, 에러처리, 알림, 관리자, 성능 최적화</li>
+                <li>⭐ <strong>v2.0 NEW:</strong> SEO, 반응형, 테스트, 배포, 법적문서, DB마이그레이션, 마케팅</li>
+            </ul>
+        </div>
+
+        <div class="toc">
+            <h3>📑 목차</h3>
+            <ul>
+                <li><a href="#overview">1. 프로젝트 전체 개요</a></li>
+                <li><a href="#policy">2. ⚠️ 정책 준수 체크리스트</a></li>
+                <li><a href="#phase1">3. 1차 구현: 게시판 + 바알의 저울 + 꿀단지</a></li>
+                <li><a href="#phase2">4. 2차 구현: 법정 시스템 고급 기능</a></li>
+                <li><a href="#tech-stack">5. 기술 스택</a></li>
+                <li><a href="#database">6. Supabase DB 설계</a></li>
+                <li><a href="#security">7. 🔒 보안 설계</a></li>
+                <li><a href="#error-handling">8. ⚠️ 에러 처리 & 로깅</a></li>
+                <li><a href="#notification">9. 🔔 알림 시스템</a></li>
+                <li><a href="#admin">10. 👑 관리자 기능</a></li>
+                <li><a href="#performance">11. ⚡ 성능 최적화</a></li>
+                <li><a href="#roadmap">12. 개발 로드맵 (18주)</a></li>
+                <li><a href="#prompts">13. 클로드코드 프롬프트</a></li>
+                <li><a href="#seo">14. 🔍 SEO & 메타데이터 (NEW)</a></li>
+                <li><a href="#responsive">15. 📱 반응형 디테일 (NEW)</a></li>
+                <li><a href="#testing">16. 🧪 테스트 전략 (NEW)</a></li>
+                <li><a href="#cicd">17. 🚀 배포 & CI/CD (NEW)</a></li>
+                <li><a href="#legal-docs">18. 📄 법적 문서 템플릿 (NEW)</a></li>
+                <li><a href="#migration">19. 🔄 DB 마이그레이션 (NEW)</a></li>
+                <li><a href="#marketing">20. 📈 초기 마케팅 전략 (NEW)</a></li>
+            </ul>
+        </div>
+
+        <h2 id="overview"><span class="section-number">1</span>프로젝트 전체 개요</h2>
+
+        <div class="highlight-box">
+            <h4>🎯 BAAL이란?</h4>
+            <p><strong>세계 최초</strong> 엔터테인먼트형 자율 규제 커뮤니티 + 리워드 광고 통합 플랫폼</p>
+            <ul style="margin-bottom: 0;">
+                <li>⚖️ 커뮤니티 법정: 억울한 제재를 역전재판으로 해결</li>
+                <li>🍯 꿀단지: 광고 시청으로 실제 현금 적립</li>
+                <li>📌 꼬리표: 유저의 대표 글을 커뮤니티가 선정</li>
+                <li>🎭 실시간 관전: 재판을 팝콘 먹으며 관람</li>
+            </ul>
+        </div>
+
+        <h3>핵심 차별점</h3>
+        <ul>
+            <li><strong>평판(명예) ≠ 포인트(현금)</strong>: 완전 분리로 공정성 확보</li>
+            <li><strong>AI 판사 + 배심원</strong>: 빠른 판결 or 민주적 투표 선택</li>
+            <li><strong>삭제 불가 증거</strong>: 바알의 저울에서는 모든 발언 영구 기록</li>
+            <li><strong>리워드 광고 분리</strong>: AdSense 정책 완벽 준수</li>
+        </ul>
+
+        <h3>전체 구조</h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>도메인</th>
+                    <th>주요 기능</th>
+                    <th>광고</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>baal.co.kr</strong></td>
+                    <td>메인 커뮤니티 (게시판, 법정, 도구, 심리테스트)</td>
+                    <td>Google AdSense</td>
+                </tr>
+                <tr>
+                    <td><strong>honey.baal.co.kr</strong></td>
+                    <td>꿀단지 리워드 광고 (1~4페이지)</td>
+                    <td>Tapjoy, AdGate, OfferToro</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2 id="policy"><span class="section-number">2</span>⚠️ 정책 준수 체크리스트</h2>
+
+        <div class="critical-box">
+            <h3 style="margin-top: 0; color: #d32f2f;">🚨 서비스 정지 방지 핵심 원칙</h3>
+            <p>아래 원칙 중 <strong>하나라도 위반하면</strong> 계정 정지/법적 문제 발생</p>
+        </div>
+
+        <h3>2.1 Google AdSense 정책</h3>
+
+        <div class="success-box">
+            <h4>✅ 준수 전략: 완벽한 페이지 분리</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>페이지</th>
+                        <th>광고 종류</th>
+                        <th>리워드</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>메인 사이트 (baal.co.kr)</td>
+                        <td>Google AdSense</td>
+                        <td>없음</td>
+                    </tr>
+                    <tr>
+                        <td>꿀단지 (honey.baal.co.kr)</td>
+                        <td>Tapjoy/AdGate (리워드 전용)</td>
+                        <td>포인트 지급</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="warning-box">
+            <h4>❌ 절대 금지</h4>
+            <ul style="margin-bottom: 0;">
+                <li>AdSense 클릭 시 리워드 지급</li>
+                <li>같은 페이지에 AdSense + 리워드 광고 동시 배치</li>
+                <li>"광고 클릭하면 돈 드려요" 문구</li>
+            </ul>
+        </div>
+
+        <h3>2.2 개인정보보호법</h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>항목</th>
+                    <th>수집 여부</th>
+                    <th>사유</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>이메일</td>
+                    <td>✅ 수집</td>
+                    <td>OAuth 로그인 (카카오/네이버/구글)</td>
+                </tr>
+                <tr>
+                    <td>닉네임</td>
+                    <td>✅ 자동 생성</td>
+                    <td>"익명404" 랜덤 생성</td>
+                </tr>
+                <tr>
+                    <td>전화번호, 실명</td>
+                    <td>❌ 수집 안 함</td>
+                    <td>개인정보 최소화</td>
+                </tr>
+                <tr>
+                    <td>GPS 위치</td>
+                    <td>⚠️ 일회성</td>
+                    <td>방문 인증 후 즉시 삭제</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>2.3 법적 신고 필수 항목</h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>항목</th>
+                    <th>필요 여부</th>
+                    <th>시기</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>사업자등록</td>
+                    <td>✅ 필수</td>
+                    <td>서비스 오픈 전</td>
+                </tr>
+                <tr>
+                    <td>통신판매업 신고</td>
+                    <td>✅ 필수</td>
+                    <td>서비스 오픈 전</td>
+                </tr>
+                <tr>
+                    <td>전자금융업 등록</td>
+                    <td>❌ 불필요</td>
+                    <td>소액 결제 면제</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2 id="phase1"><span class="section-number">3</span>1차 구현: 게시판 + 바알의 저울 + 꿀단지</h2>
+
+        <div class="info-box">
+            <h4>🎯 1차 구현 목표 (9주)</h4>
+            <ul style="margin-bottom: 0;">
+                <li>✅ 기본 커뮤니티 게시판 9개</li>
+                <li>✅ 바알의 저울 (법정 게시판 + 실시간 채팅)</li>
+                <li>✅ 꿀단지 리워드 광고 (1~4페이지)</li>
+                <li>✅ OAuth 로그인, 댓글, 추천/비추</li>
+            </ul>
+        </div>
+
+        <h3>3.1 게시판 목록</h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>게시판</th>
+                    <th>URL</th>
+                    <th>특징</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>🤖 AI·Claude Code</td>
+                    <td>/board/ai</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td>😂 유머</td>
+                    <td>/board/humor</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td>🧠 철학</td>
+                    <td>/board/philosophy</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td>🔮 오컬트·영성</td>
+                    <td>/board/occult</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td>💻 IT 정보</td>
+                    <td>/board/it</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td>🖥️ 중고 하드웨어</td>
+                    <td>/board/hardware</td>
+                    <td>거래 게시판</td>
+                </tr>
+                <tr>
+                    <td>💰 경제</td>
+                    <td>/board/economy</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td>❓ 질문·답변</td>
+                    <td>/board/qna</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td>📝 자유게시판</td>
+                    <td>/board/free</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td>⚖️ 바알의 저울</td>
+                    <td>/court</td>
+                    <td><strong>실시간 채팅 모드, 삭제/수정 불가</strong></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>3.2 게시판 공통 기능</h3>
+
+        <ul>
+            <li>✅ <strong>읽기</strong>: 로그인 없이 가능</li>
+            <li>🔒 <strong>쓰기</strong>: 로그인 필수 (OAuth)</li>
+            <li>💬 <strong>댓글</strong>: 로그인 필수</li>
+            <li>👍👎 <strong>추천/비추</strong>: 로그인 필수, 1인 1표</li>
+            <li>📌 <strong>꼬리표</strong>: 평판 500+ (좋은 글, 논란 글, 웃긴 글...)</li>
+        </ul>
+
+        <h3>3.3 바알의 저울 특수 기능</h3>
+
+        <div class="warning-box">
+            <h4>⚖️ 특별 규칙</h4>
+            <ul style="margin-bottom: 0;">
+                <li><strong>댓글/채팅 삭제 불가</strong>: 증거 조작 방지</li>
+                <li><strong>댓글/채팅 수정 불가</strong>: 발언 영구 기록</li>
+                <li><strong>글 작성 시 모드 선택</strong>:
+                    <ul>
+                        <li>일반 댓글 모드: comments 테이블</li>
+                        <li>실시간 채팅 모드: court_chat 테이블 + Supabase Realtime</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+        <h3>3.4 꿀단지 리워드 시스템</h3>
+
+        <div class="critical-box">
+            <h4>🚨 완전 분리된 사이트</h4>
+            <ul style="margin-bottom: 0;">
+                <li>도메인: <strong>honey.baal.co.kr</strong></li>
+                <li>메인에서 <code>target="_blank"</code> 새 탭 열림</li>
+                <li>AdSense 없음 (리워드 광고만)</li>
+                <li>로그인 공유 (Supabase Auth 동일)</li>
+            </ul>
+        </div>
+
+        <h4>광고 페이지 구조</h4>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>페이지</th>
+                    <th>광고 형태</th>
+                    <th>보상</th>
+                    <th>개수</th>
+                    <th>플랫폼</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>🍯 1페이지</td>
+                    <td>클릭 → 3초 대기</td>
+                    <td>1원/건</td>
+                    <td>20개</td>
+                    <td>Tapjoy</td>
+                </tr>
+                <tr>
+                    <td>🍯 2페이지</td>
+                    <td>영상 10초 시청</td>
+                    <td>3원/건</td>
+                    <td>15개</td>
+                    <td>AdGate</td>
+                </tr>
+                <tr>
+                    <td>🍯 3페이지</td>
+                    <td>설문 1분</td>
+                    <td>10원/건</td>
+                    <td>10개</td>
+                    <td>OfferToro</td>
+                </tr>
+                <tr>
+                    <td>🍯 4페이지 (모바일만)</td>
+                    <td>매장 방문 (GPS)</td>
+                    <td>50원/건</td>
+                    <td>5개</td>
+                    <td>제휴 매장</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p><strong>일일 최대 획득:</strong> 415원 (PC 165원, 모바일 415원)</p>
+
+        <h2 id="phase2"><span class="section-number">4</span>2차 구현: 법정 시스템 고급 기능</h2>
+
+        <div class="info-box">
+            <h4>🎯 2차 구현 목표 (9주)</h4>
+            <ul style="margin-bottom: 0;">
+                <li>⚖️ AI 판사 (Claude API)</li>
+                <li>👥 배심원 투표</li>
+                <li>🎤 변호인단</li>
+                <li>🎭 실시간 관전 (팝콘 모드)</li>
+                <li>🔥 하이라이트 클립</li>
+            </ul>
+        </div>
+
+        <h3>4.1 법정 시스템 구성 요소</h3>
+
+        <ul>
+            <li><strong>평판 시스템</strong>: 추천/비추로 명예 점수 획득 (거래 불가)</li>
+            <li><strong>꼬리표</strong>: 유저의 대표 글 링크 (카테고리만, 텍스트 금지)</li>
+            <li><strong>이의신청</strong>: 부당한 꼬리표에 재판 요청</li>
+            <li><strong>AI 판사</strong>: Claude API로 6시간 내 판결 (평판 -100 비용)</li>
+            <li><strong>배심원 투표</strong>: 평판 500+ 유저가 48시간 투표 (무료)</li>
+            <li><strong>변호인단</strong>: 평판 2000+ 유저가 변론 작성</li>
+            <li><strong>실시간 관전</strong>: 팝콘/불꽃/다이아 반응, 베팅</li>
+        </ul>
+
+        <h2 id="tech-stack"><span class="section-number">5</span>기술 스택</h2>
+
+        <h3>5.1 프론트엔드</h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>기술</th>
+                    <th>버전</th>
+                    <th>용도</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Next.js</td>
+                    <td>14.2.x</td>
+                    <td>React 프레임워크 (App Router)</td>
+                </tr>
+                <tr>
+                    <td>TypeScript</td>
+                    <td>5.x</td>
+                    <td>타입 안정성</td>
+                </tr>
+                <tr>
+                    <td>TailwindCSS</td>
+                    <td>3.4.x</td>
+                    <td>스타일링 (화이트골드 톤)</td>
+                </tr>
+                <tr>
+                    <td>Zustand</td>
+                    <td>4.x</td>
+                    <td>전역 상태 관리</td>
+                </tr>
+                <tr>
+                    <td>marked.js</td>
+                    <td>12.x</td>
+                    <td>마크다운 렌더링</td>
+                </tr>
+                <tr>
+                    <td>date-fns</td>
+                    <td>3.x</td>
+                    <td>날짜 포맷팅</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>5.2 백엔드</h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>기술</th>
+                    <th>용도</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Supabase</td>
+                    <td>BaaS (DB + Auth + Realtime + Storage)</td>
+                </tr>
+                <tr>
+                    <td>PostgreSQL 15</td>
+                    <td>관계형 DB</td>
+                </tr>
+                <tr>
+                    <td>Supabase Auth</td>
+                    <td>OAuth (카카오/네이버/구글)</td>
+                </tr>
+                <tr>
+                    <td>Supabase Realtime</td>
+                    <td>실시간 채팅 (바알의 저울)</td>
+                </tr>
+                <tr>
+                    <td>Edge Functions</td>
+                    <td>서버리스 API (리워드 검증)</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>5.3 외부 API</h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>서비스</th>
+                    <th>용도</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Anthropic Claude API</td>
+                    <td>AI 판사 판결</td>
+                </tr>
+                <tr>
+                    <td>Tapjoy</td>
+                    <td>리워드 광고 (클릭형)</td>
+                </tr>
+                <tr>
+                    <td>AdGate Media</td>
+                    <td>리워드 광고 (영상/설문)</td>
+                </tr>
+                <tr>
+                    <td>OfferToro</td>
+                    <td>리워드 광고 (고보상)</td>
+                </tr>
+                <tr>
+                    <td>토스페이먼츠</td>
+                    <td>출금 송금</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>5.4 배포</h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>서비스</th>
+                    <th>용도</th>
+                    <th>요금</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Vercel</td>
+                    <td>메인 사이트 (baal.co.kr)</td>
+                    <td>Pro $20/월</td>
+                </tr>
+                <tr>
+                    <td>Vercel (별도)</td>
+                    <td>꿀단지 (honey.baal.co.kr)</td>
+                    <td>무료 or Pro</td>
+                </tr>
+                <tr>
+                    <td>Supabase</td>
+                    <td>백엔드</td>
+                    <td>Pro $25/월</td>
+                </tr>
+                <tr>
+                    <td>Cloudflare</td>
+                    <td>DNS 관리</td>
+                    <td>무료</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2 id="database"><span class="section-number">6</span>Supabase DB 설계</h2>
+
+        <h3>6.1 핵심 테이블</h3>
+
+        <h4>users (회원)</h4>
+        <pre><code>CREATE TABLE users (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  email VARCHAR(255) UNIQUE NOT NULL,
+  oauth_provider VARCHAR(20) NOT NULL,
+  nickname VARCHAR(50) NOT NULL,
+  
+  -- 평판 (명예, 거래 불가)
+  reputation INTEGER DEFAULT 0,
+  trust_level VARCHAR(20) DEFAULT 'bronze',
+  
+  -- 포인트 (현금, 출금 가능)
+  points INTEGER DEFAULT 0,
+  
+  -- 통계
+  posts_count INTEGER DEFAULT 0,
+  comments_count INTEGER DEFAULT 0,
+  
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW(),
+  
+  is_admin BOOLEAN DEFAULT FALSE,
+  is_banned BOOLEAN DEFAULT FALSE,
+  
+  INDEX idx_email (email),
+  INDEX idx_reputation (reputation DESC)
+);</code></pre>
+
+        <h4>posts (게시글)</h4>
+        <pre><code>CREATE TABLE posts (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+  board_type VARCHAR(50) NOT NULL, -- 'ai', 'court' 등
+  title VARCHAR(200) NOT NULL,
+  content TEXT NOT NULL,
+  
+  -- 바알의 저울 전용
+  is_chat_mode BOOLEAN DEFAULT FALSE,
+  
+  -- 통계
+  views INTEGER DEFAULT 0,
+  upvotes INTEGER DEFAULT 0,
+  downvotes INTEGER DEFAULT 0,
+  comments_count INTEGER DEFAULT 0,
+  
+  -- 상태
+  is_deleted BOOLEAN DEFAULT FALSE,
+  is_best BOOLEAN DEFAULT FALSE,
+  
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW(),
+  
+  INDEX idx_board_created (board_type, created_at DESC),
+  INDEX idx_board_upvotes (board_type, upvotes DESC)
+);</code></pre>
+
+        <h4>comments (댓글)</h4>
+        <pre><code>CREATE TABLE comments (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  post_id UUID REFERENCES posts(id) ON DELETE CASCADE,
+  user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+  parent_id UUID REFERENCES comments(id),
+  content TEXT NOT NULL,
+  
+  upvotes INTEGER DEFAULT 0,
+  downvotes INTEGER DEFAULT 0,
+  
+  -- 바알의 저울 전용
+  can_edit BOOLEAN DEFAULT TRUE,
+  can_delete BOOLEAN DEFAULT TRUE,
+  
+  is_deleted BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMP DEFAULT NOW(),
+  
+  INDEX idx_post_created (post_id, created_at)
+);</code></pre>
+
+        <h4>votes (추천/비추)</h4>
+        <pre><code>CREATE TABLE votes (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+  target_type VARCHAR(20) NOT NULL, -- 'post', 'comment'
+  target_id UUID NOT NULL,
+  vote_type VARCHAR(10) NOT NULL, -- 'upvote', 'downvote'
+  
+  created_at TIMESTAMP DEFAULT NOW(),
+  
+  CONSTRAINT unique_vote UNIQUE(user_id, target_type, target_id)
+);</code></pre>
+
+        <h4>user_tags (꼬리표)</h4>
+        <pre><code>CREATE TABLE user_tags (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  tagged_user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+  tagger_user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+  post_id UUID REFERENCES posts(id) ON DELETE CASCADE,
+  tag_type VARCHAR(20) NOT NULL, -- 'good', 'bad', 'funny', 'fire', 'think'
+  
+  created_at TIMESTAMP DEFAULT NOW(),
+  
+  CONSTRAINT unique_tag UNIQUE(tagger_user_id, post_id),
+  INDEX idx_tagged_user (tagged_user_id, tag_type)
+);</code></pre>
+
+        <h4>court_chat (실시간 채팅)</h4>
+        <pre><code>CREATE TABLE court_chat (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  post_id UUID REFERENCES posts(id) ON DELETE CASCADE,
+  user_id UUID REFERENCES users(id),
+  message TEXT NOT NULL,
+  
+  created_at TIMESTAMP DEFAULT NOW(),
+  
+  INDEX idx_post_created (post_id, created_at)
+);</code></pre>
+
+        <h3>6.2 꿀단지 테이블</h3>
+
+        <h4>honey_ads (광고 목록)</h4>
+        <pre><code>CREATE TABLE honey_ads (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  page_number INTEGER NOT NULL, -- 1, 2, 3, 4
+  ad_platform VARCHAR(50) NOT NULL,
+  title VARCHAR(200) NOT NULL,
+  reward_points INTEGER NOT NULL,
+  duration_seconds INTEGER,
+  
+  -- 4페이지 위치 정보
+  location_lat DECIMAL(10, 8),
+  location_lng DECIMAL(11, 8),
+  location_name VARCHAR(200),
+  
+  tracking_url TEXT,
+  is_active BOOLEAN DEFAULT TRUE,
+  
+  created_at TIMESTAMP DEFAULT NOW()
+);</code></pre>
+
+        <h4>honey_activities (광고 활동 로그)</h4>
+        <pre><code>CREATE TABLE honey_activities (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+  ad_id UUID REFERENCES honey_ads(id),
+  reward_points INTEGER NOT NULL,
+  
+  ip_address VARCHAR(45),
+  duration_seconds INTEGER,
+  
+  created_at TIMESTAMP DEFAULT NOW(),
+  
+  INDEX idx_user_date (user_id, created_at DESC),
+  INDEX idx_ip_date (ip_address, created_at DESC)
+);</code></pre>
+
+        <h2 id="security"><span class="section-number">7</span>🔒 보안 설계</h2>
+
+        <div class="critical-box">
+            <h3 style="margin-top: 0;">🛡️ 보안 3대 원칙</h3>
+            <ul style="margin-bottom: 0;">
+                <li>인증: OAuth만 사용, 비밀번호 저장 금지</li>
+                <li>권한: RLS (Row Level Security)로 DB 레벨 차단</li>
+                <li>검증: 클라이언트 신뢰 금지, 서버에서 재검증</li>
+            </ul>
+        </div>
+
+        <h3>7.1 Supabase RLS (Row Level Security) 정책</h3>
+
+        <h4>users 테이블</h4>
+        <pre><code>-- 모든 사람이 읽기 가능 (프로필 조회)
+CREATE POLICY "Anyone can view users"
+ON users FOR SELECT
+USING (true);
+
+-- 본인만 수정 가능
+CREATE POLICY "Users can update own profile"
+ON users FOR UPDATE
+USING (auth.uid() = id);</code></pre>
+
+        <h4>posts 테이블</h4>
+        <pre><code>-- 모든 사람이 읽기 가능
+CREATE POLICY "Anyone can view posts"
+ON posts FOR SELECT
+USING (is_deleted = false);
+
+-- 로그인한 사람만 작성 가능
+CREATE POLICY "Authenticated users can insert posts"
+ON posts FOR INSERT
+WITH CHECK (auth.uid() = user_id);
+
+-- 본인만 수정/삭제 가능
+CREATE POLICY "Users can update own posts"
+ON posts FOR UPDATE
+USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can delete own posts"
+ON posts FOR DELETE
+USING (auth.uid() = user_id);</code></pre>
+
+        <h4>comments 테이블</h4>
+        <pre><code>-- 모든 사람이 읽기 가능
+CREATE POLICY "Anyone can view comments"
+ON comments FOR SELECT
+USING (is_deleted = false);
+
+-- 로그인한 사람만 작성
+CREATE POLICY "Authenticated users can insert comments"
+ON comments FOR INSERT
+WITH CHECK (auth.uid() = user_id);
+
+-- 본인만 수정/삭제 (단, can_edit/can_delete = true인 경우만)
+CREATE POLICY "Users can update own comments if allowed"
+ON comments FOR UPDATE
+USING (auth.uid() = user_id AND can_edit = true);
+
+CREATE POLICY "Users can delete own comments if allowed"
+ON comments FOR DELETE
+USING (auth.uid() = user_id AND can_delete = true);</code></pre>
+
+        <h3>7.2 API Rate Limiting</h3>
+
+        <div class="component-card">
+            <h5>🚦 제한 정책</h5>
+            <table>
+                <thead>
+                    <tr>
+                        <th>API</th>
+                        <th>제한</th>
+                        <th>목적</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>글쓰기</td>
+                        <td>10건/시간</td>
+                        <td>스팸 방지</td>
+                    </tr>
+                    <tr>
+                        <td>댓글</td>
+                        <td>30건/시간</td>
+                        <td>도배 방지</td>
+                    </tr>
+                    <tr>
+                        <td>추천/비추</td>
+                        <td>100건/시간</td>
+                        <td>어뷰징 방지</td>
+                    </tr>
+                    <tr>
+                        <td>꿀단지 광고</td>
+                        <td>50건/일</td>
+                        <td>부정 클릭 방지</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h4>구현 (Vercel Edge Config)</h4>
+        <pre><code>// middleware.ts
+import { Ratelimit } from '@upstash/ratelimit'
+import { Redis } from '@upstash/redis'
+
+const ratelimit = new Ratelimit({
+  redis: Redis.fromEnv(),
+  limiter: Ratelimit.slidingWindow(10, '1 h'), // 10 requests per hour
+})
+
+export async function middleware(request: Request) {
+  const ip = request.headers.get('x-forwarded-for')
+  const { success } = await ratelimit.limit(ip)
+  
+  if (!success) {
+    return new Response('Too many requests', { status: 429 })
+  }
+}</code></pre>
+
+        <h3>7.3 XSS/CSRF 방어</h3>
+
+        <ul>
+            <li><strong>XSS 방어</strong>:
+                <ul>
+                    <li>게시글/댓글 HTML 태그 이스케이프</li>
+                    <li>마크다운만 허용 (marked.js sanitize 옵션)</li>
+                    <li><code>&lt;script&gt;</code> 태그 필터링</li>
+                </ul>
+            </li>
+            <li><strong>CSRF 방어</strong>:
+                <ul>
+                    <li>Supabase Auth 자동 처리 (JWT 토큰)</li>
+                    <li>SameSite Cookie 설정</li>
+                </ul>
+            </li>
+        </ul>
+
+        <h3>7.4 민감 정보 암호화</h3>
+
+        <pre><code>// 출금 계좌 정보 암호화
+import crypto from 'crypto'
+
+const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY // 32 bytes
+const IV_LENGTH = 16
+
+function encrypt(text: string) {
+  const iv = crypto.randomBytes(IV_LENGTH)
+  const cipher = crypto.createCipheriv('aes-256-cbc', ENCRYPTION_KEY, iv)
+  let encrypted = cipher.update(text)
+  encrypted = Buffer.concat([encrypted, cipher.final()])
+  return iv.toString('hex') + ':' + encrypted.toString('hex')
+}
+
+function decrypt(text: string) {
+  const parts = text.split(':')
+  const iv = Buffer.from(parts[0], 'hex')
+  const encrypted = Buffer.from(parts[1], 'hex')
+  const decipher = crypto.createDecipheriv('aes-256-cbc', ENCRYPTION_KEY, iv)
+  let decrypted = decipher.update(encrypted)
+  decrypted = Buffer.concat([decrypted, decipher.final()])
+  return decrypted.toString()
+}</code></pre>
+
+        <h2 id="error-handling"><span class="section-number">8</span>⚠️ 에러 처리 & 로깅</h2>
+
+        <h3>8.1 에러 분류</h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>에러 타입</th>
+                    <th>처리 방법</th>
+                    <th>사용자 메시지</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>네트워크 에러</td>
+                    <td>재시도 (3회)</td>
+                    <td>"연결이 불안정합니다. 재시도 중..."</td>
+                </tr>
+                <tr>
+                    <td>인증 에러</td>
+                    <td>로그인 페이지 리다이렉트</td>
+                    <td>"로그인이 필요합니다"</td>
+                </tr>
+                <tr>
+                    <td>권한 에러</td>
+                    <td>메인 페이지 리다이렉트</td>
+                    <td>"접근 권한이 없습니다"</td>
+                </tr>
+                <tr>
+                    <td>서버 에러 (500)</td>
+                    <td>에러 로깅 + Sentry</td>
+                    <td>"일시적 오류가 발생했습니다"</td>
+                </tr>
+                <tr>
+                    <td>Rate Limit (429)</td>
+                    <td>대기 시간 표시</td>
+                    <td>"잠시 후 다시 시도해주세요 (1분 대기)"</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>8.2 전역 에러 핸들러</h3>
+
+        <pre><code>// app/error.tsx (Next.js App Router)
+'use client'
+
+export default function Error({
+  error,
+  reset,
+}: {
+  error: Error & { digest?: string }
+  reset: () => void
+}) {
+  useEffect(() => {
+    // Sentry에 에러 로깅
+    console.error(error)
+  }, [error])
+
+  return (
+    &lt;div className="error-page"&gt;
+      &lt;h2&gt;문제가 발생했습니다&lt;/h2&gt;
+      &lt;p&gt;{error.message || '일시적 오류입니다'}&lt;/p&gt;
+      &lt;button onClick={reset}&gt;다시 시도&lt;/button&gt;
+    &lt;/div&gt;
+  )
+}</code></pre>
+
+        <h3>8.3 404/500 커스텀 페이지</h3>
+
+        <pre><code>// app/not-found.tsx
+export default function NotFound() {
+  return (
+    &lt;div className="not-found"&gt;
+      &lt;h1&gt;404&lt;/h1&gt;
+      &lt;p&gt;페이지를 찾을 수 없습니다&lt;/p&gt;
+      &lt;Link href="/"&gt;홈으로 돌아가기&lt;/Link&gt;
+    &lt;/div&gt;
+  )
+}</code></pre>
+
+        <h3>8.4 토스트 알림 시스템</h3>
+
+        <pre><code>// components/Toast.tsx
+import { Toaster, toast } from 'sonner'
+
+export function showToast(type: 'success' | 'error', message: string) {
+  if (type === 'success') {
+    toast.success(message)
+  } else {
+    toast.error(message)
+  }
+}
+
+// 사용 예시
+showToast('success', '게시글이 등록되었습니다')
+showToast('error', '권한이 없습니다')</code></pre>
+
+        <h2 id="notification"><span class="section-number">9</span>🔔 알림 시스템</h2>
+
+        <h3>9.1 알림 종류</h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>알림 타입</th>
+                    <th>트리거</th>
+                    <th>전송 방식</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>댓글 알림</td>
+                    <td>내 글에 댓글 작성</td>
+                    <td>인앱 + 브라우저 Push</td>
+                </tr>
+                <tr>
+                    <td>추천 알림</td>
+                    <td>내 글이 베스트 선정</td>
+                    <td>인앱</td>
+                </tr>
+                <tr>
+                    <td>꼬리표 알림</td>
+                    <td>누군가 내게 꼬리표 부착</td>
+                    <td>인앱</td>
+                </tr>
+                <tr>
+                    <td>법정 소환</td>
+                    <td>증인 소환, 판결 완료</td>
+                    <td>인앱 + 브라우저 Push</td>
+                </tr>
+                <tr>
+                    <td>포인트 적립</td>
+                    <td>꿀단지 광고 완료</td>
+                    <td>인앱</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>9.2 DB 테이블</h3>
+
+        <pre><code>CREATE TABLE notifications (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+  type VARCHAR(50) NOT NULL, -- 'comment', 'best', 'tag', 'court', 'points'
+  title VARCHAR(200) NOT NULL,
+  message TEXT NOT NULL,
+  link VARCHAR(500), -- 클릭 시 이동할 URL
+  
+  is_read BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMP DEFAULT NOW(),
+  
+  INDEX idx_user_unread (user_id, is_read, created_at DESC)
+);</code></pre>
+
+        <h3>9.3 알림 생성 로직</h3>
+
+        <pre><code>// 댓글 알림 예시
+async function createCommentNotification(postId: string, commenterId: string) {
+  // 게시글 작성자 가져오기
+  const { data: post } = await supabase
+    .from('posts')
+    .select('user_id, title')
+    .eq('id', postId)
+    .single()
+  
+  // 본인 댓글은 알림 안 보냄
+  if (post.user_id === commenterId) return
+  
+  // 알림 생성
+  await supabase.from('notifications').insert({
+    user_id: post.user_id,
+    type: 'comment',
+    title: '새 댓글',
+    message: `'${post.title}'에 댓글이 달렸습니다`,
+    link: `/post/${postId}`
+  })
+  
+  // 실시간 알림 (Supabase Realtime)
+  // 클라이언트에서 자동으로 받음
+}</code></pre>
+
+        <h3>9.4 브라우저 Push 알림</h3>
+
+        <pre><code>// 권한 요청
+async function requestNotificationPermission() {
+  const permission = await Notification.requestPermission()
+  if (permission === 'granted') {
+    // FCM 토큰 등록
+    const token = await getMessagingToken()
+    await supabase.from('users').update({
+      fcm_token: token
+    }).eq('id', userId)
+  }
+}
+
+// 알림 전송 (서버)
+import admin from 'firebase-admin'
+
+await admin.messaging().send({
+  token: user.fcm_token,
+  notification: {
+    title: '새 댓글',
+    body: '게시글에 댓글이 달렸습니다'
+  },
+  webpush: {
+    fcmOptions: {
+      link: 'https://baal.co.kr/post/123'
+    }
+  }
+})</code></pre>
+
+        <h2 id="admin"><span class="section-number">10</span>👑 관리자 기능</h2>
+
+        <h3>10.1 관리자 대시보드 구성</h3>
+
+        <div class="component-card">
+            <h5>📊 통계 대시보드</h5>
+            <ul>
+                <li>일일 방문자 (DAU)</li>
+                <li>신규 가입자</li>
+                <li>게시글/댓글 수</li>
+                <li>광고 수익 (AdSense + 꿀단지)</li>
+                <li>출금 요청 현황</li>
+            </ul>
+        </div>
+
+        <div class="component-card">
+            <h5>👥 유저 관리</h5>
+            <ul>
+                <li>유저 검색 (이메일, 닉네임, ID)</li>
+                <li>유저 상세 정보 (평판, 포인트, 활동 내역)</li>
+                <li>경고/밴 처리</li>
+                <li>평판 수동 조정</li>
+            </ul>
+        </div>
+
+        <div class="component-card">
+            <h5>📝 콘텐츠 관리</h5>
+            <ul>
+                <li>신고 게시글/댓글 목록</li>
+                <li>게시글 삭제/복구</li>
+                <li>댓글 삭제/복구</li>
+                <li>베스트 게시글 수동 선정</li>
+            </ul>
+        </div>
+
+        <div class="component-card">
+            <h5>🍯 광고 관리</h5>
+            <ul>
+                <li>꿀단지 광고 추가/수정/삭제</li>
+                <li>일일 제한 설정</li>
+                <li>어뷰징 유저 차단</li>
+                <li>출금 승인/거부</li>
+            </ul>
+        </div>
+
+        <h3>10.2 관리자 권한 체크</h3>
+
+        <pre><code>// middleware.ts
+export async function adminMiddleware(req: Request) {
+  const user = await getUser(req)
+  
+  if (!user || !user.is_admin) {
+    return new Response('Unauthorized', { status: 403 })
+  }
+}
+
+// app/admin/page.tsx
+export default async function AdminPage() {
+  const user = await getServerUser()
+  
+  if (!user.is_admin) {
+    redirect('/')
+  }
+  
+  return &lt;AdminDashboard /&gt;
+}</code></pre>
+
+        <h3>10.3 신고 시스템</h3>
+
+        <pre><code>CREATE TABLE reports (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  reporter_id UUID REFERENCES users(id),
+  target_type VARCHAR(20) NOT NULL, -- 'post', 'comment', 'user'
+  target_id UUID NOT NULL,
+  reason VARCHAR(50) NOT NULL, -- 'spam', 'abuse', 'illegal', 'other'
+  description TEXT,
+  
+  status VARCHAR(20) DEFAULT 'pending', -- 'pending', 'processed', 'rejected'
+  admin_note TEXT,
+  processed_by UUID REFERENCES users(id),
+  processed_at TIMESTAMP,
+  
+  created_at TIMESTAMP DEFAULT NOW(),
+  
+  INDEX idx_status (status, created_at DESC)
+);</code></pre>
+
+        <h2 id="performance"><span class="section-number">11</span>⚡ 성능 최적화</h2>
+
+        <h3>11.1 이미지 최적화</h3>
+
+        <pre><code>// Next.js Image 컴포넌트 사용
+import Image from 'next/image'
+
+&lt;Image
+  src="/profile.jpg"
+  alt="프로필"
+  width={50}
+  height={50}
+  quality={75}
+  placeholder="blur" // LQIP
+/&gt;
+
+// Supabase Storage 이미지 변환
+const url = supabase.storage
+  .from('uploads')
+  .getPublicUrl('image.jpg', {
+    transform: {
+      width: 400,
+      height: 400,
+      quality: 80
+    }
+  })</code></pre>
+
+        <h3>11.2 DB 쿼리 최적화</h3>
+
+        <ul>
+            <li><strong>인덱스 추가</strong>: 자주 조회하는 컬럼 (board_type, created_at, user_id)</li>
+            <li><strong>N+1 문제 해결</strong>: JOIN으로 한 번에 가져오기</li>
+        </ul>
+
+        <pre><code>// ❌ 나쁜 예 (N+1)
+const posts = await supabase.from('posts').select('*')
+for (const post of posts) {
+  const user = await supabase.from('users').select('*').eq('id', post.user_id).single()
+}
+
+// ✅ 좋은 예
+const posts = await supabase
+  .from('posts')
+  .select('*, users(nickname, reputation)')
+  .limit(20)</code></pre>
+
+        <h3>11.3 캐싱 전략</h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>데이터</th>
+                    <th>캐싱 방법</th>
+                    <th>TTL</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>베스트 게시글</td>
+                    <td>Vercel Edge Cache</td>
+                    <td>10분</td>
+                </tr>
+                <tr>
+                    <td>유저 프로필</td>
+                    <td>React Query</td>
+                    <td>5분</td>
+                </tr>
+                <tr>
+                    <td>게시판 목록</td>
+                    <td>Next.js ISR</td>
+                    <td>1분</td>
+                </tr>
+                <tr>
+                    <td>정적 페이지</td>
+                    <td>Next.js SSG</td>
+                    <td>영구</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <pre><code>// Next.js ISR (Incremental Static Regeneration)
+export const revalidate = 60 // 1분마다 재생성
+
+export default async function BoardPage({ params }) {
+  const posts = await getPosts(params.type)
+  return &lt;BoardList posts={posts} /&gt;
+}</code></pre>
+
+        <h3>11.4 번들 사이즈 최적화</h3>
+
+        <ul>
+            <li><strong>Dynamic Import</strong>: 필요할 때만 로드</li>
+        </ul>
+
+        <pre><code>// ❌ 나쁜 예
+import HeavyComponent from './HeavyComponent'
+
+// ✅ 좋은 예
+const HeavyComponent = dynamic(() => import('./HeavyComponent'), {
+  loading: () => &lt;p&gt;로딩 중...&lt;/p&gt;
+})</code></pre>
+
+        <ul>
+            <li><strong>Tree Shaking</strong>: 사용하지 않는 코드 제거</li>
+        </ul>
+
+        <pre><code>// ❌ 나쁜 예
+import _ from 'lodash'
+
+// ✅ 좋은 예
+import debounce from 'lodash/debounce'</code></pre>
+
+        <h3>11.5 무한 스크롤 최적화</h3>
+
+        <pre><code>// Intersection Observer 사용
+const { ref, inView } = useInView()
+
+useEffect(() => {
+  if (inView && hasMore) {
+    loadMore()
+  }
+}, [inView])
+
+return (
+  &lt;&gt;
+    {posts.map(post => &lt;PostCard key={post.id} post={post} /&gt;)}
+    &lt;div ref={ref}&gt;로딩 중...&lt;/div&gt;
+  &lt;/&gt;
+)</code></pre>
+
+        <h2 id="roadmap"><span class="section-number">12</span>개발 로드맵 (18주)</h2>
+
+        <h3>Phase 1: MVP 커뮤니티 (4주)</h3>
+        <ul>
+            <li>Week 1: Next.js + Supabase 초기화, OAuth 로그인</li>
+            <li>Week 2: 게시판 CRUD, 댓글, 추천/비추</li>
+            <li>Week 3: 꼬리표 시스템, 유저 프로필</li>
+            <li>Week 4: 베타 테스트, 버그 수정</li>
+        </ul>
+
+        <h3>Phase 2: 바알의 저울 (2주)</h3>
+        <ul>
+            <li>Week 5: 실시간 채팅 모드, 삭제/수정 불가 처리</li>
+            <li>Week 6: 법정 게시판 UI, 특수 규칙 적용</li>
+        </ul>
+
+        <h3>Phase 3: 꿀단지 (3주)</h3>
+        <ul>
+            <li>Week 7: 별도 프로젝트 생성, 1~2페이지 (Tapjoy 연동)</li>
+            <li>Week 8: 3페이지 (AdGate), 부정 방지 API</li>
+            <li>Week 9: 4페이지 (GPS 인증), 출금 시스템</li>
+        </ul>
+
+        <h3>Phase 4: 법정 시스템 - AI 판사 (3주)</h3>
+        <ul>
+            <li>Week 10: 이의신청, Claude API 연동</li>
+            <li>Week 11: 판결문 생성, 평판 업데이트</li>
+            <li>Week 12: 법정 통계, 판결 게시판</li>
+        </ul>
+
+        <h3>Phase 5: 배심원 & 변호인 (3주)</h3>
+        <ul>
+            <li>Week 13: 변호인 모집, 변론문 에디터</li>
+            <li>Week 14: 배심원 투표, 실시간 집계</li>
+            <li>Week 15: 변호인 전적, 칭호 시스템</li>
+        </ul>
+
+        <h3>Phase 6: 실시간 관전 (3주)</h3>
+        <ul>
+            <li>Week 16: 팝콘/불꽃/다이아 반응</li>
+            <li>Week 17: 베팅 시스템, 하이라이트 클립</li>
+            <li>Week 18: 통합 테스트, 최종 배포</li>
+        </ul>
+
+        <h2 id="seo"><span class="section-number">14</span>🔍 SEO & 메타데이터</h2>
+
+        <div class="highlight-box">
+            <h4>🎯 SEO 목표</h4>
+            <ul style="margin-bottom: 0;">
+                <li>검색 엔진 노출 최적화 (구글, 네이버)</li>
+                <li>소셜 미디어 공유 최적화 (카카오톡, 트위터)</li>
+                <li>검색 순위 향상 (커뮤니티 법정, 리워드 광고 키워드)</li>
+            </ul>
+        </div>
+
+        <h3>14.1 페이지별 메타태그 전략</h3>
+
+        <h4>메인 페이지 (/)</h4>
+        <pre><code>// app/page.tsx
+export const metadata = {
+  title: 'BAAL - 커뮤니티 법정 & 리워드 광고 플랫폼',
+  description: '억울한 제재를 역전재판으로 해결하고, 광고 시청으로 현금을 적립하세요. AI 판사, 배심원, 실시간 관전까지!',
+  keywords: '커뮤니티 법정, 리워드 광고, 꿀단지, AI 판사, 역전재판, 커뮤니티 게시판',
+  openGraph: {
+    title: 'BAAL - 세계 최초 커뮤니티 법정',
+    description: '억울하면 재판으로! 광고 보고 돈 버는 꿀단지까지',
+    images: ['/og-image.png'],
+    url: 'https://baal.co.kr'
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'BAAL - 커뮤니티 법정',
+    description: '억울하면 재판으로!',
+    images: ['/twitter-card.png']
+  }
+}</code></pre>
+
+        <h4>게시판 목록 (/board/[type])</h4>
+        <pre><code>// app/board/[type]/page.tsx
+export async function generateMetadata({ params }) {
+  const boardNames = {
+    ai: 'AI·Claude Code',
+    philosophy: '철학',
+    occult: '오컬트·영성',
+    // ...
+  }
+  
+  return {
+    title: `${boardNames[params.type]} 게시판 | BAAL`,
+    description: `${boardNames[params.type]} 관련 글을 읽고 토론하세요`,
+    openGraph: {
+      title: `${boardNames[params.type]} 게시판`,
+      url: `https://baal.co.kr/board/${params.type}`
+    }
+  }
+}</code></pre>
+
+        <h4>게시글 상세 (/post/[id])</h4>
+        <pre><code>export async function generateMetadata({ params }) {
+  const post = await getPost(params.id)
+  
+  return {
+    title: `${post.title} | BAAL`,
+    description: post.content.substring(0, 150) + '...',
+    openGraph: {
+      title: post.title,
+      description: post.content.substring(0, 150),
+      images: post.image ? [post.image] : ['/og-default.png'],
+      url: `https://baal.co.kr/post/${params.id}`
+    }
+  }
+}</code></pre>
+
+        <h3>14.2 Open Graph (카카오톡 미리보기)</h3>
+
+        <div class="component-card">
+            <h5>🎨 OG 이미지 생성 전략</h5>
+            <ul>
+                <li>크기: 1200x630px (권장)</li>
+                <li>용량: 1MB 이하</li>
+                <li>게시글마다 동적 생성 (Vercel OG Image API)</li>
+            </ul>
+        </div>
+
+        <pre><code>// app/api/og/route.tsx (Vercel OG Image)
+import { ImageResponse } from 'next/og'
+
+export async function GET(request) {
+  const { searchParams } = new URL(request.url)
+  const title = searchParams.get('title')
+  
+  return new ImageResponse(
+    (
+      &lt;div style={{
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: '#fafaf8',
+        fontFamily: 'sans-serif'
+      }}&gt;
+        &lt;h1 style={{ fontSize: 60, color: '#8a7a5f' }}&gt;{title}&lt;/h1&gt;
+        &lt;p style={{ fontSize: 30, color: '#666' }}&gt;BAAL 커뮤니티&lt;/p&gt;
+      &lt;/div&gt;
+    ),
+    {
+      width: 1200,
+      height: 630
+    }
+  )
+}</code></pre>
+
+        <h3>14.3 sitemap.xml 자동 생성</h3>
+
+        <pre><code>// app/sitemap.ts
+import { MetadataRoute } from 'next'
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  // 정적 페이지
+  const staticPages = [
+    {
+      url: 'https://baal.co.kr',
+      lastModified: new Date(),
+      changeFrequency: 'daily',
+      priority: 1
+    },
+    {
+      url: 'https://baal.co.kr/court',
+      lastModified: new Date(),
+      changeFrequency: 'daily',
+      priority: 0.9
+    }
+  ]
+  
+  // 동적 게시글
+  const posts = await supabase.from('posts').select('id, updated_at').limit(1000)
+  const postPages = posts.data.map(post => ({
+    url: `https://baal.co.kr/post/${post.id}`,
+    lastModified: new Date(post.updated_at),
+    changeFrequency: 'weekly',
+    priority: 0.7
+  }))
+  
+  return [...staticPages, ...postPages]
+}</code></pre>
+
+        <h3>14.4 robots.txt</h3>
+
+        <pre><code>// public/robots.txt
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+
+Sitemap: https://baal.co.kr/sitemap.xml</code></pre>
+
+        <h3>14.5 구조화된 데이터 (Schema.org)</h3>
+
+        <pre><code>// 게시글에 구조화된 데이터 추가
+&lt;script type="application/ld+json"&gt;
+{
+  "@context": "https://schema.org",
+  "@type": "DiscussionForumPosting",
+  "headline": "게시글 제목",
+  "author": {
+    "@type": "Person",
+    "name": "익명404"
+  },
+  "datePublished": "2025-01-15",
+  "commentCount": 42,
+  "interactionStatistic": {
+    "@type": "InteractionCounter",
+    "interactionType": "https://schema.org/LikeAction",
+    "userInteractionCount": 123
+  }
+}
+&lt;/script&gt;</code></pre>
+
+        <h2 id="responsive"><span class="section-number">15</span>📱 반응형 디테일</h2>
+
+        <h3>15.1 브레이크포인트 전략</h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>디바이스</th>
+                    <th>브레이크포인트</th>
+                    <th>주요 변경사항</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>모바일</td>
+                    <td>~768px</td>
+                    <td>햄버거 메뉴, 1단 레이아웃, 하단 네비</td>
+                </tr>
+                <tr>
+                    <td>태블릿</td>
+                    <td>768px~1024px</td>
+                    <td>2단 레이아웃, 사이드바 축소</td>
+                </tr>
+                <tr>
+                    <td>데스크톱</td>
+                    <td>1024px~</td>
+                    <td>3단 레이아웃, 풀 사이드바</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>15.2 모바일 네비게이션</h3>
+
+        <pre><code>// components/MobileNav.tsx
+'use client'
+
+export function MobileNav() {
+  const [isOpen, setIsOpen] = useState(false)
+  
+  return (
+    &lt;&gt;
+      {/* 햄버거 버튼 */}
+      &lt;button
+        className="fixed top-4 left-4 z-50 md:hidden"
+        onClick={() =&gt; setIsOpen(!isOpen)}
+      &gt;
+        &lt;svg className="w-6 h-6"&gt;
+          &lt;path d="M4 6h16M4 12h16M4 18h16" /&gt;
+        &lt;/svg&gt;
+      &lt;/button&gt;
+      
+      {/* 사이드 메뉴 */}
+      &lt;div
+        className={`fixed inset-0 z-40 bg-black/50 transition-opacity md:hidden ${
+          isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
+        }`}
+        onClick={() =&gt; setIsOpen(false)}
+      &gt;
+        &lt;div
+          className={`fixed left-0 top-0 h-full w-80 bg-white transform transition-transform ${
+            isOpen ? 'translate-x-0' : '-translate-x-full'
+          }`}
+          onClick={e =&gt; e.stopPropagation()}
+        &gt;
+          {/* 메뉴 내용 */}
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/&gt;
+  )
+}</code></pre>
+
+        <h3>15.3 터치 제스처</h3>
+
+        <pre><code>// 스와이프로 사이드바 열기/닫기
+import { useSwipeable } from 'react-swipeable'
+
+const handlers = useSwipeable({
+  onSwipedRight: () => setIsOpen(true),
+  onSwipedLeft: () => setIsOpen(false),
+  trackMouse: true
+})
+
+&lt;div {...handlers}&gt;
+  {/* 콘텐츠 */}
+&lt;/div&gt;</code></pre>
+
+        <h3>15.4 모바일 키보드 대응</h3>
+
+        <pre><code>// 키보드 올라올 때 레이아웃 조정
+useEffect(() => {
+  const handleResize = () => {
+    if (window.visualViewport) {
+      document.documentElement.style.setProperty(
+        '--vh',
+        `${window.visualViewport.height * 0.01}px`
+      )
+    }
+  }
+  
+  window.visualViewport?.addEventListener('resize', handleResize)
+  return () => window.visualViewport?.removeEventListener('resize', handleResize)
+}, [])
+
+// CSS
+.mobile-input {
+  height: calc(var(--vh, 1vh) * 100);
+}</code></pre>
+
+        <h3>15.5 PWA 설정 (선택적)</h3>
+
+        <pre><code>// public/manifest.json
+{
+  "name": "BAAL 커뮤니티",
+  "short_name": "BAAL",
+  "description": "커뮤니티 법정 & 리워드 광고",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fafaf8",
+  "theme_color": "#c9b896",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}</code></pre>
+
+        <h2 id="testing"><span class="section-number">16</span>🧪 테스트 전략</h2>
+
+        <h3>16.1 테스트 피라미드</h3>
+
+        <div class="component-card">
+            <h5>📊 테스트 구성</h5>
+            <ul>
+                <li><strong>단위 테스트 (70%)</strong>: 개별 함수/컴포넌트</li>
+                <li><strong>통합 테스트 (20%)</strong>: API + DB 연동</li>
+                <li><strong>E2E 테스트 (10%)</strong>: 사용자 시나리오</li>
+            </ul>
+        </div>
+
+        <h3>16.2 단위 테스트 (Jest + React Testing Library)</h3>
+
+        <pre><code>// __tests__/components/PostCard.test.tsx
+import { render, screen } from '@testing-library/react'
+import { PostCard } from '@/components/PostCard'
+
+describe('PostCard', () => {
+  const mockPost = {
+    id: '123',
+    title: '테스트 제목',
+    author: '익명404',
+    upvotes: 10,
+    comments_count: 5
+  }
+  
+  it('제목이 올바르게 렌더링된다', () => {
+    render(&lt;PostCard post={mockPost} /&gt;)
+    expect(screen.getByText('테스트 제목')).toBeInTheDocument()
+  })
+  
+  it('추천 수가 표시된다', () => {
+    render(&lt;PostCard post={mockPost} /&gt;)
+    expect(screen.getByText('10')).toBeInTheDocument()
+  })
+})</code></pre>
+
+        <h3>16.3 E2E 테스트 (Playwright)</h3>
+
+        <pre><code>// e2e/login.spec.ts
+import { test, expect } from '@playwright/test'
+
+test('카카오 로그인 플로우', async ({ page }) => {
+  await page.goto('https://baal.co.kr')
+  
+  // 로그인 버튼 클릭
+  await page.click('text=로그인')
+  
+  // 카카오 선택
+  await page.click('text=카카오 로그인')
+  
+  // 카카오 로그인 페이지로 이동 확인
+  await expect(page).toHaveURL(/kauth.kakao.com/)
+  
+  // 로그인 완료 후 리다이렉트 확인
+  // (실제 로그인은 테스트 계정 사용)
+})</code></pre>
+
+        <h3>16.4 부하 테스트 (꿀단지 어뷰징 시뮬레이션)</h3>
+
+        <pre><code>// loadtest/honey-abuse.js
+import http from 'k6/http'
+import { check, sleep } from 'k6'
+
+export const options = {
+  stages: [
+    { duration: '1m', target: 100 }, // 100명 동시 접속
+    { duration: '5m', target: 100 },
+    { duration: '1m', target: 0 }
+  ]
+}
+
+export default function() {
+  // 광고 클릭 시뮬레이션
+  const res = http.post('https://honey.baal.co.kr/api/honey/verify', {
+    adId: 'test-ad-1',
+    duration: 3
+  })
+  
+  check(res, {
+    'status is 200': r => r.status === 200,
+    'not rate limited': r => r.status !== 429
+  })
+  
+  sleep(1)
+}</code></pre>
+
+        <h3>16.5 테스트 커버리지 목표</h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>영역</th>
+                    <th>목표 커버리지</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>유틸리티 함수</td>
+                    <td>90%+</td>
+                </tr>
+                <tr>
+                    <td>React 컴포넌트</td>
+                    <td>80%+</td>
+                </tr>
+                <tr>
+                    <td>API Routes</td>
+                    <td>85%+</td>
+                </tr>
+                <tr>
+                    <td>전체</td>
+                    <td>75%+</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2 id="cicd"><span class="section-number">17</span>🚀 배포 & CI/CD</h2>
+
+        <h3>17.1 GitHub Actions 워크플로우</h3>
+
+        <pre><code># .github/workflows/deploy.yml
+name: Deploy to Production
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Run tests
+        run: npm test
+      
+      - name: Run E2E tests
+        run: npx playwright test
+  
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v20
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.ORG_ID }}
+          vercel-project-id: ${{ secrets.PROJECT_ID }}
+          vercel-args: '--prod'</code></pre>
+
+        <h3>17.2 환경 변수 관리</h3>
+
+        <div class="component-card">
+            <h5>🔐 환경 변수 분리</h5>
+            <table>
+                <thead>
+                    <tr>
+                        <th>환경</th>
+                        <th>파일</th>
+                        <th>용도</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>로컬 개발</td>
+                        <td>.env.local</td>
+                        <td>개발 서버</td>
+                    </tr>
+                    <tr>
+                        <td>스테이징</td>
+                        <td>Vercel 설정</td>
+                        <td>테스트 배포</td>
+                    </tr>
+                    <tr>
+                        <td>프로덕션</td>
+                        <td>Vercel 설정</td>
+                        <td>실제 서비스</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <pre><code># .env.local
+NEXT_PUBLIC_SUPABASE_URL=https://dev.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=dev-key
+CLAUDE_API_KEY=dev-claude-key
+
+# .env.production (Vercel에서 설정)
+NEXT_PUBLIC_SUPABASE_URL=https://prod.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=prod-key
+CLAUDE_API_KEY=prod-claude-key</code></pre>
+
+        <h3>17.3 스테이징 환경</h3>
+
+        <ul>
+            <li><strong>URL:</strong> staging.baal.co.kr</li>
+            <li><strong>용도:</strong> 프로덕션 배포 전 최종 테스트</li>
+            <li><strong>데이터:</strong> 프로덕션과 별도 DB (Supabase 프로젝트 분리)</li>
+        </ul>
+
+        <h3>17.4 롤백 전략</h3>
+
+        <pre><code># Vercel CLI로 이전 버전 롤백
+vercel rollback
+
+# 또는 대시보드에서 Deployments → 이전 버전 → Promote to Production</code></pre>
+
+        <h3>17.5 무중단 배포</h3>
+
+        <ul>
+            <li>Vercel이 자동으로 무중단 배포 지원</li>
+            <li>새 버전 배포 → 헬스 체크 → 트래픽 전환</li>
+            <li>DB 마이그레이션은 배포 전 수동 실행</li>
+        </ul>
+
+        <h2 id="legal-docs"><span class="section-number">18</span>📄 법적 문서 템플릿</h2>
+
+        <div class="warning-box">
+            <h4>⚠️ 법적 효력 안내</h4>
+            <p>아래 템플릿은 참고용입니다. 실제 사용 전 <strong>반드시 변호사 검토</strong>를 받으세요.</p>
+        </div>
+
+        <h3>18.1 이용약관 (주요 조항)</h3>
+
+        <pre><code>제1조 (목적)
+이 약관은 BAAL(이하 "회사")이 제공하는 커뮤니티 서비스(이하 "서비스")의 이용과 관련하여 회사와 이용자 간의 권리, 의무 및 책임사항을 규정함을 목적으로 합니다.
+
+제2조 (정의)
+1. "서비스"란 회사가 제공하는 커뮤니티 게시판, 법정 시스템, 리워드 광고 등을 의미합니다.
+2. "이용자"란 회사의 서비스에 접속하여 이 약관에 따라 회사가 제공하는 서비스를 받는 회원 및 비회원을 말합니다.
+3. "회원"이란 소셜 로그인을 통해 회원가입을 하여 서비스를 이용하는 자를 말합니다.
+
+제3조 (약관의 명시와 개정)
+1. 회사는 이 약관의 내용을 이용자가 쉽게 알 수 있도록 서비스 초기 화면에 게시합니다.
+2. 회사는 필요한 경우 관련 법령을 위배하지 않는 범위에서 이 약관을 개정할 수 있습니다.
+
+제4조 (서비스의 제공 및 변경)
+1. 회사는 다음과 같은 업무를 수행합니다:
+   - 커뮤니티 게시판 제공
+   - 법정 시스템 운영
+   - 리워드 광고 서비스
+2. 회사는 서비스의 내용을 변경할 수 있으며, 변경 시 사전 공지합니다.
+
+제5조 (이용자의 의무)
+1. 이용자는 다음 행위를 하여서는 안 됩니다:
+   - 타인의 정보 도용
+   - 허위 내용 게시
+   - 불법 정보 유통
+   - 서비스 운영 방해 (어뷰징, 스팸 등)
+   - 타인의 명예 훼손 또는 모욕
+
+제6조 (포인트 및 환전)
+1. 리워드 광고 시청으로 획득한 포인트는 현금으로 환전할 수 있습니다.
+2. 최소 환전 금액은 5,000원이며, 수수료 500원이 차감됩니다.
+3. 부정한 방법으로 획득한 포인트는 회수되며, 계정이 정지될 수 있습니다.
+
+제7조 (책임의 제한)
+1. 회사는 천재지변 또는 이에 준하는 불가항력으로 인해 서비스를 제공할 수 없는 경우 책임이 면제됩니다.
+2. 회사는 이용자 간 또는 이용자와 제3자 간의 분쟁에 대해 개입할 의무가 없습니다.
+
+제8조 (분쟁 해결)
+1. 서비스 이용과 관련한 분쟁은 대한민국 법률을 준거법으로 합니다.
+2. 소송이 필요한 경우 회사의 본사 소재지를 관할하는 법원을 전속 관할로 합니다.</code></pre>
+
+        <h3>18.2 개인정보처리방침 (주요 조항)</h3>
+
+        <pre><code>개인정보처리방침
+
+BAAL(이하 "회사")는 개인정보보호법에 따라 이용자의 개인정보를 보호하고 관련 고충을 신속하게 처리하기 위하여 다음과 같이 개인정보처리방침을 수립합니다.
+
+제1조 (개인정보의 수집 항목 및 방법)
+1. 회사는 다음의 개인정보를 수집합니다:
+   - 필수 항목: 이메일 주소 (OAuth 로그인)
+   - 자동 생성: 닉네임 (예: 익명404)
+   - 선택 항목: 출금 시 계좌 정보 (암호화 저장)
+
+2. 수집 방법:
+   - 소셜 로그인 (카카오, 네이버, 구글)
+   - 리워드 광고 참여 시 (IP 주소, 접속 시간)
+
+제2조 (개인정보의 이용 목적)
+회사는 수집한 개인정보를 다음의 목적으로 이용합니다:
+1. 회원 가입 및 관리
+2. 서비스 제공 (게시판, 댓글, 추천)
+3. 리워드 광고 포인트 지급 및 출금 처리
+4. 부정 이용 방지 및 서비스 개선
+
+제3조 (개인정보의 보유 및 이용 기간)
+1. 회원 탈퇴 시 즉시 삭제
+2. 다만, 관련 법령에 따라 보존이 필요한 경우 일정 기간 보관:
+   - 부정 이용 기록: 1년 (전자상거래법)
+   - 세금 관련 기록: 5년 (국세기본법)
+
+제4조 (개인정보의 제3자 제공)
+회사는 원칙적으로 개인정보를 외부에 제공하지 않습니다. 다만, 다음의 경우 제공할 수 있습니다:
+1. 출금 처리를 위한 토스페이먼츠 제공
+2. 법령에 따른 수사 기관의 요청
+
+제5조 (개인정보의 파기)
+회사는 보유 기간이 경과하거나 처리 목적이 달성된 개인정보를 지체 없이 파기합니다.
+
+제6조 (이용자의 권리)
+이용자는 언제든지 다음의 권리를 행사할 수 있습니다:
+1. 개인정보 열람 요구
+2. 개인정보 정정·삭제 요구
+3. 개인정보 처리 정지 요구
+
+제7조 (개인정보 보호책임자)
+이름: [운영자 이름]
+이메일: privacy@baal.co.kr</code></pre>
+
+        <h3>18.3 커뮤니티 가이드라인</h3>
+
+        <pre><code>BAAL 커뮤니티 가이드라인
+
+BAAL은 건전하고 자유로운 토론 문화를 지향합니다.
+
+✅ 권장 행동:
+- 서로 존중하는 대화
+- 건설적인 비판
+- 출처가 명확한 정보 공유
+- 다양한 의견 인정
+
+❌ 금지 행동:
+- 욕설, 비속어, 모욕적 표현
+- 특정 개인 또는 집단에 대한 혐오 발언
+- 허위 사실 유포
+- 저작권 침해
+- 불법 정보 게시
+- 도배, 스팸
+- 리워드 광고 부정 이용
+
+위반 시 조치:
+1차: 경고
+2차: 7일 정지
+3차: 영구 정지
+
+⚖️ 바알의 저울 특별 규칙:
+- 모든 발언은 영구 기록됩니다
+- 삭제/수정이 불가능합니다
+- 신중하게 작성해주세요</code></pre>
+
+        <h2 id="migration"><span class="section-number">19</span>🔄 DB 마이그레이션</h2>
+
+        <h3>19.1 Supabase Migrations 기본</h3>
+
+        <pre><code># Supabase CLI 설치
+npm install -g supabase
+
+# 프로젝트 초기화
+supabase init
+
+# 새 마이그레이션 생성
+supabase migration new add_user_bio_column
+
+# 생성된 파일: supabase/migrations/20250115_add_user_bio_column.sql</code></pre>
+
+        <h3>19.2 마이그레이션 예시</h3>
+
+        <h4>컬럼 추가</h4>
+        <pre><code>-- supabase/migrations/20250115_add_user_bio.sql
+ALTER TABLE users
+ADD COLUMN bio TEXT;</code></pre>
+
+        <h4>인덱스 추가</h4>
+        <pre><code>-- supabase/migrations/20250116_add_indexes.sql
+CREATE INDEX idx_posts_board_upvotes
+ON posts(board_type, upvotes DESC);
+
+CREATE INDEX idx_comments_post_created
+ON comments(post_id, created_at);</code></pre>
+
+        <h4>RLS 정책 추가</h4>
+        <pre><code>-- supabase/migrations/20250117_add_rls_policies.sql
+CREATE POLICY "Users can view own profile"
+ON users FOR SELECT
+USING (auth.uid() = id);
+
+CREATE POLICY "Users can update own profile"
+ON users FOR UPDATE
+USING (auth.uid() = id);</code></pre>
+
+        <h3>19.3 마이그레이션 실행</h3>
+
+        <pre><code># 로컬에서 테스트
+supabase db reset
+
+# 프로덕션 배포
+supabase db push</code></pre>
+
+        <h3>19.4 롤백 전략</h3>
+
+        <pre><code>-- 각 마이그레이션에 롤백 SQL 포함
+-- supabase/migrations/20250115_add_user_bio.sql
+
+-- Up Migration
+ALTER TABLE users ADD COLUMN bio TEXT;
+
+-- Down Migration (주석)
+-- ALTER TABLE users DROP COLUMN bio;
+
+# 수동 롤백
+psql -h [supabase-host] -U postgres -d postgres
+DROP COLUMN bio;</code></pre>
+
+        <h3>19.5 데이터 백업 자동화</h3>
+
+        <pre><code># GitHub Actions로 일일 백업
+name: Daily DB Backup
+
+on:
+  schedule:
+    - cron: '0 3 * * *' # 매일 새벽 3시
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Backup Supabase DB
+        run: |
+          pg_dump $DATABASE_URL > backup-$(date +%Y%m%d).sql
+      
+      - name: Upload to S3
+        run: |
+          aws s3 cp backup-*.sql s3://baal-backups/</code></pre>
+
+        <h2 id="marketing"><span class="section-number">20</span>📈 초기 마케팅 전략</h2>
+
+        <h3>20.1 베타 테스터 모집 (첫 100명)</h3>
+
+        <div class="component-card">
+            <h5>🎯 타겟</h5>
+            <ul>
+                <li>커뮤니티 활동 경험자 (디시인사이드, 클리앙, 레딧 유저)</li>
+                <li>AI 관심층 (Claude, ChatGPT 사용자)</li>
+                <li>리워드 앱 이용자 (캐시워크, 허니스크린)</li>
+            </ul>
+        </div>
+
+        <h4>모집 방법</h4>
+        <ul>
+            <li><strong>트위터:</strong> #커뮤니티법정 #리워드광고 해시태그</li>
+            <li><strong>레딧:</strong> r/korea, r/Korean 서브레딧 포스팅</li>
+            <li><strong>디스코드:</strong> AI 관련 서버에 소개</li>
+            <li><strong>클리앙:</strong> 모두의 공원 게시판</li>
+        </ul>
+
+        <h4>베타 혜택</h4>
+        <ul>
+            <li>첫 100명 한정 "창립 멤버" 뱃지</li>
+            <li>영구 VIP 권한 (광고 없음)</li>
+            <li>꿀단지 첫 출금 수수료 무료</li>
+        </ul>
+
+        <h3>20.2 커뮤니티 시드 콘텐츠</h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>게시판</th>
+                    <th>시드 콘텐츠</th>
+                    <th>담당</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>AI 게시판</td>
+                    <td>Claude vs ChatGPT 비교 글 10개</td>
+                    <td>운영진</td>
+                </tr>
+                <tr>
+                    <td>유머</td>
+                    <td>웃긴 짤, 밈 20개</td>
+                    <td>운영진</td>
+                </tr>
+                <tr>
+                    <td>바알의 저울</td>
+                    <td>모의 재판 3건 (운영진끼리)</td>
+                    <td>운영진</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>20.3 SNS 바이럴 전략</h3>
+
+        <h4>트위터</h4>
+        <ul>
+            <li>매일 1개 게시글 하이라이트 공유</li>
+            <li>재밌는 법정 판결문 스크린샷</li>
+            <li>"오늘의 억울한 사연" 시리즈</li>
+        </ul>
+
+        <h4>유튜브 (장기)</h4>
+        <ul>
+            <li>법정 실시간 관전 하이라이트 영상</li>
+            <li>"BAAL에서 일어난 실화" 시리즈</li>
+        </ul>
+
+        <h3>20.4 유입 채널별 전략</h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>채널</th>
+                    <th>전략</th>
+                    <th>예상 유입</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>검색 (SEO)</td>
+                    <td>롱테일 키워드 ("억울한 제재 해결", "광고보고 돈벌기")</td>
+                    <td>30%</td>
+                </tr>
+                <tr>
+                    <td>SNS (트위터, 레딧)</td>
+                    <td>바이럴 콘텐츠 공유</td>
+                    <td>40%</td>
+                </tr>
+                <tr>
+                    <td>입소문 (친구 추천)</td>
+                    <td>추천인 제도 (추천인 + 신규 각 1,000P)</td>
+                    <td>20%</td>
+                </tr>
+                <tr>
+                    <td>커뮤니티 홍보</td>
+                    <td>디시, 클리앙, 레딧 포스팅</td>
+                    <td>10%</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>20.5 론칭 첫 달 목표</h3>
+
+        <ul>
+            <li>✅ <strong>Week 1:</strong> 베타 테스터 100명 모집</li>
+            <li>✅ <strong>Week 2:</strong> 일 방문자 500명 달성</li>
+            <li>✅ <strong>Week 3:</strong> 누적 가입자 1,000명</li>
+            <li>✅ <strong>Week 4:</strong> 첫 법정 재판 10건 완료</li>
+        </ul>
+
+        <h3>Phase 6: 실시간 관전 (3주)</h3>
+
+        <div class="critical-box">
+            <h3 style="margin-top: 0;">🤖 클로드코드 개발 시작 프롬프트</h3>
+            <pre><code>당신은 BAAL 커뮤니티 플랫폼을 개발하는 풀스택 개발자입니다.
+
+【현재 문서】
+이 문서는 3개 계획서의 통합본입니다:
+- 전체 계획서 (커뮤니티 법정 + 꿀단지)
+- 1차 구현 가이드 (게시판 시스템)
+- 정책 준수 체크리스트
+
+【핵심 원칙】
+1. OAuth 로그인 (카카오/네이버/구글) - 이메일만 수집
+2. 읽기는 로그인 없이, 쓰기는 로그인 필수
+3. 바알의 저울: 댓글/채팅 삭제/수정 불가
+4. 꿀단지: 새 탭 (honey.baal.co.kr), AdSense 없음
+5. 화이트골드 톤 일관성 (#fafaf8, #c9b896, #8a7a5f)
+
+【기술 스택】
+- Frontend: Next.js 14 (App Router) + TypeScript + TailwindCSS
+- Backend: Supabase (PostgreSQL + Auth + Realtime)
+- 배포: Vercel (메인 + 꿀단지 별도)
+
+【DB 구조】
+- 하나의 posts 테이블로 모든 게시판 처리 (board_type 컬럼)
+- 실시간 채팅: court_chat 테이블 + Supabase Realtime
+- 꿀단지: honey_ads, honey_activities, honey_daily_limits
+
+【보안】
+- RLS (Row Level Security) 정책 적용
+- Rate Limiting (글쓰기 10건/시간)
+- XSS/CSRF 방어 (마크다운만 허용)
+
+【구현 순서】
+Phase 1 (4주): 기본 커뮤니티 (게시판, 댓글, 추천/비추)
+Phase 2 (2주): 바알의 저울 (실시간 채팅)
+Phase 3 (3주): 꿀단지 (광고 1-4페이지)
+Phase 4-6 (9주): 법정 시스템 고급 기능
+
+【주의사항】
+- 정책 위반 제로: AdSense와 리워드 광고 완전 분리
+- 성능 최적화: 이미지 최적화, DB 인덱스, 캐싱
+- 에러 처리: 전역 에러 핸들러, 토스트 알림
+- 알림 시스템: 댓글, 추천, 법정 소환 알림
+
+이 문서를 참고하여 단계별로 개발하세요.
+코드 작성 전 항상 이 계획서를 확인하세요.</code></pre>
+        </div>
+
+        <hr style="margin: 60px 0; border: none; border-top: 2px solid #e8dcc8;">
+
+        <div style="text-align: center; color: #666; font-size: 14px;">
+            <p><strong>BAAL 통합 완전 개발 계획서 v2.0 - 최종 완전판</strong></p>
+            <p>커뮤니티 법정 + 꿀단지 리워드 + 게시판 시스템 + 전체 인프라</p>
+            <p style="margin-top: 20px; color: #c9b896;">클로드코드 개발용 - 3개 문서 통합 + 12개 핵심 주제 완비</p>
+            <p style="margin-top: 8px;">© 2025 BAAL.CO.KR | v2.0 (최종 완전판)</p>
+        </div>
+    </div>
+</body>
+</html>

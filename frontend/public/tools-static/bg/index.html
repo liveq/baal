@@ -1,0 +1,1623 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="무료 배경 제거 도구. 자동으로 이미지 배경을 제거합니다. 투명 PNG 다운로드. API 키 불필요.">
+    <meta name="keywords" content="배경 제거, 배경 지우기, 이미지 배경 제거, 투명 배경, 누끼, 무료 배경 제거">
+    <meta name="author" content="BAAL">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://bg.baal.co.kr/">
+    <meta property="og:title" content="배경 제거 - 무료 온라인 도구">
+    <meta property="og:description" content="자동으로 이미지 배경을 제거합니다. 투명 PNG 다운로드.">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://bg.baal.co.kr/">
+    <meta property="twitter:title" content="배경 제거 - 무료 온라인 도구">
+    <meta property="twitter:description" content="배경 제거 도구. 무료, API 키 불필요.">
+
+    <title>배경 제거 - BAAL</title>
+
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2886185075996969"
+     crossorigin="anonymous"></script>
+
+    <!-- Google Analytics - Disabled for local development -->
+    <!--
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-XXXXXXXXXX');
+    </script>
+    -->
+
+    <!-- 공통 스타일 -->
+    <link rel="stylesheet" href="_common/common.css">
+    <style>
+        /* 이미지 리스트 */
+        .image-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .image-item {
+            position: relative;
+            border: 3px solid var(--border-color);
+            border-radius: var(--border-radius-md);
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.2s;
+            aspect-ratio: 1;
+        }
+
+        .image-item:hover {
+            border-color: var(--gold-primary);
+            transform: scale(1.05);
+        }
+
+        .image-item.active {
+            border-color: var(--gold-primary);
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.3);
+        }
+
+        .image-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .image-item .status-badge {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75em;
+            font-weight: 600;
+        }
+
+        .image-item .status-badge.processing {
+            background: var(--gold-primary);
+        }
+
+        .image-item .status-badge.completed {
+            background: #2f9e44;
+        }
+
+        .image-item .status-badge.error {
+            background: #c92a2a;
+        }
+
+        .image-item .remove-btn {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            background: rgba(255, 0, 0, 0.8);
+            color: white;
+            border: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .image-item:hover .remove-btn {
+            opacity: 1;
+        }
+
+        /* 비교 슬라이더 */
+        .comparison-container {
+            background: var(--bg-accent);
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius-lg);
+            padding: 30px;
+            margin-bottom: 25px;
+            position: relative;
+            min-height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .comparison-wrapper {
+            position: relative;
+            max-width: 100%;
+            max-height: 500px;
+            display: inline-block;
+        }
+
+        .comparison-wrapper img {
+            max-width: 100%;
+            max-height: 500px;
+            display: block;
+            border-radius: var(--border-radius-md);
+        }
+
+        .result-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 50%;
+            height: 100%;
+            overflow: hidden;
+            border-right: 3px solid var(--gold-primary);
+        }
+
+        .result-overlay img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 200%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .slider-handle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 40px;
+            height: 40px;
+            background: var(--gold-gradient);
+            border: 3px solid white;
+            border-radius: 50%;
+            cursor: ew-resize;
+            transform: translate(-50%, -50%);
+            box-shadow: var(--shadow-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            user-select: none;
+            z-index: 10;
+        }
+
+        .thumbnail-nav {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            overflow-x: auto;
+            padding: 10px 0;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .thumbnail-nav::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .thumbnail-nav::-webkit-scrollbar-thumb {
+            background: var(--gold-primary);
+            border-radius: 3px;
+        }
+
+        .placeholder-text {
+            color: var(--text-secondary);
+            font-size: 1.1em;
+            text-align: center;
+        }
+
+        /* 진행률 표시 */
+        .progress-container {
+            margin: 20px 0;
+            display: none;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--border-color);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--gold-gradient);
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .progress-text {
+            text-align: center;
+            color: var(--text-secondary);
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+
+        /* 다운로드 옵션 */
+        .download-options {
+            background: var(--bg-accent);
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius-lg);
+            padding: 25px;
+            margin-bottom: 25px;
+            display: none;
+        }
+
+        .option-group {
+            margin-bottom: 20px;
+        }
+
+        .option-label {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .bg-color-options {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .bg-color-btn {
+            width: 60px;
+            height: 60px;
+            border: 3px solid var(--border-color);
+            border-radius: var(--border-radius-sm);
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .bg-color-btn.transparent {
+            background:
+                linear-gradient(45deg, #ccc 25%, transparent 25%),
+                linear-gradient(-45deg, #ccc 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, #ccc 75%),
+                linear-gradient(-45deg, transparent 75%, #ccc 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+        }
+
+        .bg-color-btn:hover,
+        .bg-color-btn.active {
+            border-color: var(--gold-primary);
+            transform: scale(1.1);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .bg-color-btn.active::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: var(--gold-primary);
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        /* 커스텀 색상 버튼 */
+        .bg-color-btn.custom-color-btn {
+            background: linear-gradient(135deg,
+                #ff0000 0%, #ff7f00 16.66%, #ffff00 33.33%,
+                #00ff00 50%, #0000ff 66.66%, #8b00ff 83.33%, #ff0000 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .bg-color-btn.custom-color-btn span {
+            color: white;
+            text-shadow:
+                -1px -1px 0 #000,
+                1px -1px 0 #000,
+                -1px 1px 0 #000,
+                1px 1px 0 #000,
+                0 0 5px rgba(0, 0, 0, 0.5);
+        }
+
+        .bg-color-btn.custom-color-btn.active::after {
+            text-shadow:
+                -1px -1px 0 #000,
+                1px -1px 0 #000,
+                -1px 1px 0 #000,
+                1px 1px 0 #000,
+                0 0 5px rgba(0, 0, 0, 0.8);
+        }
+
+        /* 버튼 */
+        .btn-process {
+            padding: 18px 60px;
+            background: var(--gold-gradient);
+            color: white;
+            border: 3px solid var(--gold-primary);
+            border-radius: var(--border-radius-md);
+            font-weight: 700;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: block;
+            margin: 0 auto;
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+        }
+
+        .btn-process:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.5);
+        }
+
+        .btn-process:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-download {
+            padding: 14px 32px;
+            background: var(--gold-gradient);
+            color: white;
+            border: 2px solid var(--gold-primary);
+            border-radius: var(--border-radius-md);
+            font-weight: 600;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-download:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .download-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* 반응형 */
+        @media (max-width: 768px) {
+            .slider-handle {
+                width: 30px;
+                height: 30px;
+                margin-top: calc(50% - 15px);
+            }
+        }
+
+        /* Privacy Modal Styles (from baal.co.kr) */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(10px);
+        }
+
+        .modal.show {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: rgba(255,255,255,0.95);
+            padding: 50px 40px;
+            border-radius: 20px;
+            max-width: 700px;
+            width: 90%;
+            position: relative;
+            text-align: center;
+            word-break: keep-all;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            font-size: 32px;
+            color: #9ca3af;
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .modal-close:hover {
+            color: var(--gold-primary);
+        }
+
+        .modal-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2em;
+            margin-bottom: 25px;
+            background: linear-gradient(-45deg, #d4af37, #ffd700, #b8860b);
+            background-size: 300% 300%;
+            animation: modalGradientFlow 4s ease-in-out infinite;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            word-break: keep-all;
+        }
+
+        @keyframes modalGradientFlow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .privacy-content {
+            text-align: left;
+            color: #4a4a4a;
+            line-height: 1.8;
+            max-height: 60vh;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .privacy-content h3 {
+            color: #2c3e50;
+            margin-top: 20px;
+            font-size: 1.1em;
+        }
+
+        .privacy-content h3:first-of-type {
+            margin-top: 0;
+        }
+
+        .privacy-content p {
+            margin-bottom: 15px;
+        }
+
+        .privacy-content ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .privacy-content a {
+            color: var(--gold-primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .privacy-content a:hover {
+            text-decoration: underline;
+        }
+
+        .privacy-content strong {
+            color: #2c3e50;
+            font-weight: 700;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- 다크모드 토글 -->
+    <div class="theme-toggle">
+        <button id="themeToggle" aria-label="다크모드 전환">
+            <span class="icon-light">☀️</span>
+            <span class="icon-dark">🌙</span>
+        </button>
+    </div>
+
+    <!-- 언어 전환 & 도구 버튼 -->
+    <div class="lang-toggle">
+        <button id="langToggle" data-lang="ko">
+            <span class="lang-ko">EN</span>
+            <span class="lang-en">KO</span>
+        </button>
+        <button id="toolsToggle">
+            <span class="tooltip" data-ko="더 많은 도구" data-en="More Tools">더 많은 도구</span>
+            🧰
+        </button>
+    </div>
+
+    <!-- 메인 컨테이너 -->
+    <div class="container">
+        <header>
+            <h1 data-ko="배경 제거" data-en="Background Removal">배경 제거</h1>
+            <p class="subtitle" data-ko="자동으로 이미지 배경을 제거합니다" data-en="Automatically removes image backgrounds">자동으로 이미지 배경을 제거합니다</p>
+        </header>
+
+        <main>
+            <!-- 이미지 업로드 -->
+            <input type="file" id="fileInput" accept="image/*" multiple style="display: none;">
+            <div class="dropzone" id="dropzone">
+                <p>
+                    <span data-ko="이미지를 드래그하거나 클릭하여 업로드 (여러 개 선택 가능)" data-en="Drag & drop images or click to upload (Multiple files supported)">이미지를 드래그하거나 클릭하여 업로드 (여러 개 선택 가능)</span>
+                </p>
+            </div>
+
+            <!-- 비교 미리보기 -->
+            <div class="comparison-container" id="comparisonContainer">
+                <p class="placeholder-text" id="placeholder" data-ko="이미지를 업로드하면 미리보기에 표시됩니다" data-en="Uploaded images will be shown in preview">이미지를 업로드하면 미리보기에 표시됩니다</p>
+            </div>
+
+            <!-- 시작 버튼 -->
+            <div style="text-align: center; margin: 20px 0;">
+                <button class="btn-process" id="startBtn" style="display: none;" data-ko="🚀 배경 제거 시작" data-en="🚀 Start Background Removal">🚀 배경 제거 시작</button>
+            </div>
+
+            <!-- 진행률 -->
+            <div class="progress-container" id="progressContainer">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <p class="progress-text" id="progressText">AI 모델 로딩 중...</p>
+            </div>
+
+            <!-- 업로드된 이미지 리스트 -->
+            <div class="image-list" id="imageList" style="display: none;"></div>
+
+            <!-- 배경색 옵션 -->
+            <div class="download-options" id="downloadOptions">
+                <div class="option-group">
+                    <label class="option-label">
+                        <span data-ko="배경색 선택" data-en="Select Background Color">배경색 선택</span>
+                    </label>
+                    <div class="bg-color-options">
+                        <button class="bg-color-btn transparent active" data-color="transparent" title="투명"></button>
+                        <button class="bg-color-btn" data-color="#ffffff" style="background: #ffffff;" title="흰색"></button>
+                        <button class="bg-color-btn" data-color="#000000" style="background: #000000;" title="검정"></button>
+                        <button class="bg-color-btn" data-color="#f0f0f0" style="background: #f0f0f0;" title="회색"></button>
+                        <button class="bg-color-btn" data-color="#d4af37" style="background: #d4af37;" title="골드"></button>
+                        <!-- 커스텀 색상 선택 버튼 -->
+                        <button class="bg-color-btn custom-color-btn" id="customColorBtn" title="색상 선택">
+                            <span style="font-size: 24px; font-weight: bold;">+</span>
+                            <input type="color" id="customColorPicker" style="position: absolute; opacity: 0; pointer-events: none;">
+                        </button>
+                    </div>
+                </div>
+
+                <div class="download-buttons">
+                    <button class="btn-download" id="downloadBtn" data-ko="다운로드 (PNG)" data-en="Download (PNG)">다운로드 (PNG)</button>
+                    <button class="btn-download" id="downloadAllBtn" style="display: none;" data-ko="📦 일괄 다운로드 (ZIP)" data-en="📦 Download All (ZIP)">📦 일괄 다운로드 (ZIP)</button>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <div class="footer-content">
+                <p class="footer-brand">
+                    Made by <a href="https://baal.co.kr" target="_blank">BAAL</a>
+                </p>
+                <p class="footer-contact">
+                    <a href="mailto:summon@baal.co.kr">summon@baal.co.kr</a>
+                </p>
+                <p class="footer-links">
+                    <a href="#" onclick="event.preventDefault(); openPrivacyModal();" data-ko="개인정보처리방침" data-en="Privacy Policy">개인정보처리방침</a>
+                </p>
+                <p class="footer-copyright">&copy; 2025 BAAL. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Privacy Policy Modal (from baal.co.kr) -->
+    <div id="privacyModal" class="modal" onclick="if(event.target.id==='privacyModal') closePrivacyModal()">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closePrivacyModal()">&times;</button>
+            <h1 class="modal-title">개인정보처리방침</h1>
+
+            <div class="privacy-content">
+                <h3>1. 개인정보의 처리 목적</h3>
+                <p>BAAL(이하 "회사")은 사용자가 브라우저에서 직접 파일을 처리하는 무료 온라인 도구를 제공합니다. 회사는 <strong>어떠한 개인정보도 수집하지 않습니다.</strong></p>
+
+                <h3>2. 처리하는 개인정보 항목</h3>
+                <p><strong>없음</strong> - 모든 파일 처리는 사용자의 브라우저 내에서만 이루어지며, 서버로 전송되지 않습니다.</p>
+
+                <h3>3. 개인정보의 처리 및 보유기간</h3>
+                <p>회사는 개인정보를 수집하지 않으므로 보유하지 않습니다.</p>
+
+                <h3>4. 쿠키(Cookie) 사용</h3>
+                <p>본 웹사이트는 Google AdSense 광고 서비스를 사용합니다. Google은 사용자의 관심사에 맞는 광고를 제공하기 위해 쿠키를 사용할 수 있습니다.</p>
+                <ul>
+                    <li>Google의 광고 쿠키 정책: <a href="https://policies.google.com/technologies/ads" target="_blank">링크</a></li>
+                    <li>쿠키 설정은 브라우저에서 관리하실 수 있습니다.</li>
+                </ul>
+
+                <h3>5. 개인정보 보호책임자</h3>
+                <p>
+                    이메일: <a href="mailto:summon@baal.co.kr">summon@baal.co.kr</a><br>
+                    사용자는 회사의 서비스를 이용하며 발생한 모든 개인정보 보호 관련 문의를 위 연락처로 하실 수 있습니다.
+                </p>
+
+                <h3>6. 개인정보처리방침 변경</h3>
+                <p>본 개인정보처리방침은 법령, 정책 또는 보안기술의 변경에 따라 내용이 추가, 삭제 및 수정될 수 있으며, 변경 시 웹사이트를 통해 공지합니다.</p>
+
+                <p style="margin-top: 30px; text-align: center; color: #7f8c8d; font-size: 0.9em;">
+                    시행일자: 2025년 1월 24일
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Import Map for ES Modules -->
+    <!-- esm.sh automatically resolves all dependencies, no need for explicit mapping -->
+    <script type="importmap">
+    {
+        "imports": {
+            "lodash": "https://esm.sh/lodash-es@4.17.21"
+        }
+    }
+    </script>
+
+    <!-- 공통 스크립트 -->
+    <script src="_common/common.js"></script>
+
+    <!-- 파일 업로드 초기화 (모듈 외부) -->
+    <script>
+        // 전역 테스트 함수
+        window.testFileUpload = function() {
+            console.log('=== MANUAL TEST START ===');
+            const fileInput = document.getElementById('fileInput');
+            console.log('fileInput:', fileInput);
+            console.log('fileInput.files:', fileInput.files);
+            console.log('fileInput.files.length:', fileInput.files.length);
+
+            if (fileInput.files.length > 0) {
+                console.log('Files detected:', Array.from(fileInput.files));
+                // 수동으로 change 이벤트 발생
+                const event = new Event('change', { bubbles: true });
+                fileInput.dispatchEvent(event);
+                console.log('Change event dispatched');
+            } else {
+                console.log('No files selected');
+            }
+        };
+
+        // 즉시 파일 입력 초기화
+        window.addEventListener('DOMContentLoaded', () => {
+            console.log('=== FILE INPUT INIT START ===');
+
+            const dropzone = document.getElementById('dropzone');
+            const fileInput = document.getElementById('fileInput');
+
+            console.log('dropzone:', dropzone);
+            console.log('fileInput:', fileInput);
+
+            if (dropzone && fileInput) {
+                dropzone.onclick = function() {
+                    console.log('>>> DROPZONE CLICKED <<<');
+                    fileInput.click();
+                    console.log('fileInput.click() called');
+
+                    // 파일 선택 후 테스트를 위해 약간의 지연
+                    setTimeout(() => {
+                        console.log('Checking if file was selected...');
+                        console.log('fileInput.files.length:', fileInput.files.length);
+                    }, 1000);
+                };
+                console.log('✅ Click handler attached');
+
+                // 파일 input change 이벤트 직접 추가 (테스트)
+                fileInput.addEventListener('change', (e) => {
+                    console.log('🔥 FILE INPUT CHANGE EVENT (outside module)');
+                    console.log('Event:', e);
+                    console.log('Files:', e.target.files);
+                    console.log('Files length:', e.target.files.length);
+                });
+            } else {
+                console.error('❌ Elements not found!');
+            }
+        });
+    </script>
+
+    <!-- JSZip for batch download -->
+    <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+
+    <script type="module">
+        console.log('🚀 MODULE SCRIPT START');
+
+        import { removeBackground } from 'https://esm.sh/@imgly/background-removal@1.4.5';
+
+        console.log('✅ removeBackground imported:', typeof removeBackground);
+
+        // 전역 변수: 현재 처리 중인 이미지 번호
+        let currentProcessingIndex = 0;
+        let totalProcessingImages = 0;
+
+        // 강제로 스크롤 맨 위로
+        if ('scrollRestoration' in history) {
+            history.scrollRestoration = 'manual';
+        }
+        window.scrollTo(0, 0);
+
+        window.addEventListener('load', () => {
+            window.scrollTo(0, 0);
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            window.scrollTo(0, 0);
+
+            // 입력값 초기화 (새로고침 시)
+            document.querySelectorAll('input[type="text"], input[type="number"], textarea').forEach(el => {
+                el.value = '';
+            });
+        });
+
+        // 다국어 텍스트
+        const i18n = {
+            ko: {
+                modelLoading: 'AI 모델 로딩 중...',
+                modelDownload: '모델 다운로드 중...',
+                processing: '배경 제거 중...',
+                completed: '배경 제거 완료!',
+                error: '배경 제거 실패',
+                waiting: '대기중',
+                done: '완료'
+            },
+            en: {
+                modelLoading: 'Loading AI model...',
+                modelDownload: 'Downloading model...',
+                processing: 'Removing background...',
+                completed: 'Background removal completed!',
+                error: 'Background removal failed',
+                waiting: 'Waiting',
+                done: 'Done'
+            }
+        };
+
+        const getText = (key) => {
+            const lang = document.body.getAttribute('data-lang') || 'ko';
+            return i18n[lang][key] || i18n.ko[key];
+        };
+
+        let uploadedImages = [];
+        let processedImages = [];
+        let currentImageIndex = 0;
+        let selectedBgColor = 'transparent';
+        let isProcessing = false;
+
+        // 파일 업로드 이벤트 (모듈 내부)
+        const initializeApp = () => {
+            console.log('📦 initializeApp() called');
+
+            const fileInput = document.getElementById('fileInput');
+            const startBtn = document.getElementById('startBtn');
+
+            console.log('fileInput element:', fileInput);
+            console.log('startBtn element:', startBtn);
+
+            if (!fileInput || !startBtn) {
+                console.error('❌ Required elements not found:', { fileInput, startBtn });
+                return;
+            }
+
+            console.log('✅ Module initialized with elements:', { fileInput, startBtn });
+
+            // 파일 선택 시
+            fileInput.addEventListener('change', (e) => {
+                console.log('🔥 FILE INPUT CHANGE EVENT (inside module)');
+                console.log('Event:', e);
+                console.log('e.target.files:', e.target.files);
+                const filesArray = Array.from(e.target.files);
+                console.log('Files array:', filesArray);
+                handleFiles(filesArray);
+            });
+
+            console.log('✅ Change event listener attached to fileInput');
+
+            // 드래그 앤 드롭
+            const dropzone = document.getElementById('dropzone');
+            if (dropzone) {
+                ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                    dropzone.addEventListener(eventName, preventDefaults, false);
+                });
+
+                function preventDefaults(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+
+                ['dragenter', 'dragover'].forEach(eventName => {
+                    dropzone.addEventListener(eventName, () => {
+                        dropzone.classList.add('active');
+                    }, false);
+                });
+
+                ['dragleave', 'drop'].forEach(eventName => {
+                    dropzone.addEventListener(eventName, () => {
+                        dropzone.classList.remove('active');
+                    }, false);
+                });
+
+                dropzone.addEventListener('drop', (e) => {
+                    const dt = e.dataTransfer;
+                    const files = Array.from(dt.files).filter(f => f.type.startsWith('image/'));
+                    handleFiles(files);
+                }, false);
+
+                console.log('✅ Drag & drop initialized');
+            }
+
+            // 시작 버튼
+            startBtn.addEventListener('click', startProcessing);
+
+            console.log('App initialized successfully');
+        };
+
+        // DOM 준비 확인 및 초기화
+        console.log('📌 document.readyState:', document.readyState);
+
+        if (document.readyState === 'loading') {
+            console.log('⏳ DOM is loading, adding DOMContentLoaded listener');
+            document.addEventListener('DOMContentLoaded', () => {
+                console.log('✅ DOMContentLoaded fired, calling initializeApp');
+                initializeApp();
+            });
+        } else {
+            console.log('✅ DOM already loaded, calling initializeApp immediately');
+            initializeApp();
+        }
+
+        function handleFiles(files) {
+            console.log('=== handleFiles START ===');
+            console.log('handleFiles called with:', files);
+            console.log('Files length:', files.length);
+
+            if (files.length === 0) {
+                console.log('No files provided');
+                return;
+            }
+
+            // 이미지 파일만 필터링
+            const imageFiles = files.filter(f => f.type.startsWith('image/'));
+            console.log('Image files filtered:', imageFiles);
+            console.log('Image files length:', imageFiles.length);
+
+            if (imageFiles.length === 0) {
+                console.log('No image files found');
+                window.BaalUtils.showToast('이미지 파일을 선택해주세요.', 'error', 3000);
+                return;
+            }
+
+            // 파일 크기 체크 (10MB)
+            const oversized = imageFiles.filter(f => f.size > 10 * 1024 * 1024);
+            if (oversized.length > 0) {
+                console.log('Oversized files detected:', oversized);
+                window.BaalUtils.showToast('파일 크기는 10MB 이하여야 합니다.', 'error', 3000);
+                return;
+            }
+
+            console.log('Creating uploadedImages array...');
+            uploadedImages = imageFiles.map((file, index) => ({
+                id: Date.now() + index,
+                file: file,
+                status: 'waiting',
+                originalUrl: URL.createObjectURL(file),
+                resultBlob: null,
+                resultUrl: null
+            }));
+            console.log('uploadedImages created:', uploadedImages);
+
+            console.log('Calling displayImageList()...');
+            displayImageList();
+
+            console.log('Calling showFirstImagePreview()...');
+            showFirstImagePreview();
+
+            console.log('Showing start button...');
+            const startBtn = document.getElementById('startBtn');
+            console.log('startBtn element:', startBtn);
+            if (startBtn) {
+                startBtn.style.display = 'block';
+                console.log('✅ Start button shown');
+            } else {
+                console.error('❌ startBtn not found!');
+            }
+
+            console.log('=== handleFiles END ===');
+        }
+
+        function showFirstImagePreview() {
+            console.log('=== showFirstImagePreview START ===');
+            console.log('uploadedImages.length:', uploadedImages.length);
+
+            if (uploadedImages.length === 0) {
+                console.log('No uploaded images, returning');
+                return;
+            }
+
+            const comparisonContainer = document.getElementById('comparisonContainer');
+            const placeholder = document.getElementById('placeholder');
+
+            console.log('comparisonContainer:', comparisonContainer);
+            console.log('placeholder:', placeholder);
+
+            // placeholder 숨기기
+            if (placeholder) {
+                placeholder.style.display = 'none';
+                console.log('Placeholder hidden');
+            }
+
+            // 첫 번째 이미지 미리보기 표시
+            const firstImage = uploadedImages[0];
+            console.log('First image:', firstImage);
+
+            comparisonContainer.innerHTML = `
+                <div class="comparison-wrapper" id="beforeWrapper">
+                    <img src="${firstImage.originalUrl}" alt="Preview" id="beforeImg">
+                </div>
+                <p style="margin-top: 15px; color: var(--text-secondary); font-size: 0.9em;">
+                    <span data-ko="시작 버튼을 눌러 배경 제거를 시작하세요" data-en="Click start button to begin background removal">시작 버튼을 눌러 배경 제거를 시작하세요</span>
+                </p>
+            `;
+            console.log('Preview HTML set');
+
+            // 다국어 적용
+            if (window.BaalUtils && window.BaalUtils.updateLanguage) {
+                const currentLang = document.body.getAttribute('data-lang') || 'ko';
+                window.BaalUtils.updateLanguage(currentLang);
+                console.log('Language updated');
+            } else {
+                console.warn('BaalUtils.updateLanguage not available');
+            }
+
+            // 디버그: 이미지 로드 후 크기 확인
+            setTimeout(() => {
+                const wrapper = document.getElementById('beforeWrapper');
+                const img = document.getElementById('beforeImg');
+                if (wrapper && img) {
+                    const wrapperStyle = window.getComputedStyle(wrapper);
+                    const imgStyle = window.getComputedStyle(img);
+                    console.log('📐 [업로드 당시] wrapper:', {
+                        width: wrapper.offsetWidth,
+                        height: wrapper.offsetHeight,
+                        maxWidth: wrapperStyle.maxWidth,
+                        maxHeight: wrapperStyle.maxHeight
+                    });
+                    console.log('📐 [업로드 당시] img:', {
+                        width: img.offsetWidth,
+                        height: img.offsetHeight,
+                        naturalWidth: img.naturalWidth,
+                        naturalHeight: img.naturalHeight,
+                        maxWidth: imgStyle.maxWidth,
+                        maxHeight: imgStyle.maxHeight
+                    });
+                }
+            }, 100);
+
+            console.log('=== showFirstImagePreview END ===');
+        }
+
+        function displayImageList() {
+            console.log('=== displayImageList START ===');
+            const imageList = document.getElementById('imageList');
+            console.log('imageList element:', imageList);
+
+            imageList.style.display = 'grid';
+            imageList.innerHTML = '';
+            console.log('Image list cleared, uploading', uploadedImages.length, 'images');
+
+            uploadedImages.forEach((img, index) => {
+                const item = document.createElement('div');
+                item.className = 'image-item';
+                if (index === 0) item.classList.add('active');
+                item.dataset.index = index;
+
+                item.innerHTML = `
+                    <img src="${img.originalUrl}" alt="Image ${index + 1}">
+                    <button class="remove-btn" data-index="${index}">×</button>
+                    <div class="status-badge">${getText('waiting')}</div>
+                `;
+
+                item.addEventListener('click', (e) => {
+                    if (!e.target.classList.contains('remove-btn')) {
+                        selectImage(index);
+                    }
+                });
+
+                const removeBtn = item.querySelector('.remove-btn');
+                removeBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    removeImage(index);
+                });
+
+                imageList.appendChild(item);
+            });
+        }
+
+        function removeImage(index) {
+            URL.revokeObjectURL(uploadedImages[index].originalUrl);
+            if (uploadedImages[index].resultUrl) {
+                URL.revokeObjectURL(uploadedImages[index].resultUrl);
+            }
+
+            uploadedImages.splice(index, 1);
+
+            if (uploadedImages.length === 0) {
+                document.getElementById('imageList').style.display = 'none';
+                document.getElementById('startBtn').style.display = 'none';
+                document.getElementById('comparisonContainer').innerHTML = `
+                    <p class="placeholder-text" id="placeholder" data-ko="이미지를 업로드하면 자동으로 배경이 제거됩니다" data-en="Upload an image to automatically remove background">이미지를 업로드하면 자동으로 배경이 제거됩니다</p>
+                `;
+                document.getElementById('downloadOptions').style.display = 'none';
+            } else {
+                displayImageList();
+                if (currentImageIndex >= uploadedImages.length) {
+                    selectImage(uploadedImages.length - 1);
+                }
+            }
+        }
+
+        async function selectImage(index) {
+            currentImageIndex = index;
+
+            document.querySelectorAll('.image-item').forEach((item, i) => {
+                item.classList.toggle('active', i === index);
+            });
+
+            const img = uploadedImages[index];
+            const comparisonContainer = document.getElementById('comparisonContainer');
+
+            if (img.resultBlob) {
+                // 처리 완료된 경우: 비교 뷰 표시
+                await displayComparison(img.file, img.resultBlob);
+
+                // 선택된 배경색이 있으면 미리보기에 적용
+                if (selectedBgColor) {
+                    console.log(`🎨 Applying selected background color to thumbnail: ${selectedBgColor}`);
+                    await updatePreviewWithBackground(img.file, img.resultBlob, selectedBgColor);
+                }
+
+                document.getElementById('downloadOptions').style.display = 'block';
+            } else {
+                // 처리 전인 경우: 원본 이미지 미리보기
+                comparisonContainer.innerHTML = `
+                    <div class="comparison-wrapper" id="beforeWrapper">
+                        <img src="${img.originalUrl}" alt="Preview" id="beforeImg">
+                    </div>
+                    <p style="margin-top: 15px; color: var(--text-secondary); font-size: 0.9em;">
+                        <span data-ko="시작 버튼을 눌러 배경 제거를 시작하세요" data-en="Click start button to begin background removal">시작 버튼을 눌러 배경 제거를 시작하세요</span>
+                    </p>
+                `;
+                const currentLang = document.body.getAttribute('data-lang') || 'ko';
+                window.BaalUtils.updateLanguage(currentLang);
+                document.getElementById('downloadOptions').style.display = 'none';
+
+                // 디버그: 이미지 로드 후 크기 확인
+                setTimeout(() => {
+                    const wrapper = document.getElementById('beforeWrapper');
+                    const img = document.getElementById('beforeImg');
+                    if (wrapper && img) {
+                        const wrapperStyle = window.getComputedStyle(wrapper);
+                        const imgStyle = window.getComputedStyle(img);
+                        console.log('📐 [업로드 당시] wrapper:', {
+                            width: wrapper.offsetWidth,
+                            height: wrapper.offsetHeight,
+                            maxWidth: wrapperStyle.maxWidth,
+                            maxHeight: wrapperStyle.maxHeight
+                        });
+                        console.log('📐 [업로드 당시] img:', {
+                            width: img.offsetWidth,
+                            height: img.offsetHeight,
+                            naturalWidth: img.naturalWidth,
+                            naturalHeight: img.naturalHeight,
+                            maxWidth: imgStyle.maxWidth,
+                            maxHeight: imgStyle.maxHeight
+                        });
+                    }
+                }, 100);
+            }
+        }
+
+        async function startProcessing() {
+            if (isProcessing || uploadedImages.length === 0) return;
+
+            isProcessing = true;
+            document.getElementById('startBtn').disabled = true;
+            document.getElementById('progressContainer').style.display = 'block';
+
+            totalProcessingImages = uploadedImages.length;
+
+            for (let i = 0; i < uploadedImages.length; i++) {
+                const img = uploadedImages[i];
+                currentProcessingIndex = i + 1; // 전역 변수 업데이트
+
+                console.log(`🔄 Starting image ${currentProcessingIndex}/${totalProcessingImages}: ${img.file.name}`);
+
+                // 상태 업데이트
+                updateImageStatus(i, 'processing');
+
+                try {
+                    // 배경 제거 실행
+                    const imageBlob = await removeBackground(img.file, {
+                        progress: (key, current, total) => {
+                            const progress = Math.round((current / total) * 100);
+                            console.log(`Progress [${currentProcessingIndex}/${totalProcessingImages}]: ${key} ${progress}%`);
+
+                            const progressFill = document.getElementById('progressFill');
+                            const progressText = document.getElementById('progressText');
+
+                            if (progressFill) {
+                                progressFill.style.width = progress + '%';
+                            }
+
+                            if (progressText) {
+                                if (key === 'compute:inference') {
+                                    progressText.textContent = `${getText('processing')} (${currentProcessingIndex}/${totalProcessingImages}) ${progress}%`;
+                                } else if (key === 'fetch:model') {
+                                    progressText.textContent = `${getText('modelDownload')} (${currentProcessingIndex}/${totalProcessingImages}) ${progress}%`;
+                                }
+                            }
+                        }
+                    });
+
+                    img.resultBlob = imageBlob;
+                    img.resultUrl = URL.createObjectURL(imageBlob);
+                    img.status = 'completed';
+
+                    updateImageStatus(i, 'completed');
+
+                    // 첫 번째 이미지는 자동으로 표시
+                    if (i === 0) {
+                        displayComparison(img.file, img.resultBlob);
+                        document.getElementById('downloadOptions').style.display = 'block';
+                    }
+
+                } catch (error) {
+                    console.error('Background removal error:', error);
+                    img.status = 'error';
+                    updateImageStatus(i, 'error');
+                    window.BaalUtils.showToast(`${getText('error')}: ${img.file.name}`, 'error', 3000);
+                }
+            }
+
+            // 진행률 숨김
+            document.getElementById('progressContainer').style.display = 'none';
+            document.getElementById('startBtn').disabled = false;
+            isProcessing = false;
+
+            // 일괄 다운로드 버튼 표시 (2개 이상 완료된 경우)
+            const completedCount = uploadedImages.filter(img => img.status === 'completed' && img.resultBlob).length;
+            const downloadAllBtn = document.getElementById('downloadAllBtn');
+            if (completedCount >= 2) {
+                downloadAllBtn.style.display = 'inline-block';
+            } else {
+                downloadAllBtn.style.display = 'none';
+            }
+
+            window.BaalUtils.showToast(getText('completed'), 'success', 3000);
+        }
+
+        function updateImageStatus(index, status) {
+            const items = document.querySelectorAll('.image-item');
+            if (items[index]) {
+                const badge = items[index].querySelector('.status-badge');
+                badge.className = `status-badge ${status}`;
+
+                if (status === 'processing') {
+                    badge.textContent = getText('processing');
+                } else if (status === 'completed') {
+                    badge.textContent = getText('done');
+                } else if (status === 'error') {
+                    badge.textContent = getText('error');
+                } else {
+                    badge.textContent = getText('waiting');
+                }
+            }
+        }
+
+        async function displayComparison(originalFile, resultBlob) {
+            const container = document.getElementById('comparisonContainer');
+            const placeholder = document.getElementById('placeholder');
+            if (placeholder) placeholder.style.display = 'none';
+
+            // 원본 이미지 URL
+            const originalUrl = URL.createObjectURL(originalFile);
+            const resultUrl = URL.createObjectURL(resultBlob);
+
+            container.innerHTML = `
+                <div class="comparison-wrapper" id="comparisonWrapper">
+                    <img src="${originalUrl}" alt="Original" id="originalImg">
+                    <div class="result-overlay" id="resultOverlay">
+                        <img src="${resultUrl}" alt="Result" id="resultImg">
+                    </div>
+                    <div class="slider-handle" id="sliderHandle">⇔</div>
+                </div>
+            `;
+
+            // 디버그: 이미지 로드 후 크기 확인
+            setTimeout(() => {
+                const wrapper = document.getElementById('comparisonWrapper');
+                const img = document.getElementById('originalImg');
+                if (wrapper && img) {
+                    const wrapperStyle = window.getComputedStyle(wrapper);
+                    const imgStyle = window.getComputedStyle(img);
+                    console.log('📐 [작업 완료 후] wrapper:', {
+                        width: wrapper.offsetWidth,
+                        height: wrapper.offsetHeight,
+                        maxWidth: wrapperStyle.maxWidth,
+                        maxHeight: wrapperStyle.maxHeight
+                    });
+                    console.log('📐 [작업 완료 후] img:', {
+                        width: img.offsetWidth,
+                        height: img.offsetHeight,
+                        naturalWidth: img.naturalWidth,
+                        naturalHeight: img.naturalHeight,
+                        maxWidth: imgStyle.maxWidth,
+                        maxHeight: imgStyle.maxHeight
+                    });
+                }
+            }, 100);
+
+            // 슬라이더 드래그 기능
+            setupSlider();
+        }
+
+        function setupSlider() {
+            const handle = document.getElementById('sliderHandle');
+            const overlay = document.getElementById('resultOverlay');
+            const wrapper = document.getElementById('comparisonWrapper');
+
+            if (!handle || !overlay || !wrapper) return;
+
+            let isDragging = false;
+
+            handle.addEventListener('mousedown', () => {
+                isDragging = true;
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+
+                const rect = wrapper.getBoundingClientRect();
+                let x = e.clientX - rect.left;
+                x = Math.max(0, Math.min(x, rect.width));
+
+                const percentage = (x / rect.width) * 100;
+                overlay.style.width = percentage + '%';
+                handle.style.left = percentage + '%';
+            });
+
+            document.addEventListener('mouseup', () => {
+                isDragging = false;
+            });
+
+            // 터치 이벤트 (모바일)
+            handle.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                isDragging = true;
+            });
+
+            document.addEventListener('touchmove', (e) => {
+                if (!isDragging) return;
+
+                const rect = wrapper.getBoundingClientRect();
+                let x = e.touches[0].clientX - rect.left;
+                x = Math.max(0, Math.min(x, rect.width));
+
+                const percentage = (x / rect.width) * 100;
+                overlay.style.width = percentage + '%';
+                handle.style.left = percentage + '%';
+            });
+
+            document.addEventListener('touchend', () => {
+                isDragging = false;
+            });
+        }
+
+        // 배경색 선택 (실시간 미리보기 - 모든 이미지에 적용)
+        document.querySelectorAll('.bg-color-btn:not(.custom-color-btn)').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                selectedBgColor = btn.dataset.color;
+                document.querySelectorAll('.bg-color-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                // 현재 보고 있는 이미지 미리보기 업데이트
+                const currentImg = uploadedImages[currentImageIndex];
+                if (currentImg && currentImg.resultBlob) {
+                    console.log('🎨 Updating preview with new background color:', selectedBgColor);
+                    await updatePreviewWithBackground(currentImg.file, currentImg.resultBlob, selectedBgColor);
+                }
+
+                // 모든 썸네일 이미지에도 배경색 적용
+                await updateAllThumbnails(selectedBgColor);
+            });
+        });
+
+        // 커스텀 색상 선택 버튼
+        const customColorBtn = document.getElementById('customColorBtn');
+        const customColorPicker = document.getElementById('customColorPicker');
+
+        if (customColorBtn && customColorPicker) {
+            // + 버튼 클릭 시 색상 팔레트 열기
+            customColorBtn.addEventListener('click', () => {
+                customColorPicker.click();
+            });
+
+            // 색상 선택 시
+            customColorPicker.addEventListener('change', async (e) => {
+                const customColor = e.target.value;
+                console.log('🎨 Custom color selected:', customColor);
+
+                // 선택한 색상을 버튼에 적용
+                customColorBtn.style.background = customColor;
+
+                // 활성화 상태로 변경
+                selectedBgColor = customColor;
+                document.querySelectorAll('.bg-color-btn').forEach(b => b.classList.remove('active'));
+                customColorBtn.classList.add('active');
+
+                // 현재 보고 있는 이미지 미리보기 업데이트
+                const currentImg = uploadedImages[currentImageIndex];
+                if (currentImg && currentImg.resultBlob) {
+                    console.log('🎨 Updating preview with custom color:', customColor);
+                    await updatePreviewWithBackground(currentImg.file, currentImg.resultBlob, customColor);
+                }
+
+                // 모든 썸네일 이미지에도 배경색 적용
+                await updateAllThumbnails(customColor);
+            });
+        }
+
+        // 모든 썸네일 이미지에 배경색 적용
+        async function updateAllThumbnails(bgColor) {
+            const imageList = document.getElementById('imageList');
+            if (!imageList) return;
+
+            const items = imageList.querySelectorAll('.image-item');
+
+            for (let i = 0; i < uploadedImages.length; i++) {
+                const img = uploadedImages[i];
+
+                // 처리 완료된 이미지만 업데이트
+                if (img.status === 'completed' && img.resultBlob) {
+                    const item = items[i];
+                    if (!item) continue;
+
+                    const thumbnailImg = item.querySelector('img');
+                    if (!thumbnailImg) continue;
+
+                    let thumbnailUrl;
+
+                    if (bgColor === 'transparent') {
+                        // 투명 배경: 원본 사용
+                        thumbnailUrl = URL.createObjectURL(img.resultBlob);
+                    } else {
+                        // 배경색 적용: Canvas로 합성
+                        const image = new Image();
+                        image.src = URL.createObjectURL(img.resultBlob);
+                        await image.decode();
+
+                        const canvas = document.createElement('canvas');
+                        canvas.width = image.width;
+                        canvas.height = image.height;
+                        const ctx = canvas.getContext('2d');
+
+                        // 배경색 채우기
+                        ctx.fillStyle = bgColor;
+                        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                        // 결과 이미지 그리기
+                        ctx.drawImage(image, 0, 0);
+
+                        // Blob으로 변환
+                        const blob = await new Promise((resolve) => {
+                            canvas.toBlob(resolve, 'image/png');
+                        });
+
+                        thumbnailUrl = URL.createObjectURL(blob);
+                        URL.revokeObjectURL(image.src);
+                    }
+
+                    // 썸네일 이미지 업데이트
+                    const oldSrc = thumbnailImg.src;
+                    thumbnailImg.src = thumbnailUrl;
+
+                    // 이전 URL 정리
+                    if (oldSrc && oldSrc.startsWith('blob:')) {
+                        setTimeout(() => URL.revokeObjectURL(oldSrc), 100);
+                    }
+                }
+            }
+
+            console.log(`✅ Updated ${uploadedImages.filter(i => i.status === 'completed').length} thumbnails with background color: ${bgColor}`);
+        }
+
+        // 배경색이 적용된 미리보기 업데이트
+        async function updatePreviewWithBackground(originalFile, resultBlob, bgColor) {
+            const resultOverlay = document.getElementById('resultOverlay');
+            if (!resultOverlay) return;
+
+            let previewUrl;
+
+            if (bgColor === 'transparent') {
+                // 투명 배경: 원본 결과 이미지 사용
+                previewUrl = URL.createObjectURL(resultBlob);
+            } else {
+                // 배경색 적용: Canvas로 합성
+                const img = new Image();
+                img.src = URL.createObjectURL(resultBlob);
+                await img.decode();
+
+                const canvas = document.createElement('canvas');
+                canvas.width = img.width;
+                canvas.height = img.height;
+                const ctx = canvas.getContext('2d');
+
+                // 배경색 채우기
+                ctx.fillStyle = bgColor;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                // 결과 이미지 그리기
+                ctx.drawImage(img, 0, 0);
+
+                // Blob으로 변환
+                const blob = await new Promise((resolve) => {
+                    canvas.toBlob(resolve, 'image/png');
+                });
+
+                previewUrl = URL.createObjectURL(blob);
+                URL.revokeObjectURL(img.src);
+            }
+
+            // 미리보기 업데이트
+            const resultImg = resultOverlay.querySelector('img');
+            if (resultImg) {
+                const oldSrc = resultImg.src;
+                resultImg.src = previewUrl;
+                // 이전 URL 정리
+                if (oldSrc && oldSrc.startsWith('blob:')) {
+                    setTimeout(() => URL.revokeObjectURL(oldSrc), 100);
+                }
+            }
+        }
+
+        // 다운로드
+        document.getElementById('downloadBtn').addEventListener('click', async () => {
+            const currentImg = uploadedImages[currentImageIndex];
+            if (!currentImg || !currentImg.resultBlob) return;
+
+            const resultBlob = currentImg.resultBlob;
+
+            if (selectedBgColor === 'transparent') {
+                // 투명 배경 그대로 다운로드
+                const filename = currentImg.file.name.replace(/\.[^/.]+$/, '') + '-removed-bg.png';
+                window.BaalUtils.downloadFile(resultBlob, filename);
+            } else {
+                // 배경색 추가
+                const img = new Image();
+                img.src = URL.createObjectURL(resultBlob);
+                await img.decode();
+
+                const canvas = document.createElement('canvas');
+                canvas.width = img.width;
+                canvas.height = img.height;
+                const ctx = canvas.getContext('2d');
+
+                // 배경색 채우기
+                ctx.fillStyle = selectedBgColor;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                // 결과 이미지 그리기
+                ctx.drawImage(img, 0, 0);
+
+                canvas.toBlob((blob) => {
+                    const filename = currentImg.file.name.replace(/\.[^/.]+$/, '') + '-removed-bg.png';
+                    window.BaalUtils.downloadFile(blob, filename);
+                }, 'image/png');
+
+                URL.revokeObjectURL(img.src);
+            }
+
+            window.BaalUtils.showToast('다운로드 완료!', 'success', 3000);
+        });
+
+        // 일괄 다운로드 (ZIP)
+        document.getElementById('downloadAllBtn').addEventListener('click', async () => {
+            console.log('📦 Starting batch download...');
+
+            // 완료된 이미지만 필터링
+            const completedImages = uploadedImages.filter(img => img.status === 'completed' && img.resultBlob);
+
+            if (completedImages.length === 0) {
+                window.BaalUtils.showToast('다운로드할 이미지가 없습니다.', 'error', 3000);
+                return;
+            }
+
+            try {
+                // JSZip 인스턴스 생성
+                const zip = new JSZip();
+                const folder = zip.folder('background-removed');
+
+                window.BaalUtils.showToast(`${completedImages.length}개 이미지 압축 중...`, 'info', 2000);
+
+                // 각 이미지를 ZIP에 추가
+                for (let i = 0; i < completedImages.length; i++) {
+                    const img = completedImages[i];
+                    const originalFilename = img.file.name.replace(/\.[^/.]+$/, '');
+
+                    if (selectedBgColor === 'transparent') {
+                        // 투명 배경: 원본 resultBlob 사용
+                        const arrayBuffer = await img.resultBlob.arrayBuffer();
+                        folder.file(`${originalFilename}-removed-bg.png`, arrayBuffer);
+                    } else {
+                        // 배경색 적용: Canvas로 합성
+                        const image = new Image();
+                        image.src = URL.createObjectURL(img.resultBlob);
+                        await image.decode();
+
+                        const canvas = document.createElement('canvas');
+                        canvas.width = image.width;
+                        canvas.height = image.height;
+                        const ctx = canvas.getContext('2d');
+
+                        // 배경색 채우기
+                        ctx.fillStyle = selectedBgColor;
+                        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                        // 결과 이미지 그리기
+                        ctx.drawImage(image, 0, 0);
+
+                        // Blob으로 변환
+                        const blob = await new Promise((resolve) => {
+                            canvas.toBlob(resolve, 'image/png');
+                        });
+
+                        const arrayBuffer = await blob.arrayBuffer();
+                        folder.file(`${originalFilename}-removed-bg.png`, arrayBuffer);
+
+                        URL.revokeObjectURL(image.src);
+                    }
+
+                    console.log(`✅ Added to ZIP: ${originalFilename} (${i + 1}/${completedImages.length})`);
+                }
+
+                // ZIP 파일 생성
+                const zipBlob = await zip.generateAsync({
+                    type: 'blob',
+                    compression: 'DEFLATE',
+                    compressionOptions: { level: 6 }
+                });
+
+                // 파일명 생성 (타임스탬프 포함)
+                const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
+                const filename = `background-removed-${timestamp}.zip`;
+
+                // 다운로드
+                window.BaalUtils.downloadFile(zipBlob, filename);
+
+                window.BaalUtils.showToast(`✅ ${completedImages.length}개 파일 다운로드 완료!`, 'success', 3000);
+
+            } catch (error) {
+                console.error('ZIP download error:', error);
+                window.BaalUtils.showToast('일괄 다운로드 실패', 'error', 3000);
+            }
+        });
+
+        // Privacy Modal Functions (exposed to global scope)
+        window.openPrivacyModal = function() {
+            document.getElementById('privacyModal').classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        window.closePrivacyModal = function() {
+            document.getElementById('privacyModal').classList.remove('show');
+            document.body.style.overflow = '';
+        }
+
+        // ESC key to close modal
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                window.closePrivacyModal();
+            }
+        });
+    </script>
+</body>
+</html>

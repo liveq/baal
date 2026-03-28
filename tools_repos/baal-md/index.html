@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="실시간 마크다운 에디터. GitHub Flavored Markdown 지원, 코드 하이라이팅, HTML/MD 다운로드">
+    <meta name="keywords" content="마크다운 에디터, Markdown Editor, 마크다운 변환, MD to HTML, 마크다운 미리보기, GitHub Markdown, 온라인 마크다운 에디터">
+    <meta name="author" content="BAAL">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://md.baal.co.kr/">
+    <meta property="og:title" content="마크다운 에디터 - BAAL">
+    <meta property="og:description" content="실시간 마크다운 에디터. GitHub Flavored Markdown 지원, 코드 하이라이팅, HTML/MD 다운로드">
+    <meta property="og:image" content="https://md.baal.co.kr/og-image.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://md.baal.co.kr/">
+    <meta property="twitter:title" content="마크다운 에디터 - BAAL">
+    <meta property="twitter:description" content="실시간 마크다운 에디터. GitHub Flavored Markdown 지원, 코드 하이라이팅, HTML/MD 다운로드">
+    <meta property="twitter:image" content="https://md.baal.co.kr/og-image.png">
+
+    <title>마크다운 에디터 - BAAL</title>
+
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2886185075996969"
+     crossorigin="anonymous"></script>
+
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-XXXXXXXXXX');
+    </script>
+
+    <!-- Marked.js for Markdown parsing -->
+    <script src="https://cdn.jsdelivr.net/npm/marked@11.0.0/marked.min.js"></script>
+
+    <!-- Highlight.js for code syntax highlighting -->
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/highlight.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github-dark.min.css">
+
+    <!-- DOMPurify for XSS protection -->
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.6/dist/purify.min.js"></script>
+
+    <!-- Playfair Display 폰트 (Privacy Modal용) -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+
+    <!-- 공통 스타일 -->
+    <link rel="stylesheet" href="../_common/common.css">
+    <style>
+        .toolbar {
+            background: var(--bg-secondary);
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .toolbar-btn {
+            padding: 8px 16px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            font-size: 0.9em;
+        }
+
+        .toolbar-btn:hover {
+            background: var(--gold-gradient);
+            color: white;
+            border-color: var(--gold-primary);
+        }
+
+        .toolbar-separator {
+            width: 1px;
+            height: 30px;
+            background: var(--border-color);
+        }
+
+        .editor-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .editor-panel {
+            background: var(--bg-secondary);
+            padding: 20px;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .editor-panel h3 {
+            margin: 0 0 15px 0;
+        }
+
+        #markdownInput {
+            width: 100%;
+            min-height: 500px;
+            padding: 15px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Courier New', Monaco, monospace;
+            font-size: 0.95em;
+            resize: vertical;
+            line-height: 1.6;
+        }
+
+        #preview {
+            min-height: 500px;
+            padding: 15px;
+            background: var(--bg-primary);
+            border-radius: 8px;
+            overflow-y: auto;
+            line-height: 1.6;
+        }
+
+        /* Markdown preview styles */
+        #preview h1, #preview h2, #preview h3, #preview h4, #preview h5, #preview h6 {
+            margin-top: 24px;
+            margin-bottom: 16px;
+            font-weight: 600;
+            line-height: 1.25;
+        }
+
+        #preview h1 {
+            font-size: 2em;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 0.3em;
+        }
+
+        #preview h2 {
+            font-size: 1.5em;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.3em;
+        }
+
+        #preview h3 { font-size: 1.25em; }
+        #preview h4 { font-size: 1em; }
+        #preview h5 { font-size: 0.875em; }
+        #preview h6 { font-size: 0.85em; color: var(--text-secondary); }
+
+        #preview p {
+            margin-top: 0;
+            margin-bottom: 16px;
+        }
+
+        #preview code {
+            background: var(--bg-secondary);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        #preview pre {
+            background: #282c34;
+            color: #abb2bf;
+            padding: 16px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 16px 0;
+        }
+
+        #preview pre code {
+            background: none;
+            padding: 0;
+            color: inherit;
+        }
+
+        #preview blockquote {
+            border-left: 4px solid var(--gold-primary);
+            margin: 16px 0;
+            padding-left: 16px;
+            color: var(--text-secondary);
+        }
+
+        #preview table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 16px 0;
+        }
+
+        #preview th, #preview td {
+            border: 1px solid var(--border-color);
+            padding: 8px 12px;
+            text-align: left;
+        }
+
+        #preview th {
+            background: var(--bg-secondary);
+            font-weight: 600;
+        }
+
+        #preview tr:hover {
+            background: var(--bg-secondary);
+        }
+
+        #preview ul, #preview ol {
+            margin: 16px 0;
+            padding-left: 32px;
+        }
+
+        #preview li {
+            margin: 4px 0;
+        }
+
+        #preview a {
+            color: var(--gold-primary);
+            text-decoration: none;
+        }
+
+        #preview a:hover {
+            text-decoration: underline;
+        }
+
+        #preview img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin: 16px 0;
+        }
+
+        #preview hr {
+            border: none;
+            border-top: 2px solid var(--border-color);
+            margin: 24px 0;
+        }
+
+        #preview del {
+            text-decoration: line-through;
+        }
+
+        #preview input[type="checkbox"] {
+            margin-right: 8px;
+        }
+
+        .actions-section {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            background: var(--gold-gradient);
+            color: white;
+            border: 2px solid var(--gold-primary);
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        @media (max-width: 1024px) {
+            .editor-container {
+                grid-template-columns: 1fr;
+            }
+
+            .toolbar {
+                justify-content: center;
+            }
+        }
+
+        /* Privacy Modal Styles (from baal.co.kr) */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(10px);
+        }
+
+        .modal.show {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: rgba(255,255,255,0.95);
+            padding: 50px 40px;
+            border-radius: 20px;
+            max-width: 700px;
+            width: 90%;
+            position: relative;
+            text-align: center;
+            word-break: keep-all;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            font-size: 32px;
+            color: #9ca3af;
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .modal-close:hover {
+            color: var(--gold-primary);
+        }
+
+        .modal-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2em;
+            margin-bottom: 25px;
+            background: linear-gradient(-45deg, #d4af37, #ffd700, #b8860b);
+            background-size: 300% 300%;
+            animation: modalGradientFlow 4s ease-in-out infinite;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            word-break: keep-all;
+        }
+
+        @keyframes modalGradientFlow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .privacy-content {
+            text-align: left;
+            color: #4a4a4a;
+            line-height: 1.8;
+            max-height: 60vh;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .privacy-content h3 {
+            color: #2c3e50;
+            margin-top: 20px;
+            font-size: 1.1em;
+        }
+
+        .privacy-content h3:first-of-type {
+            margin-top: 0;
+        }
+
+        .privacy-content p {
+            margin-bottom: 15px;
+        }
+
+        .privacy-content ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .privacy-content a {
+            color: var(--gold-primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .privacy-content a:hover {
+            text-decoration: underline;
+        }
+
+        .privacy-content strong {
+            color: #2c3e50;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+    <!-- 다크모드 토글 -->
+    <div class="theme-toggle">
+        <button id="themeToggle" aria-label="다크모드 전환">
+            <span class="icon-light">☀️</span>
+            <span class="icon-dark">🌙</span>
+        </button>
+    </div>
+
+    <!-- 언어 전환 -->
+    <div class="lang-toggle">
+        <button id="langToggle" data-lang="ko">
+            <span class="lang-ko">EN</span>
+            <span class="lang-en">KO</span>
+        </button>
+    </div>
+
+    <!-- 도구 버튼 -->
+    <div class="tools-toggle">
+        <button id="toolsToggle">
+            <span class="tooltip" data-ko="더 많은 도구" data-en="More Tools"></span>
+            🧰
+        </button>
+    </div>
+
+    <!-- 메인 컨테이너 -->
+    <div class="container">
+        <header>
+            <h1 data-ko="마크다운 에디터" data-en="Markdown Editor">마크다운 에디터</h1>
+            <p class="subtitle" data-ko="실시간 미리보기로 마크다운 작성" data-en="Write markdown with real-time preview">실시간 미리보기로 마크다운 작성</p>
+        </header>
+
+        <main>
+            <!-- 툴바 -->
+            <div class="toolbar">
+                <button class="toolbar-btn" onclick="insertMarkdown('**', '**', 'bold text')" title="Bold (Ctrl+B)"><strong>B</strong></button>
+                <button class="toolbar-btn" onclick="insertMarkdown('_', '_', 'italic text')" title="Italic (Ctrl+I)"><em>I</em></button>
+                <button class="toolbar-btn" onclick="insertMarkdown('~~', '~~', 'strikethrough')" title="Strikethrough">~~S~~</button>
+                <div class="toolbar-separator"></div>
+                <button class="toolbar-btn" onclick="insertMarkdown('[', '](url)', 'link text')" title="Link (Ctrl+K)" data-ko="링크" data-en="Link">링크</button>
+                <button class="toolbar-btn" onclick="insertMarkdown('`', '`', 'code')" title="Inline Code" data-ko="코드" data-en="Code">코드</button>
+                <button class="toolbar-btn" onclick="insertMarkdown('```\n', '\n```', 'code block')" title="Code Block" data-ko="코드 블록" data-en="Block">코드 블록</button>
+                <div class="toolbar-separator"></div>
+                <button class="toolbar-btn" onclick="insertMarkdown('- ', '', 'list item')" title="List" data-ko="목록" data-en="List">목록</button>
+                <button class="toolbar-btn" onclick="insertMarkdown('> ', '', 'quote')" title="Quote" data-ko="인용" data-en="Quote">인용</button>
+                <button class="toolbar-btn" onclick="insertTable()" title="Table" data-ko="표" data-en="Table">표</button>
+            </div>
+
+            <!-- 액션 버튼 -->
+            <div class="actions-section">
+                <button class="btn" onclick="uploadMarkdown()" data-ko="파일 업로드" data-en="Upload File">파일 업로드</button>
+                <button class="btn" onclick="downloadMarkdown()" data-ko="MD 다운로드" data-en="Download MD">MD 다운로드</button>
+                <button class="btn" onclick="downloadHTML()" data-ko="HTML 다운로드" data-en="Download HTML">HTML 다운로드</button>
+                <input type="file" id="fileInput" accept=".md,.markdown,.txt" style="display: none;">
+            </div>
+
+            <!-- 에디터 -->
+            <div class="editor-container">
+                <div class="editor-panel">
+                    <h3 data-ko="마크다운 입력" data-en="Markdown Input">마크다운 입력</h3>
+                    <textarea id="markdownInput" placeholder="# Hello World
+
+This is **bold** and _italic_.
+
+## Code Example
+```javascript
+console.log('Hello!');
+```
+
+- [x] Task completed
+- [ ] Task pending
+
+[Link](https://example.com)"></textarea>
+                </div>
+
+                <div class="editor-panel">
+                    <h3 data-ko="미리보기" data-en="Preview">미리보기</h3>
+                    <div id="preview"></div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <div class="footer-content">
+                <p class="footer-brand">
+                    Made by <a href="https://baal.co.kr" target="_blank">BAAL</a>
+                </p>
+                <p class="footer-contact">
+                    <a href="mailto:summon@baal.co.kr">summon@baal.co.kr</a>
+                </p>
+                <p class="footer-links">
+                    <a href="#" onclick="event.preventDefault(); openPrivacyModal();" data-ko="개인정보처리방침" data-en="Privacy Policy">개인정보처리방침</a>
+                </p>
+                <p class="footer-copyright">&copy; 2025 BAAL. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- 공통 스크립트 -->
+    <script src="../_common/common.js"></script>
+    <script>
+        // Configure marked
+        marked.setOptions({
+            gfm: true,
+            breaks: true,
+            tables: true,
+            highlight: function(code, lang) {
+                if (lang && hljs.getLanguage(lang)) {
+                    try {
+                        return hljs.highlight(code, { language: lang }).value;
+                    } catch (e) {
+                        console.error('Highlight error:', e);
+                    }
+                }
+                return hljs.highlightAuto(code).value;
+            }
+        });
+
+        // Render markdown
+        function renderMarkdown(markdown) {
+            try {
+                const rawHtml = marked.parse(markdown);
+                const cleanHtml = DOMPurify.sanitize(rawHtml, {
+                    ALLOWED_TAGS: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'a', 'ul', 'ol', 'li', 'blockquote', 'code', 'pre', 'strong', 'em', 'img', 'table', 'thead', 'tbody', 'tr', 'th', 'td', 'hr', 'br', 'del', 'input', 'span'],
+                    ALLOWED_ATTR: ['href', 'src', 'alt', 'title', 'type', 'checked', 'disabled', 'class']
+                });
+                return cleanHtml;
+            } catch (error) {
+                return '<p style="color: #ef4444;">Markdown parsing error: ' + error.message + '</p>';
+            }
+        }
+
+        // Update preview
+        function updatePreview() {
+            const markdown = document.getElementById('markdownInput').value;
+            const html = renderMarkdown(markdown);
+            document.getElementById('preview').innerHTML = html;
+        }
+
+        // Debounced update
+        let debounceTimer;
+        document.getElementById('markdownInput').addEventListener('input', () => {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(updatePreview, 300);
+        });
+
+        // Insert markdown syntax
+        function insertMarkdown(prefix, suffix, placeholder) {
+            const textarea = document.getElementById('markdownInput');
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            const selectedText = textarea.value.substring(start, end);
+            const text = selectedText || placeholder;
+
+            const before = textarea.value.substring(0, start);
+            const after = textarea.value.substring(end);
+
+            textarea.value = before + prefix + text + suffix + after;
+
+            const newCursorPos = start + prefix.length + text.length;
+            textarea.setSelectionRange(newCursorPos, newCursorPos);
+            textarea.focus();
+
+            updatePreview();
+        }
+
+        // Insert table
+        function insertTable() {
+            const table = '| Header 1 | Header 2 | Header 3 |\n| -------- | -------- | -------- |\n| Cell 1   | Cell 2   | Cell 3   |\n| Cell 4   | Cell 5   | Cell 6   |';
+            insertMarkdown('', '', table);
+        }
+
+        // Keyboard shortcuts
+        document.getElementById('markdownInput').addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'b') {
+                e.preventDefault();
+                insertMarkdown('**', '**', 'bold text');
+            }
+
+            if ((e.ctrlKey || e.metaKey) && e.key === 'i') {
+                e.preventDefault();
+                insertMarkdown('_', '_', 'italic text');
+            }
+
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                e.preventDefault();
+                insertMarkdown('[', '](url)', 'link text');
+            }
+        });
+
+        // Upload markdown file
+        function uploadMarkdown() {
+            document.getElementById('fileInput').click();
+        }
+
+        document.getElementById('fileInput').addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                const file = e.target.files[0];
+                const reader = new FileReader();
+
+                reader.onload = (event) => {
+                    document.getElementById('markdownInput').value = event.target.result;
+                    updatePreview();
+                };
+
+                reader.onerror = () => {
+                    const lang = document.body.getAttribute('data-lang') || 'ko';
+                    alert(lang === 'ko' ? '파일 읽기 실패' : 'Failed to read file');
+                };
+
+                reader.readAsText(file, 'UTF-8');
+            }
+        });
+
+        // Download markdown
+        function downloadMarkdown() {
+            const markdown = document.getElementById('markdownInput').value;
+            const blob = new Blob([markdown], { type: 'text/markdown;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'markdown.md';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Download HTML
+        function downloadHTML() {
+            const markdown = document.getElementById('markdownInput').value;
+            const html = renderMarkdown(markdown);
+
+            const styledHtml = `<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Markdown Preview</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github-dark.min.css">
+    <style>
+        body {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+        h1, h2 { border-bottom: 1px solid #eee; padding-bottom: 0.3em; }
+        code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; }
+        pre { background: #282c34; color: #abb2bf; padding: 16px; border-radius: 8px; overflow-x: auto; }
+        pre code { background: none; padding: 0; }
+        table { border-collapse: collapse; width: 100%; margin: 16px 0; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background: #f4f4f4; font-weight: 600; }
+        blockquote { border-left: 4px solid #6366f1; margin: 0; padding-left: 16px; color: #666; }
+        img { max-width: 100%; height: auto; }
+        a { color: #6366f1; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+
+        /* Privacy Modal Styles (from baal.co.kr) */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(10px);
+        }
+
+        .modal.show {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: rgba(255,255,255,0.95);
+            padding: 50px 40px;
+            border-radius: 20px;
+            max-width: 700px;
+            width: 90%;
+            position: relative;
+            text-align: center;
+            word-break: keep-all;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            font-size: 32px;
+            color: #9ca3af;
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .modal-close:hover {
+            color: var(--gold-primary);
+        }
+
+        .modal-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2em;
+            margin-bottom: 25px;
+            background: linear-gradient(-45deg, #d4af37, #ffd700, #b8860b);
+            background-size: 300% 300%;
+            animation: modalGradientFlow 4s ease-in-out infinite;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            word-break: keep-all;
+        }
+
+        @keyframes modalGradientFlow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .privacy-content {
+            text-align: left;
+            color: #4a4a4a;
+            line-height: 1.8;
+            max-height: 60vh;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .privacy-content h3 {
+            color: #2c3e50;
+            margin-top: 20px;
+            font-size: 1.1em;
+        }
+
+        .privacy-content h3:first-of-type {
+            margin-top: 0;
+        }
+
+        .privacy-content p {
+            margin-bottom: 15px;
+        }
+
+        .privacy-content ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .privacy-content a {
+            color: var(--gold-primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .privacy-content a:hover {
+            text-decoration: underline;
+        }
+
+        .privacy-content strong {
+            color: #2c3e50;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+    ${html}
+
+    <!-- Privacy Policy Modal (from baal.co.kr) -->
+    <div id="privacyModal" class="modal" onclick="if(event.target.id==='privacyModal') closePrivacyModal()">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closePrivacyModal()">&times;</button>
+            <h1 class="modal-title">개인정보처리방침</h1>
+
+            <div class="privacy-content">
+                <h3>1. 개인정보의 처리 목적</h3>
+                <p>BAAL(이하 "회사")은 사용자가 브라우저에서 직접 파일을 처리하는 무료 온라인 도구를 제공합니다. 회사는 <strong>어떠한 개인정보도 수집하지 않습니다.</strong></p>
+
+                <h3>2. 처리하는 개인정보 항목</h3>
+                <p><strong>없음</strong> - 모든 파일 처리는 사용자의 브라우저 내에서만 이루어지며, 서버로 전송되지 않습니다.</p>
+
+                <h3>3. 개인정보의 처리 및 보유기간</h3>
+                <p>회사는 개인정보를 수집하지 않으므로 보유하지 않습니다.</p>
+
+                <h3>4. 쿠키(Cookie) 사용</h3>
+                <p>본 웹사이트는 Google AdSense 광고 서비스를 사용합니다. Google은 사용자의 관심사에 맞는 광고를 제공하기 위해 쿠키를 사용할 수 있습니다.</p>
+                <ul>
+                    <li>Google의 광고 쿠키 정책: <a href="https://policies.google.com/technologies/ads" target="_blank">링크</a></li>
+                    <li>쿠키 설정은 브라우저에서 관리하실 수 있습니다.</li>
+                </ul>
+
+                <h3>5. 개인정보 보호책임자</h3>
+                <p>
+                    이메일: <a href="mailto:summon@baal.co.kr">summon@baal.co.kr</a><br>
+                    사용자는 회사의 서비스를 이용하며 발생한 모든 개인정보 보호 관련 문의를 위 연락처로 하실 수 있습니다.
+                </p>
+
+                <h3>6. 개인정보처리방침 변경</h3>
+                <p>본 개인정보처리방침은 법령, 정책 또는 보안기술의 변경에 따라 내용이 추가, 삭제 및 수정될 수 있으며, 변경 시 웹사이트를 통해 공지합니다.</p>
+
+                <p style="margin-top: 30px; text-align: center; color: #7f8c8d; font-size: 0.9em;">
+                    시행일자: 2025년 1월 24일
+                </p>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>`;
+
+            const blob = new Blob([styledHtml], { type: 'text/html;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'markdown.html';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Initialize with sample content
+        document.getElementById('markdownInput').value = `# Hello World
+
+This is a **markdown editor** with _real-time preview_.
+
+## Features
+
+- GitHub Flavored Markdown
+- Code syntax highlighting
+- Tables support
+- Task lists
+
+## Code Example
+
+\`\`\`javascript
+function greet(name) {
+    console.log('Hello, ' + name + '!');
+}
+
+greet('World');
+\`\`\`
+
+## Table
+
+| Feature | Status |
+| ------- | ------ |
+| GFM     | ✓      |
+| Tables  | ✓      |
+| Code    | ✓      |
+
+## Task List
+
+- [x] Real-time preview
+- [x] Code highlighting
+- [ ] More features coming soon
+
+> This is a blockquote.
+> You can write multiple lines.
+
+[Visit BAAL](https://baal.co.kr)
+`;
+
+        // Initial render
+        updatePreview();
+
+        // Privacy Modal Functions
+        function openPrivacyModal() {
+            document.getElementById('privacyModal').classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closePrivacyModal() {
+            document.getElementById('privacyModal').classList.remove('show');
+            document.body.style.overflow = '';
+        }
+
+        // ESC key to close modal
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closePrivacyModal();
+            }
+        });
+    </script>
+
+    <!-- Privacy Policy Modal (from baal.co.kr) -->
+    <div id="privacyModal" class="modal" onclick="if(event.target.id==='privacyModal') closePrivacyModal()">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closePrivacyModal()">&times;</button>
+            <h1 class="modal-title">개인정보처리방침</h1>
+
+            <div class="privacy-content">
+                <h3>1. 개인정보의 처리 목적</h3>
+                <p>BAAL(이하 "회사")은 사용자가 브라우저에서 직접 파일을 처리하는 무료 온라인 도구를 제공합니다. 회사는 <strong>어떠한 개인정보도 수집하지 않습니다.</strong></p>
+
+                <h3>2. 처리하는 개인정보 항목</h3>
+                <p><strong>없음</strong> - 모든 파일 처리는 사용자의 브라우저 내에서만 이루어지며, 서버로 전송되지 않습니다.</p>
+
+                <h3>3. 개인정보의 처리 및 보유기간</h3>
+                <p>회사는 개인정보를 수집하지 않으므로 보유하지 않습니다.</p>
+
+                <h3>4. 쿠키(Cookie) 사용</h3>
+                <p>본 웹사이트는 Google AdSense 광고 서비스를 사용합니다. Google은 사용자의 관심사에 맞는 광고를 제공하기 위해 쿠키를 사용할 수 있습니다.</p>
+                <ul>
+                    <li>Google의 광고 쿠키 정책: <a href="https://policies.google.com/technologies/ads" target="_blank">링크</a></li>
+                    <li>쿠키 설정은 브라우저에서 관리하실 수 있습니다.</li>
+                </ul>
+
+                <h3>5. 개인정보 보호책임자</h3>
+                <p>
+                    이메일: <a href="mailto:summon@baal.co.kr">summon@baal.co.kr</a><br>
+                    사용자는 회사의 서비스를 이용하며 발생한 모든 개인정보 보호 관련 문의를 위 연락처로 하실 수 있습니다.
+                </p>
+
+                <h3>6. 개인정보처리방침 변경</h3>
+                <p>본 개인정보처리방침은 법령, 정책 또는 보안기술의 변경에 따라 내용이 추가, 삭제 및 수정될 수 있으며, 변경 시 웹사이트를 통해 공지합니다.</p>
+
+                <p style="margin-top: 30px; text-align: center; color: #7f8c8d; font-size: 0.9em;">
+                    시행일자: 2025년 1월 24일
+                </p>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

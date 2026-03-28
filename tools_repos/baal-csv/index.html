@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="CSV, JSON, Excel 파일 변환기. 구분자 자동 감지, 실시간 미리보기, UTF-8/EUC-KR 인코딩 지원">
+    <meta name="keywords" content="CSV JSON 변환, CSV 변환기, CSV to JSON, Excel 변환, 데이터 변환, JSON to CSV, CSV to Excel, 엑셀 변환기">
+    <meta name="author" content="BAAL">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://csv.baal.co.kr/">
+    <meta property="og:title" content="CSV 변환기 - BAAL">
+    <meta property="og:description" content="CSV, JSON, Excel 파일 변환기. 구분자 자동 감지, 실시간 미리보기 지원">
+    <meta property="og:image" content="https://csv.baal.co.kr/og-image.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://csv.baal.co.kr/">
+    <meta property="twitter:title" content="CSV 변환기 - BAAL">
+    <meta property="twitter:description" content="CSV, JSON, Excel 파일 변환기. 구분자 자동 감지, 실시간 미리보기 지원">
+    <meta property="twitter:image" content="https://csv.baal.co.kr/og-image.png">
+
+    <title>CSV 변환기 - BAAL</title>
+
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2886185075996969"
+     crossorigin="anonymous"></script>
+
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-XXXXXXXXXX');
+    </script>
+
+    <!-- PapaParse for CSV parsing -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+
+    <!-- SheetJS for Excel -->
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+
+    <!-- Playfair Display 폰트 (Privacy Modal용) -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+
+    <!-- 공통 스타일 -->
+    <link rel="stylesheet" href="../_common/common.css">
+    <style>
+        .format-selector {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .format-box {
+            padding: 20px;
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .format-box:hover,
+        .format-box.active {
+            background: var(--gold-gradient);
+            color: white;
+            border-color: var(--gold-primary);
+            transform: translateY(-2px);
+        }
+
+        .format-box .icon {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .conversion-direction {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+
+        .input-section {
+            background: var(--bg-secondary);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .input-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .input-tab {
+            padding: 10px 20px;
+            background: var(--bg-primary);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .input-tab:hover,
+        .input-tab.active {
+            background: var(--gold-gradient);
+            color: white;
+            border-color: var(--gold-primary);
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 15px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            resize: vertical;
+        }
+
+        .dropzone {
+            border: 3px dashed var(--border-color);
+            border-radius: 12px;
+            padding: 60px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: none;
+        }
+
+        .dropzone.active {
+            display: block;
+        }
+
+        .dropzone:hover,
+        .dropzone.dragover {
+            border-color: var(--gold-primary);
+            background: var(--bg-secondary);
+        }
+
+        .options-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
+        }
+
+        .option-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .option-group label {
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+
+        .option-group select,
+        .option-group input {
+            padding: 10px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+
+        .checkbox-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .checkbox-option input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            background: var(--gold-gradient);
+            color: white;
+            border: 2px solid var(--gold-primary);
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            margin-right: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .preview-section {
+            background: var(--bg-secondary);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            margin-top: 15px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--bg-primary);
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid var(--border-color);
+        }
+
+        th {
+            background: var(--gold-gradient);
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background: var(--bg-secondary);
+        }
+
+        .result-section {
+            background: var(--bg-secondary);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .result-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        @media (max-width: 768px) {
+            .format-selector {
+                grid-template-columns: 1fr;
+            }
+
+            .options-section {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Privacy Modal Styles (from baal.co.kr) */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(10px);
+        }
+
+        .modal.show {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: rgba(255,255,255,0.95);
+            padding: 50px 40px;
+            border-radius: 20px;
+            max-width: 700px;
+            width: 90%;
+            position: relative;
+            text-align: center;
+            word-break: keep-all;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            font-size: 32px;
+            color: #9ca3af;
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .modal-close:hover {
+            color: var(--gold-primary);
+        }
+
+        .modal-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2em;
+            margin-bottom: 25px;
+            background: linear-gradient(-45deg, #d4af37, #ffd700, #b8860b);
+            background-size: 300% 300%;
+            animation: modalGradientFlow 4s ease-in-out infinite;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            word-break: keep-all;
+        }
+
+        @keyframes modalGradientFlow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .privacy-content {
+            text-align: left;
+            color: #4a4a4a;
+            line-height: 1.8;
+            max-height: 60vh;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .privacy-content h3 {
+            color: #2c3e50;
+            margin-top: 20px;
+            font-size: 1.1em;
+        }
+
+        .privacy-content h3:first-of-type {
+            margin-top: 0;
+        }
+
+        .privacy-content p {
+            margin-bottom: 15px;
+        }
+
+        .privacy-content ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .privacy-content a {
+            color: var(--gold-primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .privacy-content a:hover {
+            text-decoration: underline;
+        }
+
+        .privacy-content strong {
+            color: #2c3e50;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+    <!-- 다크모드 토글 -->
+    <div class="theme-toggle">
+        <button id="themeToggle" aria-label="다크모드 전환">
+            <span class="icon-light">☀️</span>
+            <span class="icon-dark">🌙</span>
+        </button>
+    </div>
+
+    <!-- 언어 전환 -->
+    <div class="lang-toggle">
+        <button id="langToggle" data-lang="ko">
+            <span class="lang-ko">EN</span>
+            <span class="lang-en">KO</span>
+        </button>
+    </div>
+
+    <!-- 도구 버튼 -->
+    <div class="tools-toggle">
+        <button id="toolsToggle">
+            <span class="tooltip" data-ko="더 많은 도구" data-en="More Tools"></span>
+            🧰
+        </button>
+    </div>
+
+    <!-- 메인 컨테이너 -->
+    <div class="container">
+        <header>
+            <h1 data-ko="CSV 변환기" data-en="CSV Converter">CSV 변환기</h1>
+            <p class="subtitle" data-ko="CSV, JSON, Excel 파일을 변환하세요" data-en="Convert CSV, JSON, Excel files">CSV, JSON, Excel 파일을 변환하세요</p>
+        </header>
+
+        <main>
+            <!-- 입력 포맷 선택 -->
+            <h3 data-ko="입력 포맷" data-en="Input Format">입력 포맷</h3>
+            <div class="format-selector" id="inputFormat">
+                <div class="format-box active" data-format="csv">
+                    <div class="icon">📄</div>
+                    <div>CSV</div>
+                </div>
+                <div class="format-box" data-format="json">
+                    <div class="icon">{ }</div>
+                    <div>JSON</div>
+                </div>
+                <div class="format-box" data-format="excel">
+                    <div class="icon">📊</div>
+                    <div>Excel</div>
+                </div>
+            </div>
+
+            <div class="conversion-direction" id="conversionDirection">
+                CSV → JSON
+            </div>
+
+            <!-- 출력 포맷 선택 -->
+            <h3 data-ko="출력 포맷" data-en="Output Format">출력 포맷</h3>
+            <div class="format-selector" id="outputFormat">
+                <div class="format-box" data-format="csv">
+                    <div class="icon">📄</div>
+                    <div>CSV</div>
+                </div>
+                <div class="format-box active" data-format="json">
+                    <div class="icon">{ }</div>
+                    <div>JSON</div>
+                </div>
+                <div class="format-box" data-format="excel">
+                    <div class="icon">📊</div>
+                    <div>Excel</div>
+                </div>
+            </div>
+
+            <!-- 입력 섹션 -->
+            <div class="input-section">
+                <h3 data-ko="입력" data-en="Input">입력</h3>
+                <div class="input-tabs">
+                    <div class="input-tab active" data-mode="file" data-ko="파일 업로드" data-en="Upload File">파일 업로드</div>
+                    <div class="input-tab" data-mode="text" data-ko="텍스트 입력" data-en="Text Input">텍스트 입력</div>
+                </div>
+
+                <div id="fileInputArea" class="dropzone active">
+                    <p data-ko="📤 파일을 드래그하거나 클릭하여 업로드" data-en="📤 Drag & drop or click to upload">📤 파일을 드래그하거나 클릭하여 업로드</p>
+                    <input type="file" id="fileInput" accept=".csv,.json,.xlsx,.xls" style="display: none;">
+                </div>
+
+                <textarea id="textInput" placeholder="name,age,email&#10;John,30,john@example.com&#10;Jane,25,jane@example.com" style="display: none;"></textarea>
+
+                <!-- 옵션 -->
+                <div class="options-section">
+                    <div class="option-group" id="delimiterOption">
+                        <label data-ko="구분자:" data-en="Delimiter:">구분자:</label>
+                        <select id="delimiter">
+                            <option value="," data-ko="쉼표 (,)" data-en="Comma (,)">쉼표 (,)</option>
+                            <option value="\t" data-ko="탭" data-en="Tab">탭</option>
+                            <option value=";" data-ko="세미콜론 (;)" data-en="Semicolon (;)">세미콜론 (;)</option>
+                            <option value="|" data-ko="파이프 (|)" data-en="Pipe (|)">파이프 (|)</option>
+                            <option value="auto" data-ko="자동 감지" data-en="Auto Detect">자동 감지</option>
+                        </select>
+                    </div>
+
+                    <div class="option-group">
+                        <label data-ko="인코딩:" data-en="Encoding:">인코딩:</label>
+                        <select id="encoding">
+                            <option value="UTF-8">UTF-8</option>
+                            <option value="EUC-KR">EUC-KR</option>
+                        </select>
+                    </div>
+
+                    <div class="option-group">
+                        <div class="checkbox-option">
+                            <input type="checkbox" id="hasHeader" checked>
+                            <label for="hasHeader" data-ko="첫 행을 헤더로 사용" data-en="First row as header">첫 행을 헤더로 사용</label>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn" onclick="convert()" data-ko="변환하기" data-en="Convert">변환하기</button>
+            </div>
+
+            <!-- 미리보기 -->
+            <div class="preview-section" id="previewSection" style="display: none;">
+                <h3 data-ko="미리보기" data-en="Preview">미리보기</h3>
+                <p id="previewInfo"></p>
+                <div class="table-wrapper" id="previewTable"></div>
+            </div>
+
+            <!-- 결과 -->
+            <div class="result-section" id="resultSection" style="display: none;">
+                <h3 data-ko="변환 결과" data-en="Conversion Result">변환 결과</h3>
+                <textarea id="resultOutput" readonly style="min-height: 200px;"></textarea>
+                <div class="result-actions">
+                    <button class="btn" onclick="copyResult()" data-ko="복사" data-en="Copy">복사</button>
+                    <button class="btn" onclick="downloadCSV()" data-ko="CSV 다운로드" data-en="Download CSV">CSV 다운로드</button>
+                    <button class="btn" onclick="downloadJSON()" data-ko="JSON 다운로드" data-en="Download JSON">JSON 다운로드</button>
+                    <button class="btn" onclick="downloadExcel()" data-ko="Excel 다운로드" data-en="Download Excel">Excel 다운로드</button>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <div class="footer-content">
+                <p class="footer-brand">
+                    Made by <a href="https://baal.co.kr" target="_blank">BAAL</a>
+                </p>
+                <p class="footer-contact">
+                    <a href="mailto:summon@baal.co.kr">summon@baal.co.kr</a>
+                </p>
+                <p class="footer-links">
+                    <a href="#" onclick="event.preventDefault(); openPrivacyModal();" data-ko="개인정보처리방침" data-en="Privacy Policy">개인정보처리방침</a>
+                </p>
+                <p class="footer-copyright">&copy; 2025 BAAL. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- 공통 스크립트 -->
+    <script src="../_common/common.js"></script>
+    <script>
+        const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+        let currentData = null;
+        let currentInputFormat = 'csv';
+        let currentOutputFormat = 'json';
+
+        // Format selection
+        document.querySelectorAll('#inputFormat .format-box').forEach(box => {
+            box.addEventListener('click', () => {
+                document.querySelectorAll('#inputFormat .format-box').forEach(b => b.classList.remove('active'));
+                box.classList.add('active');
+                currentInputFormat = box.dataset.format;
+                updateConversionDirection();
+                updateDelimiterOption();
+            });
+        });
+
+        document.querySelectorAll('#outputFormat .format-box').forEach(box => {
+            box.addEventListener('click', () => {
+                document.querySelectorAll('#outputFormat .format-box').forEach(b => b.classList.remove('active'));
+                box.classList.add('active');
+                currentOutputFormat = box.dataset.format;
+                updateConversionDirection();
+            });
+        });
+
+        function updateConversionDirection() {
+            document.getElementById('conversionDirection').textContent =
+                `${currentInputFormat.toUpperCase()} → ${currentOutputFormat.toUpperCase()}`;
+        }
+
+        function updateDelimiterOption() {
+            const delimiterOption = document.getElementById('delimiterOption');
+            delimiterOption.style.display = currentInputFormat === 'csv' ? 'flex' : 'none';
+        }
+
+        // Input mode switching
+        document.querySelectorAll('.input-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                const mode = tab.dataset.mode;
+                document.querySelectorAll('.input-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+
+                if (mode === 'file') {
+                    document.getElementById('fileInputArea').classList.add('active');
+                    document.getElementById('textInput').style.display = 'none';
+                } else {
+                    document.getElementById('fileInputArea').classList.remove('active');
+                    document.getElementById('textInput').style.display = 'block';
+                }
+            });
+        });
+
+        // File handling
+        const dropzone = document.getElementById('fileInputArea');
+        const fileInput = document.getElementById('fileInput');
+
+        dropzone.addEventListener('click', () => fileInput.click());
+
+        dropzone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropzone.classList.add('dragover');
+        });
+
+        dropzone.addEventListener('dragleave', () => {
+            dropzone.classList.remove('dragover');
+        });
+
+        dropzone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropzone.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFile(files[0]);
+            }
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFile(e.target.files[0]);
+            }
+        });
+
+        function handleFile(file) {
+            if (file.size > MAX_FILE_SIZE) {
+                const lang = document.body.getAttribute('data-lang') || 'ko';
+                alert((lang === 'ko' ? '파일이 너무 큽니다' : 'File is too large') + ` (max 10MB, current ${(file.size / 1024 / 1024).toFixed(2)}MB)`);
+                return;
+            }
+
+            const encoding = document.getElementById('encoding').value;
+            const reader = new FileReader();
+
+            reader.onload = (e) => {
+                const content = e.target.result;
+                document.getElementById('textInput').value = content;
+            };
+
+            reader.onerror = () => {
+                const lang = document.body.getAttribute('data-lang') || 'ko';
+                alert(lang === 'ko' ? '파일 읽기 실패' : 'Failed to read file');
+            };
+
+            if (file.name.endsWith('.xlsx') || file.name.endsWith('.xls')) {
+                reader.readAsArrayBuffer(file);
+                reader.onload = async (e) => {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                    const csv = XLSX.utils.sheet_to_csv(firstSheet);
+                    document.getElementById('textInput').value = csv;
+                };
+            } else {
+                reader.readAsText(file, encoding);
+            }
+        }
+
+        // Convert
+        function convert() {
+            const text = document.getElementById('textInput').value;
+            const lang = document.body.getAttribute('data-lang') || 'ko';
+
+            if (!text) {
+                alert(lang === 'ko' ? '입력 데이터를 제공하세요' : 'Provide input data');
+                return;
+            }
+
+            try {
+                if (currentInputFormat === 'csv') {
+                    parseCSV(text);
+                } else if (currentInputFormat === 'json') {
+                    parseJSON(text);
+                } else if (currentInputFormat === 'excel') {
+                    alert(lang === 'ko' ? 'Excel 파일을 업로드하세요' : 'Upload Excel file');
+                    return;
+                }
+
+                if (currentData) {
+                    showPreview();
+                    generateOutput();
+                }
+            } catch (error) {
+                alert((lang === 'ko' ? '변환 오류: ' : 'Conversion error: ') + error.message);
+            }
+        }
+
+        // Parse CSV
+        function parseCSV(csvText) {
+            let delimiter = document.getElementById('delimiter').value;
+
+            if (delimiter === 'auto') {
+                delimiter = Papa.parse(csvText, { preview: 1 }).meta.delimiter;
+            }
+
+            if (delimiter === '\\t') delimiter = '\t';
+
+            const result = Papa.parse(csvText, {
+                header: document.getElementById('hasHeader').checked,
+                delimiter: delimiter,
+                skipEmptyLines: true,
+                dynamicTyping: true
+            });
+
+            if (result.errors.length > 0) {
+                console.error('CSV parsing errors:', result.errors);
+            }
+
+            currentData = result.data;
+        }
+
+        // Parse JSON
+        function parseJSON(jsonText) {
+            const data = JSON.parse(jsonText);
+
+            if (!Array.isArray(data)) {
+                throw new Error('JSON must be an array');
+            }
+
+            if (data.length === 0) {
+                throw new Error('JSON array is empty');
+            }
+
+            currentData = data;
+        }
+
+        // Show preview
+        function showPreview() {
+            const previewSection = document.getElementById('previewSection');
+            const previewInfo = document.getElementById('previewInfo');
+            const previewTable = document.getElementById('previewTable');
+            const lang = document.body.getAttribute('data-lang') || 'ko';
+
+            previewSection.style.display = 'block';
+
+            const maxRows = 100;
+            const preview = currentData.slice(0, maxRows);
+
+            previewInfo.textContent = `${lang === 'ko' ? '총' : 'Total'} ${currentData.length} ${lang === 'ko' ? '행' : 'rows'}${currentData.length > maxRows ? ` (${maxRows} ${lang === 'ko' ? '행만 표시' : 'rows shown'})` : ''}`;
+
+            let html = '<table><thead><tr>';
+
+            const headers = Object.keys(preview[0]);
+            headers.forEach(header => {
+                html += `<th>${escapeHtml(header)}</th>`;
+            });
+
+            html += '</tr></thead><tbody>';
+
+            preview.forEach(row => {
+                html += '<tr>';
+                headers.forEach(header => {
+                    html += `<td>${escapeHtml(String(row[header] || ''))}</td>`;
+                });
+                html += '</tr>';
+            });
+
+            html += '</tbody></table>';
+            previewTable.innerHTML = html;
+        }
+
+        // Generate output
+        function generateOutput() {
+            const resultSection = document.getElementById('resultSection');
+            const resultOutput = document.getElementById('resultOutput');
+
+            resultSection.style.display = 'block';
+
+            if (currentOutputFormat === 'json') {
+                resultOutput.value = JSON.stringify(currentData, null, 2);
+            } else if (currentOutputFormat === 'csv') {
+                resultOutput.value = Papa.unparse(currentData, {
+                    delimiter: ',',
+                    header: true,
+                    quotes: true
+                });
+            } else if (currentOutputFormat === 'excel') {
+                resultOutput.value = '(Excel file will be downloaded)';
+            }
+        }
+
+        // Copy result
+        function copyResult() {
+            const output = document.getElementById('resultOutput');
+            output.select();
+            document.execCommand('copy');
+
+            const lang = document.body.getAttribute('data-lang') || 'ko';
+            alert(lang === 'ko' ? '복사되었습니다!' : 'Copied!');
+        }
+
+        // Download CSV
+        function downloadCSV() {
+            if (!currentData) return;
+
+            const csv = Papa.unparse(currentData, {
+                delimiter: ',',
+                header: true,
+                quotes: true
+            });
+
+            const BOM = '\uFEFF';
+            const blob = new Blob([BOM + csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'data.csv';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Download JSON
+        function downloadJSON() {
+            if (!currentData) return;
+
+            const json = JSON.stringify(currentData, null, 2);
+            const blob = new Blob([json], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'data.json';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Download Excel
+        function downloadExcel() {
+            if (!currentData) return;
+
+            const worksheet = XLSX.utils.json_to_sheet(currentData);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+            XLSX.writeFile(workbook, 'data.xlsx');
+        }
+
+        // Escape HTML
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Initialize
+        updateConversionDirection();
+        updateDelimiterOption();
+
+        // Privacy Modal Functions
+        function openPrivacyModal() {
+            document.getElementById('privacyModal').classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closePrivacyModal() {
+            document.getElementById('privacyModal').classList.remove('show');
+            document.body.style.overflow = '';
+        }
+
+        // ESC key to close modal
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closePrivacyModal();
+            }
+        });
+    </script>
+
+    <!-- Privacy Policy Modal (from baal.co.kr) -->
+    <div id="privacyModal" class="modal" onclick="if(event.target.id==='privacyModal') closePrivacyModal()">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closePrivacyModal()">&times;</button>
+            <h1 class="modal-title">개인정보처리방침</h1>
+
+            <div class="privacy-content">
+                <h3>1. 개인정보의 처리 목적</h3>
+                <p>BAAL(이하 "회사")은 사용자가 브라우저에서 직접 파일을 처리하는 무료 온라인 도구를 제공합니다. 회사는 <strong>어떠한 개인정보도 수집하지 않습니다.</strong></p>
+
+                <h3>2. 처리하는 개인정보 항목</h3>
+                <p><strong>없음</strong> - 모든 파일 처리는 사용자의 브라우저 내에서만 이루어지며, 서버로 전송되지 않습니다.</p>
+
+                <h3>3. 개인정보의 처리 및 보유기간</h3>
+                <p>회사는 개인정보를 수집하지 않으므로 보유하지 않습니다.</p>
+
+                <h3>4. 쿠키(Cookie) 사용</h3>
+                <p>본 웹사이트는 Google AdSense 광고 서비스를 사용합니다. Google은 사용자의 관심사에 맞는 광고를 제공하기 위해 쿠키를 사용할 수 있습니다.</p>
+                <ul>
+                    <li>Google의 광고 쿠키 정책: <a href="https://policies.google.com/technologies/ads" target="_blank">링크</a></li>
+                    <li>쿠키 설정은 브라우저에서 관리하실 수 있습니다.</li>
+                </ul>
+
+                <h3>5. 개인정보 보호책임자</h3>
+                <p>
+                    이메일: <a href="mailto:summon@baal.co.kr">summon@baal.co.kr</a><br>
+                    사용자는 회사의 서비스를 이용하며 발생한 모든 개인정보 보호 관련 문의를 위 연락처로 하실 수 있습니다.
+                </p>
+
+                <h3>6. 개인정보처리방침 변경</h3>
+                <p>본 개인정보처리방침은 법령, 정책 또는 보안기술의 변경에 따라 내용이 추가, 삭제 및 수정될 수 있으며, 변경 시 웹사이트를 통해 공지합니다.</p>
+
+                <p style="margin-top: 30px; text-align: center; color: #7f8c8d; font-size: 0.9em;">
+                    시행일자: 2025년 1월 24일
+                </p>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

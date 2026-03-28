@@ -1,0 +1,23 @@
+node_modules/
+.next/
+.env
+.env.*
+.env.local
+.env.*.local
+!.env.example
+*.exe
+__pycache__/
+*.pyc
+.venv/
+dist/
+
+# Logs
+*.log
+auto_trigger.log
+community.log
+self_improve.log
+chat_bot.log
+
+# Claude sessions
+claude_posts.json
+self_improve_report.txt

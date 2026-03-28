@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="무료 차트 생성기. Line, Bar, Pie, Doughnut 차트를 빠르게 만드세요. CSV 데이터 지원. PNG 다운로드.">
+    <meta name="keywords" content="차트 생성기, 그래프 만들기, 데이터 시각화, 무료 차트, CSV 차트, 막대 그래프, 원형 그래프">
+    <meta name="author" content="BAAL">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://chart.baal.co.kr/">
+    <meta property="og:title" content="차트 생성기 - 무료 온라인 도구">
+    <meta property="og:description" content="Line, Bar, Pie 차트를 무료로 생성하세요. CSV 지원, PNG 다운로드.">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://chart.baal.co.kr/">
+    <meta property="twitter:title" content="차트 생성기 - 무료 온라인 도구">
+    <meta property="twitter:description" content="데이터 시각화 차트를 빠르게 만드세요.">
+
+    <title>차트 생성기 - BAAL</title>
+
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2886185075996969"
+     crossorigin="anonymous"></script>
+
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-XXXXXXXXXX');
+    </script>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <!-- 공통 스타일 -->
+    <link rel="stylesheet" href="_common/common.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style>
+        /* 차트 타입 선택 영역 */
+        .chart-type-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        /* 차트 타입 선택 */
+        .chart-types {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            flex: 1;
+        }
+
+        .chart-type-btn {
+            padding: 8px 12px;
+            border: 2px solid var(--border-color);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border-radius: var(--border-radius-md);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.85em;
+            font-weight: 600;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+        }
+
+        .chart-type-btn:hover {
+            border-color: var(--gold-primary);
+            background: var(--bg-accent);
+        }
+
+        .chart-type-btn.active {
+            background: var(--gold-gradient);
+            color: white;
+            border-color: var(--gold-primary);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .chart-icon {
+            width: 18px;
+            height: 18px;
+            stroke: currentColor;
+        }
+
+        /* 데이터 입력 */
+        .data-section {
+            background: var(--bg-accent);
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius-lg);
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .data-label {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            text-align: left;
+        }
+
+        .data-table th {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .data-table input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        .add-row-btn {
+            padding: 10px 20px;
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius-sm);
+            color: var(--text-primary);
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .add-row-btn:hover {
+            border-color: var(--gold-primary);
+            background: var(--bg-accent);
+        }
+
+        /* 차트 캔버스 */
+        .chart-container {
+            background: var(--bg-accent);
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius-lg);
+            padding: 30px;
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        #chartCanvas {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* 커스터마이징 옵션 */
+        .options-section {
+            background: var(--bg-accent);
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius-lg);
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .option-row {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .option-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .option-label {
+            font-weight: 600;
+            color: var(--text-primary);
+            min-width: 100px;
+            font-size: 0.95em;
+        }
+
+        .option-control {
+            flex: 1;
+        }
+
+        .option-select {
+            padding: 10px 14px;
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius-sm);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-size: 1em;
+            cursor: pointer;
+        }
+
+        /* 버튼 */
+        .btn-generate {
+            padding: 16px 48px;
+            background: var(--gold-gradient);
+            color: white;
+            border: 2px solid var(--gold-primary);
+            border-radius: var(--border-radius-md);
+            font-weight: 700;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .btn-generate:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-download {
+            padding: 14px 32px;
+            background: var(--gold-gradient);
+            color: white;
+            border: 2px solid var(--gold-primary);
+            border-radius: var(--border-radius-md);
+            font-weight: 600;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-download:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .download-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+
+        /* Range 슬라이더 스타일 */
+        .option-range {
+            -webkit-appearance: none;
+            appearance: none;
+            height: 6px;
+            background: var(--border-color);
+            border-radius: 3px;
+            outline: none;
+        }
+
+        .option-range::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            background: var(--gold-gradient);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .option-range::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        .option-range::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            background: var(--gold-gradient);
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .option-range::-moz-range-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        /* 커스텀 색상 선택 */
+        .custom-color-picker {
+            width: 50px;
+            height: 40px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .custom-color-picker:hover {
+            transform: scale(1.1);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* 반응형 */
+        @media (max-width: 768px) {
+            .chart-types {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .option-row {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .option-label {
+                min-width: auto;
+            }
+
+            .option-control {
+                width: 100%;
+            }
+        }
+    
+        /* Privacy Modal Styles (from baal.co.kr) */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(10px);
+        }
+
+        .modal.show {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: rgba(255,255,255,0.95);
+            padding: 50px 40px;
+            border-radius: 20px;
+            max-width: 700px;
+            width: 90%;
+            position: relative;
+            text-align: center;
+            word-break: keep-all;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            font-size: 32px;
+            color: #9ca3af;
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .modal-close:hover {
+            color: var(--gold-primary);
+        }
+
+        .modal-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2em;
+            margin-bottom: 25px;
+            background: linear-gradient(-45deg, #d4af37, #ffd700, #b8860b);
+            background-size: 300% 300%;
+            animation: modalGradientFlow 4s ease-in-out infinite;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            word-break: keep-all;
+        }
+
+        @keyframes modalGradientFlow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .privacy-content {
+            text-align: left;
+            color: #4a4a4a;
+            line-height: 1.8;
+            max-height: 60vh;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .privacy-content h3 {
+            color: #2c3e50;
+            margin-top: 20px;
+            font-size: 1.1em;
+        }
+
+        .privacy-content h3:first-of-type {
+            margin-top: 0;
+        }
+
+        .privacy-content p {
+            margin-bottom: 15px;
+        }
+
+        .privacy-content ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .privacy-content a {
+            color: var(--gold-primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .privacy-content a:hover {
+            text-decoration: underline;
+        }
+
+        .privacy-content strong {
+            color: #2c3e50;
+            font-weight: 700;
+        }
+
+    </style>
+</head>
+<body>
+    <!-- 다크모드 토글 -->
+    <div class="theme-toggle">
+        <button id="themeToggle" aria-label="다크모드 전환">
+            <span class="icon-light">☀️</span>
+            <span class="icon-dark">🌙</span>
+        </button>
+    </div>
+
+    <!-- 언어 전환 & 도구 버튼 -->
+    <div class="lang-toggle">
+        <button id="langToggle" data-lang="ko">
+            <span class="lang-ko">EN</span>
+            <span class="lang-en">KO</span>
+        </button>
+        <button id="toolsToggle">
+            <span class="tooltip" data-ko="더 많은 도구" data-en="More Tools">더 많은 도구</span>
+            🧰
+        </button>
+    </div>
+
+    <!-- 메인 컨테이너 -->
+    <div class="container">
+        <header>
+            <h1 data-ko="차트 생성기" data-en="Chart Generator">차트 생성기</h1>
+            <p class="subtitle" data-ko="데이터를 아름다운 차트로 시각화하세요" data-en="Visualize your data with beautiful charts">데이터를 아름다운 차트로 시각화하세요</p>
+        </header>
+
+        <main>
+            <!-- 📊 차트 타입 선택 (상단) -->
+            <div class="chart-type-section" style="margin-bottom: 25px;">
+                <div class="chart-types">
+                    <button class="chart-type-btn active" data-type="line">
+                        <svg class="chart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                        <span data-ko="선" data-en="Line">선</span>
+                    </button>
+                    <button class="chart-type-btn" data-type="bar">
+                        <svg class="chart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="20" x2="12" y2="10"></line><line x1="18" y1="20" x2="18" y2="4"></line><line x1="6" y1="20" x2="6" y2="16"></line></svg>
+                        <span data-ko="막대" data-en="Bar">막대</span>
+                    </button>
+                    <button class="chart-type-btn" data-type="pie">
+                        <svg class="chart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></svg>
+                        <span data-ko="원형" data-en="Pie">원형</span>
+                    </button>
+                    <button class="chart-type-btn" data-type="doughnut">
+                        <svg class="chart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><path d="M12 2 L12 8"></path><path d="M19.07 4.93 L14.83 9.17"></path></svg>
+                        <span data-ko="도넛" data-en="Doughnut">도넛</span>
+                    </button>
+                    <button class="chart-type-btn" data-type="radar">
+                        <svg class="chart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2, 22 12, 17 22, 7 22, 2 12"></polygon><polygon points="12 7, 18 12, 15 18, 9 18, 6 12"></polygon><line x1="12" y1="2" x2="12" y2="7"></line><line x1="22" y1="12" x2="18" y2="12"></line></svg>
+                        <span data-ko="방사형" data-en="Radar">방사형</span>
+                    </button>
+                    <button class="chart-type-btn" data-type="polarArea">
+                        <svg class="chart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="2" x2="12" y2="22"></line><line x1="2" y1="12" x2="22" y2="12"></line><line x1="5.64" y1="5.64" x2="18.36" y2="18.36"></line><line x1="5.64" y1="18.36" x2="18.36" y2="5.64"></line></svg>
+                        <span data-ko="극좌표" data-en="Polar">극좌표</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 📝 데이터 입력 -->
+            <div class="data-section">
+                <label class="data-label">
+                    <span data-ko="📝 데이터 입력" data-en="📝 Enter Data">📝 데이터 입력</span>
+                </label>
+                <div style="margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap;">
+                    <input type="file" id="csvInput" accept=".csv" style="display: none;">
+                    <div>
+                        <small style="color: var(--text-secondary);" data-ko="CSV 형식: 첫 행 레이블, 이후 행 데이터" data-en="CSV format: First row labels, then data rows">CSV 형식: 첫 행 레이블, 이후 행 데이터</small>
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="add-row-btn" id="csvUploadBtn" data-ko="📄 CSV 업로드" data-en="📄 Upload CSV">📄 CSV 업로드</button>
+                        <button class="add-row-btn" id="addRowBtn" data-ko="➕ 행 추가" data-en="➕ Add Row">➕ 행 추가</button>
+                        <button class="add-row-btn" id="deleteRowBtn" data-ko="🗑️ 선택행 삭제" data-en="🗑️ Delete Selected" style="background: rgba(255, 68, 68, 0.1); border-color: #ff4444; color: #ff4444;">🗑️ 선택행 삭제</button>
+                        <button class="add-row-btn" id="generateBtnTable" data-ko="📊 차트 생성" data-en="📊 Generate" style="background: var(--gold-gradient); border-color: var(--gold-primary); color: white; font-weight: 700;">📊 차트 생성</button>
+                    </div>
+                </div>
+                <table class="data-table" id="dataTable">
+                    <thead>
+                        <tr>
+                            <th style="width: 40px;"><input type="checkbox" id="selectAllCheckbox" style="width: auto; cursor: pointer;"></th>
+                            <th data-ko="레이블" data-en="Label">레이블</th>
+                            <th data-ko="값" data-en="Value">값</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dataRows">
+                        <tr>
+                            <td><input type="checkbox" class="row-checkbox" style="width: auto; cursor: pointer;"></td>
+                            <td><input type="text" placeholder="항목명 입력" data-row="0" data-col="label"></td>
+                            <td><input type="number" placeholder="값 입력" data-row="0" data-col="value"></td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" class="row-checkbox" style="width: auto; cursor: pointer;"></td>
+                            <td><input type="text" placeholder="항목명 입력" data-row="1" data-col="label"></td>
+                            <td><input type="number" placeholder="값 입력" data-row="1" data-col="value"></td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" class="row-checkbox" style="width: auto; cursor: pointer;"></td>
+                            <td><input type="text" placeholder="항목명 입력" data-row="2" data-col="label"></td>
+                            <td><input type="number" placeholder="값 입력" data-row="2" data-col="value"></td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" class="row-checkbox" style="width: auto; cursor: pointer;"></td>
+                            <td><input type="text" placeholder="항목명 입력" data-row="3" data-col="label"></td>
+                            <td><input type="number" placeholder="값 입력" data-row="3" data-col="value"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- 🎨 커스터마이징 옵션 -->
+            <div class="options-section">
+                <label class="data-label">
+                    <span data-ko="🎨 커스터마이징 (선택사항)" data-en="🎨 Customization (Optional)">🎨 커스터마이징 (선택사항)</span>
+                </label>
+
+                <div class="option-row">
+                    <span class="option-label" data-ko="색상 테마" data-en="Color Theme">색상 테마</span>
+                    <div class="option-control">
+                        <select class="option-select" id="colorPalette">
+                            <option value="default" data-ko="기본 (블루/핑크)" data-en="Default (Blue/Pink)">기본 (블루/핑크)</option>
+                            <option value="pastel" data-ko="파스텔 (부드러움)" data-en="Pastel (Soft)">파스텔 (부드러움)</option>
+                            <option value="vivid" data-ko="비비드 (선명)" data-en="Vivid (Bright)">비비드 (선명)</option>
+                            <option value="gold" data-ko="골드 (고급)" data-en="Gold (Luxury)">골드 (고급)</option>
+                            <option value="nature" data-ko="자연 (그린)" data-en="Nature (Green)">자연 (그린)</option>
+                            <option value="ocean" data-ko="오션 (블루)" data-en="Ocean (Blue)">오션 (블루)</option>
+                            <option value="sunset" data-ko="석양 (웜톤)" data-en="Sunset (Warm)">석양 (웜톤)</option>
+                            <option value="business" data-ko="비즈니스 (차분)" data-en="Business (Professional)">비즈니스 (차분)</option>
+                            <option value="custom" data-ko="커스텀 (직접 선택)" data-en="Custom (Choose Colors)">커스텀 (직접 선택)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 커스텀 색상 선택 (팔레트가 custom일 때만 표시) -->
+                <div class="option-row" id="customColorsRow" style="display: none;">
+                    <span class="option-label" data-ko="색상 선택" data-en="Choose Colors">색상 선택</span>
+                    <div class="option-control" style="display: flex; flex-wrap: wrap; gap: 8px;">
+                        <input type="color" class="custom-color-picker" data-index="0" value="#ff6384" title="색상 1">
+                        <input type="color" class="custom-color-picker" data-index="1" value="#36a2eb" title="색상 2">
+                        <input type="color" class="custom-color-picker" data-index="2" value="#ffce56" title="색상 3">
+                        <input type="color" class="custom-color-picker" data-index="3" value="#4bc0c0" title="색상 4">
+                        <input type="color" class="custom-color-picker" data-index="4" value="#9966ff" title="색상 5">
+                        <input type="color" class="custom-color-picker" data-index="5" value="#ff9f40" title="색상 6">
+                        <input type="color" class="custom-color-picker" data-index="6" value="#ff6347" title="색상 7">
+                        <input type="color" class="custom-color-picker" data-index="7" value="#6495ed" title="색상 8">
+                    </div>
+                </div>
+
+                <div class="option-row">
+                    <span class="option-label" data-ko="투명도" data-en="Opacity">투명도</span>
+                    <div class="option-control" style="display: flex; align-items: center; gap: 12px;">
+                        <input type="range" class="option-range" id="colorOpacity" min="0" max="100" value="70" style="flex: 1;">
+                        <span id="opacityValue" style="min-width: 45px; font-weight: 600; color: var(--text-primary);">70%</span>
+                    </div>
+                </div>
+
+                <div class="option-row">
+                    <span class="option-label" data-ko="테두리 두께" data-en="Border Width">테두리 두께</span>
+                    <div class="option-control" style="display: flex; align-items: center; gap: 12px;">
+                        <input type="range" class="option-range" id="borderWidth" min="0" max="8" value="2" style="flex: 1;">
+                        <span id="borderValue" style="min-width: 45px; font-weight: 600; color: var(--text-primary);">2px</span>
+                    </div>
+                </div>
+
+                <div class="option-row">
+                    <span class="option-label" data-ko="선 곡률" data-en="Line Tension">선 곡률</span>
+                    <div class="option-control" style="display: flex; align-items: center; gap: 12px;">
+                        <input type="range" class="option-range" id="lineTension" min="0" max="100" value="40" style="flex: 1;">
+                        <span id="tensionValue" style="min-width: 45px; font-weight: 600; color: var(--text-primary);">0.4</span>
+                    </div>
+                </div>
+
+                <div class="option-row">
+                    <span class="option-label" data-ko="범례 위치" data-en="Legend Position">범례 위치</span>
+                    <div class="option-control">
+                        <select class="option-select" id="legendPosition">
+                            <option value="top" data-ko="상단" data-en="Top">상단</option>
+                            <option value="bottom" data-ko="하단" data-en="Bottom">하단</option>
+                            <option value="left" data-ko="왼쪽" data-en="Left">왼쪽</option>
+                            <option value="right" data-ko="오른쪽" data-en="Right">오른쪽</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="option-row">
+                    <span class="option-label" data-ko="애니메이션" data-en="Animation">애니메이션</span>
+                    <div class="option-control">
+                        <select class="option-select" id="animationDuration">
+                            <option value="0" data-ko="없음" data-en="None">없음</option>
+                            <option value="500" data-ko="빠름 (0.5초)" data-en="Fast (0.5s)">빠름 (0.5초)</option>
+                            <option value="1000" selected data-ko="보통 (1초)" data-en="Normal (1s)">보통 (1초)</option>
+                            <option value="2000" data-ko="느림 (2초)" data-en="Slow (2s)">느림 (2초)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4️⃣ 차트 미리보기 -->
+            <div class="chart-container">
+                <canvas id="chartCanvas"></canvas>
+            </div>
+
+            <!-- 차트 타입 선택 & 다운로드 버튼 -->
+            <div class="chart-type-section">
+                <div class="chart-types">
+                    <button class="chart-type-btn active" data-type="line">
+                        <svg class="chart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                        <span data-ko="선" data-en="Line">선</span>
+                    </button>
+                    <button class="chart-type-btn" data-type="bar">
+                        <svg class="chart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="20" x2="12" y2="10"></line><line x1="18" y1="20" x2="18" y2="4"></line><line x1="6" y1="20" x2="6" y2="16"></line></svg>
+                        <span data-ko="막대" data-en="Bar">막대</span>
+                    </button>
+                    <button class="chart-type-btn" data-type="pie">
+                        <svg class="chart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></svg>
+                        <span data-ko="원형" data-en="Pie">원형</span>
+                    </button>
+                    <button class="chart-type-btn" data-type="doughnut">
+                        <svg class="chart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><path d="M12 2 L12 8"></path><path d="M19.07 4.93 L14.83 9.17"></path></svg>
+                        <span data-ko="도넛" data-en="Doughnut">도넛</span>
+                    </button>
+                    <button class="chart-type-btn" data-type="radar">
+                        <svg class="chart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2, 22 12, 17 22, 7 22, 2 12"></polygon><polygon points="12 7, 18 12, 15 18, 9 18, 6 12"></polygon><line x1="12" y1="2" x2="12" y2="7"></line><line x1="22" y1="12" x2="18" y2="12"></line></svg>
+                        <span data-ko="방사형" data-en="Radar">방사형</span>
+                    </button>
+                    <button class="chart-type-btn" data-type="polarArea">
+                        <svg class="chart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="2" x2="12" y2="22"></line><line x1="2" y1="12" x2="22" y2="12"></line><line x1="5.64" y1="5.64" x2="18.36" y2="18.36"></line><line x1="5.64" y1="18.36" x2="18.36" y2="5.64"></line></svg>
+                        <span data-ko="극좌표" data-en="Polar">극좌표</span>
+                    </button>
+                    <button class="chart-type-btn" id="generateBtnBottom" style="background: var(--gold-gradient); color: white; border-color: var(--gold-primary);">
+                        <svg class="chart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+                        <span data-ko="차트생성" data-en="Generate Chart">차트생성</span>
+                    </button>
+                </div>
+                <button class="btn-download" id="downloadPNG" data-ko="PNG 다운로드" data-en="Download PNG">PNG 다운로드</button>
+            </div>
+        </main>
+
+        <footer>
+            <div class="footer-content">
+                <p class="footer-brand">
+                    Made by <a href="https://baal.co.kr" target="_blank">BAAL</a>
+                </p>
+                <p class="footer-contact">
+                    <a href="mailto:summon@baal.co.kr">summon@baal.co.kr</a>
+                </p>
+                <p class="footer-links">
+                    <a href="#" onclick="event.preventDefault(); openPrivacyModal();" data-ko="개인정보처리방침" data-en="Privacy Policy">개인정보처리방침</a>
+                </p>
+                <p class="footer-copyright">&copy; 2025 BAAL. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+    <!-- Privacy Policy Modal (from baal.co.kr) -->
+    <div id="privacyModal" class="modal" onclick="if(event.target.id==='privacyModal') closePrivacyModal()">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closePrivacyModal()">&times;</button>
+            <h1 class="modal-title">개인정보처리방침</h1>
+
+            <div class="privacy-content">
+                <h3>1. 개인정보의 처리 목적</h3>
+                <p>BAAL(이하 "회사")은 사용자가 브라우저에서 직접 파일을 처리하는 무료 온라인 도구를 제공합니다. 회사는 <strong>어떠한 개인정보도 수집하지 않습니다.</strong></p>
+
+                <h3>2. 처리하는 개인정보 항목</h3>
+                <p><strong>없음</strong> - 모든 파일 처리는 사용자의 브라우저 내에서만 이루어지며, 서버로 전송되지 않습니다.</p>
+
+                <h3>3. 개인정보의 처리 및 보유기간</h3>
+                <p>회사는 개인정보를 수집하지 않으므로 보유하지 않습니다.</p>
+
+                <h3>4. 쿠키(Cookie) 사용</h3>
+                <p>본 웹사이트는 Google AdSense 광고 서비스를 사용합니다. Google은 사용자의 관심사에 맞는 광고를 제공하기 위해 쿠키를 사용할 수 있습니다.</p>
+                <ul>
+                    <li>Google의 광고 쿠키 정책: <a href="https://policies.google.com/technologies/ads" target="_blank">링크</a></li>
+                    <li>쿠키 설정은 브라우저에서 관리하실 수 있습니다.</li>
+                </ul>
+
+                <h3>5. 개인정보 보호책임자</h3>
+                <p>
+                    이메일: <a href="mailto:summon@baal.co.kr">summon@baal.co.kr</a><br>
+                    사용자는 회사의 서비스를 이용하며 발생한 모든 개인정보 보호 관련 문의를 위 연락처로 하실 수 있습니다.
+                </p>
+
+                <h3>6. 개인정보처리방침 변경</h3>
+                <p>본 개인정보처리방침은 법령, 정책 또는 보안기술의 변경에 따라 내용이 추가, 삭제 및 수정될 수 있으며, 변경 시 웹사이트를 통해 공지합니다.</p>
+
+                <p style="margin-top: 30px; text-align: center; color: #7f8c8d; font-size: 0.9em;">
+                    시행일자: 2025년 1월 24일
+                </p>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- 공통 스크립트 -->
+    <script src="_common/common.js"></script>
+    <script>
+        // 강제로 스크롤 맨 위로
+        if ('scrollRestoration' in history) {
+            history.scrollRestoration = 'manual';
+        }
+        window.scrollTo(0, 0);
+
+        window.addEventListener('load', () => {
+            window.scrollTo(0, 0);
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            window.scrollTo(0, 0);
+
+            // 입력값 초기화 (새로고침 시)
+            document.querySelectorAll('input[type="text"], input[type="number"], textarea').forEach(el => {
+                el.value = '';
+            });
+        });
+
+        let currentChartType = 'line';
+        let chartInstance = null;
+
+        // 색상 팔레트 (RGB 값만, 투명도는 동적 적용)
+        const colorPalettes = {
+            default: [
+                [255, 99, 132],
+                [54, 162, 235],
+                [255, 206, 86],
+                [75, 192, 192],
+                [153, 102, 255],
+                [255, 159, 64],
+                [255, 99, 71],
+                [100, 149, 237]
+            ],
+            pastel: [
+                [255, 179, 186],
+                [186, 225, 255],
+                [255, 223, 186],
+                [186, 255, 201],
+                [226, 186, 255],
+                [255, 218, 185],
+                [221, 160, 221],
+                [175, 238, 238]
+            ],
+            vivid: [
+                [255, 0, 0],
+                [0, 0, 255],
+                [255, 255, 0],
+                [0, 255, 0],
+                [255, 0, 255],
+                [0, 255, 255],
+                [255, 69, 0],
+                [138, 43, 226]
+            ],
+            gold: [
+                [212, 175, 55],
+                [218, 165, 32],
+                [184, 134, 11],
+                [255, 215, 0],
+                [238, 232, 170],
+                [189, 183, 107],
+                [205, 149, 12],
+                [139, 117, 0]
+            ],
+            nature: [
+                [34, 139, 34],
+                [50, 205, 50],
+                [144, 238, 144],
+                [0, 128, 0],
+                [107, 142, 35],
+                [154, 205, 50],
+                [46, 125, 50],
+                [76, 175, 80]
+            ],
+            ocean: [
+                [0, 105, 148],
+                [0, 191, 255],
+                [30, 144, 255],
+                [70, 130, 180],
+                [100, 149, 237],
+                [135, 206, 250],
+                [0, 119, 190],
+                [3, 155, 229]
+            ],
+            sunset: [
+                [255, 99, 71],
+                [255, 140, 0],
+                [255, 165, 0],
+                [255, 127, 80],
+                [255, 69, 0],
+                [255, 192, 203],
+                [244, 67, 54],
+                [255, 87, 34]
+            ],
+            business: [
+                [66, 66, 66],
+                [97, 97, 97],
+                [117, 117, 117],
+                [158, 158, 158],
+                [189, 189, 189],
+                [224, 224, 224],
+                [33, 33, 33],
+                [130, 130, 130]
+            ],
+            custom: [
+                [255, 99, 132],
+                [54, 162, 235],
+                [255, 206, 86],
+                [75, 192, 192],
+                [153, 102, 255],
+                [255, 159, 64],
+                [255, 99, 71],
+                [100, 149, 237]
+            ]
+        };
+
+        // 타입 선택 (상단/하단 버튼 연동)
+        document.querySelectorAll('.chart-type-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const selectedType = btn.dataset.type;
+
+                // 생성 버튼이 아닌 경우에만 차트 타입 변경
+                if (selectedType) {
+                    currentChartType = selectedType;
+
+                    // 같은 타입의 모든 버튼을 active로 설정
+                    document.querySelectorAll('.chart-type-btn').forEach(b => {
+                        if (b.dataset.type === selectedType) {
+                            b.classList.add('active');
+                            b.style.background = 'var(--gold-gradient)';
+                            b.style.color = 'white';
+                            b.style.borderColor = 'var(--gold-primary)';
+                        } else if (b.dataset.type) {
+                            // 생성 버튼이 아닌 다른 타입 버튼들은 비활성화
+                            b.classList.remove('active');
+                            b.style.background = 'var(--bg-secondary)';
+                            b.style.color = 'var(--text-primary)';
+                            b.style.borderColor = 'var(--border-color)';
+                        }
+                    });
+                }
+            });
+        });
+
+        // 초기 로드 시 line 버튼들을 active 상태로 설정
+        document.querySelectorAll('.chart-type-btn[data-type="line"]').forEach(btn => {
+            btn.classList.add('active');
+            btn.style.background = 'var(--gold-gradient)';
+            btn.style.color = 'white';
+            btn.style.borderColor = 'var(--gold-primary)';
+        });
+
+        // Range 슬라이더 실시간 업데이트
+        const opacitySlider = document.getElementById('colorOpacity');
+        const opacityValue = document.getElementById('opacityValue');
+        const borderSlider = document.getElementById('borderWidth');
+        const borderValue = document.getElementById('borderValue');
+        const tensionSlider = document.getElementById('lineTension');
+        const tensionValue = document.getElementById('tensionValue');
+
+        if (opacitySlider && opacityValue) {
+            opacitySlider.addEventListener('input', (e) => {
+                opacityValue.textContent = e.target.value + '%';
+            });
+        }
+
+        if (borderSlider && borderValue) {
+            borderSlider.addEventListener('input', (e) => {
+                borderValue.textContent = e.target.value + 'px';
+            });
+        }
+
+        if (tensionSlider && tensionValue) {
+            tensionSlider.addEventListener('input', (e) => {
+                const val = (e.target.value / 100).toFixed(1);
+                tensionValue.textContent = val;
+            });
+        }
+
+        // 색상 팔레트 변경 시 커스텀 색상 섹션 표시/숨김
+        const colorPaletteSelect = document.getElementById('colorPalette');
+        const customColorsRow = document.getElementById('customColorsRow');
+
+        if (colorPaletteSelect && customColorsRow) {
+            colorPaletteSelect.addEventListener('change', (e) => {
+                if (e.target.value === 'custom') {
+                    customColorsRow.style.display = 'flex';
+                } else {
+                    customColorsRow.style.display = 'none';
+                }
+            });
+        }
+
+        // 커스텀 색상 picker 변경 시 colorPalettes 업데이트
+        document.querySelectorAll('.custom-color-picker').forEach(picker => {
+            picker.addEventListener('change', (e) => {
+                const index = parseInt(e.target.dataset.index);
+                const hex = e.target.value;
+
+                // hex to RGB 변환
+                const r = parseInt(hex.slice(1, 3), 16);
+                const g = parseInt(hex.slice(3, 5), 16);
+                const b = parseInt(hex.slice(5, 7), 16);
+
+                colorPalettes.custom[index] = [r, g, b];
+            });
+        });
+
+        // 행 추가
+        document.getElementById('addRowBtn').addEventListener('click', () => {
+            const tbody = document.getElementById('dataRows');
+            const rowCount = tbody.children.length;
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                <td><input type="checkbox" class="row-checkbox" style="width: auto; cursor: pointer;"></td>
+                <td><input type="text" placeholder="항목명 입력" data-row="${rowCount}" data-col="label"></td>
+                <td><input type="number" placeholder="값 입력" data-row="${rowCount}" data-col="value"></td>
+            `;
+            tbody.appendChild(newRow);
+        });
+
+        // 선택행 삭제
+        document.getElementById('deleteRowBtn').addEventListener('click', () => {
+            const checkboxes = document.querySelectorAll('.row-checkbox:checked');
+
+            if (checkboxes.length === 0) {
+                window.BaalUtils.showToast('삭제할 행을 선택하세요.', 'error', 5000);
+                return;
+            }
+
+            checkboxes.forEach(checkbox => {
+                checkbox.closest('tr').remove();
+            });
+
+            window.BaalUtils.showToast(`${checkboxes.length}개 행이 삭제되었습니다.`, 'success', 5000);
+        });
+
+        // 전체 선택 체크박스
+        document.getElementById('selectAllCheckbox').addEventListener('change', (e) => {
+            const checkboxes = document.querySelectorAll('.row-checkbox');
+            checkboxes.forEach(cb => cb.checked = e.target.checked);
+        });
+
+        // CSV 업로드
+        document.getElementById('csvUploadBtn').addEventListener('click', () => {
+            document.getElementById('csvInput').click();
+        });
+
+        document.getElementById('csvInput').addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            try {
+                const text = await file.text();
+                const lines = text.split('\n').filter(line => line.trim());
+
+                if (lines.length < 2) {
+                    window.BaalUtils.showToast('CSV 파일이 비어있거나 형식이 잘못되었습니다.', 'error', 5000);
+                    return;
+                }
+
+                // 테이블 초기화
+                const tbody = document.getElementById('dataRows');
+                tbody.innerHTML = '';
+
+                // 첫 행은 건너뛰고 (레이블), 데이터 행만 파싱
+                for (let i = 1; i < lines.length; i++) {
+                    const values = lines[i].split(',').map(v => v.trim());
+                    if (values.length >= 2) {
+                        const newRow = document.createElement('tr');
+                        newRow.innerHTML = `
+                            <td><input type="checkbox" class="row-checkbox" style="width: auto; cursor: pointer;"></td>
+                            <td><input type="text" value="${values[0]}" data-row="${i-1}" data-col="label"></td>
+                            <td><input type="number" value="${parseFloat(values[1]) || 0}" data-row="${i-1}" data-col="value"></td>
+                        `;
+                        tbody.appendChild(newRow);
+                    }
+                }
+
+                window.BaalUtils.showToast(`CSV 파일 로드 완료! (${lines.length - 1}개 행)`, 'success', 5000);
+
+                // 자동으로 차트 생성
+                setTimeout(() => generateChart(), 500);
+
+            } catch (error) {
+                console.error('CSV parse error:', error);
+                window.BaalUtils.showToast('CSV 파일 읽기 실패: ' + error.message, 'error', 5000);
+            }
+        });
+
+        // 차트 생성 버튼 이벤트 (테이블 영역)
+        const generateBtnTable = document.getElementById('generateBtnTable');
+
+        if (generateBtnTable) {
+            generateBtnTable.addEventListener('click', () => {
+                generateChart();
+            });
+        }
+
+        // 차트 생성 버튼 이벤트 (하단 차트 타입 영역)
+        const generateBtnBottom = document.getElementById('generateBtnBottom');
+
+        if (generateBtnBottom) {
+            generateBtnBottom.addEventListener('click', () => {
+                generateChart();
+            });
+        }
+
+        function generateChart() {
+            const rows = Array.from(document.querySelectorAll('#dataRows tr'));
+            const labels = [];
+            const data = [];
+
+            rows.forEach(row => {
+                const labelInput = row.querySelector('[data-col="label"]');
+                const valueInput = row.querySelector('[data-col="value"]');
+
+                if (labelInput && valueInput) {
+                    labels.push(labelInput.value || '항목');
+                    data.push(parseFloat(valueInput.value) || 0);
+                }
+            });
+
+            if (data.length === 0) {
+                window.BaalUtils.showToast('데이터를 입력하세요.', 'error', 5000);
+                return;
+            }
+
+            const palette = document.getElementById('colorPalette').value;
+            const opacity = parseInt(document.getElementById('colorOpacity').value) / 100;
+            const borderWidth = parseInt(document.getElementById('borderWidth').value);
+            const tension = parseInt(document.getElementById('lineTension').value) / 100;
+            const legendPosition = document.getElementById('legendPosition').value;
+            const animationDuration = parseInt(document.getElementById('animationDuration').value);
+
+            const rgbColors = colorPalettes[palette];
+            const backgroundColors = data.map((_, i) => {
+                const [r, g, b] = rgbColors[i % rgbColors.length];
+                return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+            });
+            const borderColors = data.map((_, i) => {
+                const [r, g, b] = rgbColors[i % rgbColors.length];
+                return `rgba(${r}, ${g}, ${b}, 1)`;
+            });
+
+            if (chartInstance) {
+                chartInstance.destroy();
+            }
+
+            const ctx = document.getElementById('chartCanvas').getContext('2d');
+
+            const datasetOptions = {
+                label: '데이터',
+                data: data,
+                backgroundColor: backgroundColors,
+                borderColor: borderColors,
+                borderWidth: borderWidth,
+                tension: tension
+            };
+
+            if (currentChartType === 'line') {
+                datasetOptions.fill = false;
+                datasetOptions.pointRadius = 4;
+                datasetOptions.pointHoverRadius = 6;
+            }
+
+            if (currentChartType === 'radar') {
+                datasetOptions.fill = true;
+                datasetOptions.pointRadius = 3;
+            }
+
+            chartInstance = new Chart(ctx, {
+                type: currentChartType,
+                data: {
+                    labels: labels,
+                    datasets: [datasetOptions]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    animation: {
+                        duration: animationDuration
+                    },
+                    plugins: {
+                        legend: {
+                            position: legendPosition,
+                            labels: {
+                                color: getComputedStyle(document.body).getPropertyValue('--text-primary').trim(),
+                                padding: 15,
+                                font: {
+                                    size: 12,
+                                    weight: '600'
+                                }
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            padding: 12,
+                            titleFont: {
+                                size: 14,
+                                weight: 'bold'
+                            },
+                            bodyFont: {
+                                size: 13
+                            },
+                            cornerRadius: 8
+                        }
+                    },
+                    scales: (currentChartType === 'pie' || currentChartType === 'doughnut' || currentChartType === 'polarArea') ? {} : {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                color: getComputedStyle(document.body).getPropertyValue('--text-secondary').trim(),
+                                font: {
+                                    size: 11
+                                }
+                            },
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.08)',
+                                drawBorder: false
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                color: getComputedStyle(document.body).getPropertyValue('--text-secondary').trim(),
+                                font: {
+                                    size: 11
+                                }
+                            },
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.08)',
+                                drawBorder: false
+                            }
+                        }
+                    }
+                }
+            });
+
+            window.BaalUtils.showToast('차트가 생성되었습니다!', 'success', 5000);
+        }
+
+        // PNG 다운로드
+        document.getElementById('downloadPNG').addEventListener('click', () => {
+            if (!chartInstance) {
+                window.BaalUtils.showToast('먼저 차트를 생성하세요.', 'error', 5000);
+                return;
+            }
+
+            const canvas = document.getElementById('chartCanvas');
+            canvas.toBlob((blob) => {
+                window.BaalUtils.downloadFile(blob, 'chart.png');
+                window.BaalUtils.showToast('PNG 다운로드 완료!', 'success', 5000);
+            }, 'image/png');
+        });
+
+        // Privacy Modal Functions
+        function openPrivacyModal() {
+            document.getElementById('privacyModal').classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closePrivacyModal() {
+            document.getElementById('privacyModal').classList.remove('show');
+            document.body.style.overflow = '';
+        }
+
+        // ESC key to close modal
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closePrivacyModal();
+            }
+        });
+    </script>
+</body>
+</html>
