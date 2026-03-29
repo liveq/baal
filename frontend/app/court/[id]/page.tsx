@@ -5,7 +5,9 @@ import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { formatTimeAgo } from '@/lib/utils/time'
 
-const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'
+const API = process.env.NEXT_PUBLIC_API_URL || 'https://baal-api.fly.dev'
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
+const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
 
 const REACTIONS = [
   { type: 'popcorn', label: '🍿' },
@@ -35,25 +37,42 @@ function JuryVoting({ caseId, completed = false }: { caseId: string; completed?:
   const [voted, setVoted] = useState(false)
 
   useEffect(() => {
-    fetch(`${API}/api/court/cases/${caseId}/votes`)
+    fetch(`${SUPABASE_URL}/rest/v1/court_votes?case_id=eq.${caseId}&select=verdict`, {
+      headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` },
+    })
       .then(r => r.json())
-      .then(d => { setPVotes(d.plaintiff_votes || 0); setDVotes(d.defendant_votes || 0) })
+      .then((votes: any[]) => {
+        const pv = votes.filter((v: any) => v.verdict === 'plaintiff_win').length
+        const dv = votes.filter((v: any) => v.verdict === 'defendant_win').length
+        setPVotes(pv); setDVotes(dv)
+      })
       .catch(() => {})
   }, [caseId])
 
   async function vote(verdict: string) {
-    const res = await fetch(`${API}/api/court/cases/${caseId}/vote`, {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/court_votes`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ verdict }),
+      headers: {
+        apikey: SUPABASE_KEY,
+        Authorization: `Bearer ${SUPABASE_KEY}`,
+        'Content-Type': 'application/json',
+        Prefer: 'return=minimal',
+      },
+      body: JSON.stringify({ case_id: caseId, verdict }),
     })
     if (res.ok) {
-      const d = await res.json()
-      setPVotes(d.plaintiff_votes); setDVotes(d.defendant_votes)
+      // Reload votes
+      const vRes = await fetch(`${SUPABASE_URL}/rest/v1/court_votes?case_id=eq.${caseId}&select=verdict`, {
+        headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` },
+      })
+      if (vRes.ok) {
+        const votes = await vRes.json()
+        setPVotes(votes.filter((v: any) => v.verdict === 'plaintiff_win').length)
+        setDVotes(votes.filter((v: any) => v.verdict === 'defendant_win').length)
+      }
       setVoted(true)
     } else {
-      const d = await res.json().catch(() => ({}))
-      if (d.error?.includes('이미')) setVoted(true)
+      setVoted(true) // likely already voted
     }
   }
 
@@ -170,19 +189,38 @@ export default function CourtDetailPage() {
 
   const loadCase = useCallback(async () => {
     try {
-      const res = await fetch(`${API}/api/court/cases/${id}`)
-      if (res.ok) {
-        const data = await res.json()
-        setCourtCase(data.case)
-        setMessages(data.messages || [])
+      // Fetch case
+      const caseRes = await fetch(
+        `${SUPABASE_URL}/rest/v1/court_cases?id=eq.${id}&select=*&limit=1`,
+        { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` } }
+      )
+      if (caseRes.ok) {
+        const caseData = await caseRes.json()
+        if (caseData.length > 0) setCourtCase(caseData[0])
+      }
+      // Fetch messages
+      const msgRes = await fetch(
+        `${SUPABASE_URL}/rest/v1/court_messages?case_id=eq.${id}&order=created_at.asc&select=*`,
+        { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` } }
+      )
+      if (msgRes.ok) {
+        setMessages(await msgRes.json())
       }
     } catch {}
   }, [id])
 
   const loadReactions = useCallback(async () => {
     try {
-      const res = await fetch(`${API}/api/court/cases/${id}/reactions`)
-      if (res.ok) setReactions(await res.json())
+      const res = await fetch(
+        `${SUPABASE_URL}/rest/v1/court_reactions?case_id=eq.${id}&select=type`,
+        { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` } }
+      )
+      if (res.ok) {
+        const data = await res.json()
+        const counts: Record<string, number> = {}
+        data.forEach((r: any) => { counts[r.type] = (counts[r.type] || 0) + 1 })
+        setReactions(counts)
+      }
     } catch {}
   }, [id])
 
@@ -195,10 +233,16 @@ export default function CourtDetailPage() {
 
   async function sendMessage() {
     if (!newMessage.trim()) return
-    await fetch(`${API}/api/court/cases/${id}/messages`, {
+    await fetch(`${SUPABASE_URL}/rest/v1/court_messages`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        apikey: SUPABASE_KEY,
+        Authorization: `Bearer ${SUPABASE_KEY}`,
+        'Content-Type': 'application/json',
+        Prefer: 'return=minimal',
+      },
       body: JSON.stringify({
+        case_id: id,
         message: newMessage.trim(),
         message_type: msgType,
         nickname: nickname.trim() || '익명',
@@ -210,12 +254,17 @@ export default function CourtDetailPage() {
 
   async function addReaction(type: string) {
     try {
-      const res = await fetch(`${API}/api/court/cases/${id}/reactions`, {
+      await fetch(`${SUPABASE_URL}/rest/v1/court_reactions`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ type }),
+        headers: {
+          apikey: SUPABASE_KEY,
+          Authorization: `Bearer ${SUPABASE_KEY}`,
+          'Content-Type': 'application/json',
+          Prefer: 'return=minimal',
+        },
+        body: JSON.stringify({ case_id: id, type }),
       })
-      if (res.ok) setReactions(await res.json())
+      loadReactions()
     } catch {}
   }
 

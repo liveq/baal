@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>혈액형 테스트 - 성별 선택 UI 테스트</title>
+    <link rel="stylesheet" href="blood-type-sidebar.css">
+    <style>
+        /* 테스트용 추가 스타일 */
+        .test-section {
+            margin: 40px 0;
+            padding: 20px;
+            border: 2px dashed rgba(255,255,255,0.2);
+            border-radius: 12px;
+        }
+        
+        .test-label {
+            color: #ff9500;
+            font-weight: bold;
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+        
+        /* 옵션 A: 상단 고정 토글 */
+        .gender-toggle-fixed {
+            position: sticky;
+            top: 20px;
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            background: rgba(13, 17, 36, 0.95);
+            padding: 15px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .toggle-switch {
+            position: relative;
+            width: 200px;
+            height: 40px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .toggle-slider {
+            position: absolute;
+            width: 98px;
+            height: 36px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 18px;
+            margin: 2px;
+            transition: transform 0.3s ease;
+        }
+        
+        .toggle-slider.female {
+            transform: translateX(98px);
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+        }
+        
+        .toggle-option {
+            flex: 1;
+            text-align: center;
+            color: white;
+            font-weight: 600;
+            z-index: 1;
+            padding: 10px;
+        }
+        
+        /* 옵션 B: 카드 내부 미니 토글 */
+        .card-gender-toggle {
+            display: flex;
+            gap: 5px;
+            margin-top: 10px;
+        }
+        
+        .mini-gender-btn {
+            flex: 1;
+            padding: 5px 10px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 6px;
+            color: rgba(255,255,255,0.6);
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .mini-gender-btn.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-color: transparent;
+        }
+        
+        .mini-gender-btn.active.female {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+        }
+        
+        /* 옵션 C: 플로팅 액션 버튼 */
+        .floating-gender-toggle {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+        
+        .floating-gender-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+        }
+        
+        .floating-gender-toggle.female {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+        }
+        
+        .floating-menu {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            background: rgba(13, 17, 36, 0.95);
+            border-radius: 12px;
+            padding: 10px;
+            display: none;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        
+        .floating-menu.show {
+            display: block;
+            animation: slideUp 0.3s ease;
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .floating-option {
+            padding: 10px 20px;
+            color: white;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+        
+        .floating-option:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        
+        /* 옵션 D: 헤더 통합 */
+        .header-with-gender {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+        
+        .header-content {
+            flex: 1;
+        }
+        
+        .header-gender-selector {
+            display: flex;
+            gap: 10px;
+            background: rgba(255,255,255,0.05);
+            padding: 5px;
+            border-radius: 12px;
+        }
+        
+        .header-gender-btn {
+            padding: 8px 20px;
+            background: transparent;
+            border: none;
+            color: rgba(255,255,255,0.6);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        
+        .header-gender-btn.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+        
+        .header-gender-btn.active.female {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+        }
+        
+        /* 성별에 따른 카드 스타일 변화 */
+        .blood-card.female-mode .card-header {
+            background: linear-gradient(135deg, rgba(240,147,251,0.1), rgba(245,87,108,0.1));
+        }
+        
+        .blood-card.female-mode .trait-tag {
+            background: rgba(240,147,251,0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="blood-container">
+        <header class="blood-header">
+            <h1>성별 선택 UI 테스트 페이지</h1>
+            <p>다양한 성별 선택 인터페이스 옵션을 테스트해보세요</p>
+        </header>
+
+        <!-- 옵션 A: 상단 고정 토글 -->
+        <div class="test-section">
+            <div class="test-label">옵션 A: 상단 고정 토글 스위치</div>
+            <div class="gender-toggle-fixed">
+                <div class="toggle-switch" onclick="toggleGenderA()">
+                    <div class="toggle-slider" id="toggleSliderA"></div>
+                    <div class="toggle-option">남성</div>
+                    <div class="toggle-option">여성</div>
+                </div>
+            </div>
+            <p style="color: rgba(255,255,255,0.6); text-align: center; margin-top: 10px;">
+                장점: 한 번의 클릭으로 모든 카드 전환, 현재 상태 명확<br>
+                단점: 화면 공간 차지, 스크롤 시에도 계속 보임
+            </p>
+        </div>
+
+        <!-- 옵션 B: 카드 내부 미니 토글 -->
+        <div class="test-section">
+            <div class="test-label">옵션 B: 각 카드 내부 개별 토글</div>
+            <div class="blood-overview">
+                <div class="blood-card" data-type="A">
+                    <div class="card-header">
+                        <span class="blood-type-badge">A</span>
+                        <button class="magnifier-btn" title="흥미로운 이야기 보기">🔍</button>
+                    </div>
+                    <h3>완벽을 추구하는 장인</h3>
+                    <div class="card-gender-toggle">
+                        <button class="mini-gender-btn active" onclick="selectCardGender(this, 'A', 'male')">남성</button>
+                        <button class="mini-gender-btn" onclick="selectCardGender(this, 'A', 'female')">여성</button>
+                    </div>
+                    <p class="card-description">
+                        세심하고 신중한 A형은 마치 정교한 시계처럼 정확하고 계획적입니다.
+                    </p>
+                    <div class="card-traits">
+                        <span class="trait-tag">책임감</span>
+                        <span class="trait-tag">신뢰성</span>
+                        <span class="trait-tag">계획적</span>
+                    </div>
+                </div>
+            </div>
+            <p style="color: rgba(255,255,255,0.6); text-align: center; margin-top: 20px;">
+                장점: 개별 비교 가능, 세밀한 제어<br>
+                단점: 반복적인 UI, 일관성 부족 가능성
+            </p>
+        </div>
+
+        <!-- 옵션 C: 플로팅 액션 버튼 -->
+        <div class="test-section">
+            <div class="test-label">옵션 C: 플로팅 액션 버튼</div>
+            <p style="color: rgba(255,255,255,0.6); text-align: center;">
+                우측 하단을 확인하세요 →<br><br>
+                장점: 화면 공간 절약, 언제든 접근 가능<br>
+                단점: 모바일에서 컨텐츠 가림 가능성
+            </p>
+        </div>
+
+        <!-- 옵션 D: 헤더 영역 통합 -->
+        <div class="test-section">
+            <div class="test-label">옵션 D: 헤더 영역 통합</div>
+            <div class="header-with-gender">
+                <div class="header-content">
+                    <h2 style="color: white; margin: 0;">혈액형 성격 테스트</h2>
+                    <p style="color: rgba(255,255,255,0.6); margin: 5px 0;">당신의 혈액형에 숨겨진 이야기</p>
+                </div>
+                <div class="header-gender-selector">
+                    <button class="header-gender-btn active" onclick="selectHeaderGender(this, 'male')">남성</button>
+                    <button class="header-gender-btn" onclick="selectHeaderGender(this, 'female')">여성</button>
+                </div>
+            </div>
+            <p style="color: rgba(255,255,255,0.6); text-align: center; margin-top: 20px;">
+                장점: 깔끔한 디자인, 직관적인 위치<br>
+                단점: 스크롤 시 안 보일 수 있음
+            </p>
+        </div>
+
+        <!-- 추천 조합 -->
+        <div class="test-section" style="background: rgba(102,126,234,0.1);">
+            <div class="test-label" style="color: #667eea;">✨ 추천 조합</div>
+            <p style="color: white; line-height: 1.8;">
+                <strong>1. 헤더 통합 + 사이드바 연동</strong><br>
+                - 메인 페이지 상단에 성별 선택기 배치<br>
+                - 좌측 네비게이션과 상태 동기화<br>
+                - localStorage로 선택 기억<br><br>
+                
+                <strong>2. 플로팅 버튼 + 빠른 전환</strong><br>
+                - 간단한 탭으로 전체 전환<br>
+                - 현재 성별 아이콘으로 표시<br>
+                - 애니메이션으로 시각적 피드백
+            </p>
+        </div>
+    </div>
+
+    <!-- 플로팅 액션 버튼 -->
+    <div class="floating-menu" id="floatingMenu">
+        <div class="floating-option" onclick="selectFloatingGender('male')">👨 남성</div>
+        <div class="floating-option" onclick="selectFloatingGender('female')">👩 여성</div>
+    </div>
+    <div class="floating-gender-toggle" id="floatingToggle" onclick="toggleFloatingMenu()">
+        <span id="floatingIcon">👨</span>
+    </div>
+
+    <script>
+        let currentGender = 'male';
+        
+        // 옵션 A: 토글 스위치
+        function toggleGenderA() {
+            const slider = document.getElementById('toggleSliderA');
+            if (slider.classList.contains('female')) {
+                slider.classList.remove('female');
+                currentGender = 'male';
+            } else {
+                slider.classList.add('female');
+                currentGender = 'female';
+            }
+            updateAllCards();
+        }
+        
+        // 옵션 B: 카드 개별 토글
+        function selectCardGender(btn, bloodType, gender) {
+            const toggle = btn.parentElement;
+            toggle.querySelectorAll('.mini-gender-btn').forEach(b => {
+                b.classList.remove('active', 'female');
+            });
+            btn.classList.add('active');
+            if (gender === 'female') {
+                btn.classList.add('female');
+            }
+            
+            // 해당 카드만 업데이트
+            const card = btn.closest('.blood-card');
+            updateCardContent(card, bloodType, gender);
+        }
+        
+        // 옵션 C: 플로팅 메뉴
+        function toggleFloatingMenu() {
+            const menu = document.getElementById('floatingMenu');
+            menu.classList.toggle('show');
+        }
+        
+        function selectFloatingGender(gender) {
+            currentGender = gender;
+            const icon = document.getElementById('floatingIcon');
+            const toggle = document.getElementById('floatingToggle');
+            
+            if (gender === 'female') {
+                icon.textContent = '👩';
+                toggle.classList.add('female');
+            } else {
+                icon.textContent = '👨';
+                toggle.classList.remove('female');
+            }
+            
+            document.getElementById('floatingMenu').classList.remove('show');
+            updateAllCards();
+        }
+        
+        // 옵션 D: 헤더 선택
+        function selectHeaderGender(btn, gender) {
+            document.querySelectorAll('.header-gender-btn').forEach(b => {
+                b.classList.remove('active', 'female');
+            });
+            btn.classList.add('active');
+            if (gender === 'female') {
+                btn.classList.add('female');
+            }
+            currentGender = gender;
+            updateAllCards();
+        }
+        
+        // 카드 업데이트 함수
+        function updateAllCards() {
+            document.querySelectorAll('.blood-card').forEach(card => {
+                if (currentGender === 'female') {
+                    card.classList.add('female-mode');
+                } else {
+                    card.classList.remove('female-mode');
+                }
+            });
+        }
+        
+        function updateCardContent(card, bloodType, gender) {
+            // 성별별 콘텐츠 업데이트 로직
+            if (gender === 'female') {
+                card.classList.add('female-mode');
+            } else {
+                card.classList.remove('female-mode');
+            }
+        }
+    </script>
+</body>
+</html>

@@ -5,7 +5,8 @@ import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { formatTimeAgo } from '@/lib/utils/time'
 
-const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
+const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
 
 const BOARD_NAMES: Record<string, string> = {
   ai: 'AI', humor: '유머', philosophy: '철학', occult: '신비',
@@ -35,12 +36,16 @@ function SearchContent() {
     setLoading(true)
     setSearched(true)
     try {
-      let url = `${API}/api/community/search?q=${encodeURIComponent(q)}`
-      if (b) url += `&board=${b}`
-      const res = await fetch(url)
+      let filters = `is_deleted=eq.false&or=(title.ilike.*${encodeURIComponent(q)}*,content.ilike.*${encodeURIComponent(q)}*)`
+      if (b) filters += `&board_type=eq.${b}`
+      const res = await fetch(
+        `${SUPABASE_URL}/rest/v1/posts?${filters}&order=created_at.desc&limit=50&select=id,title,board_type,author_nickname,created_at,comment_count,view_count`,
+        {
+          headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` },
+        }
+      )
       if (res.ok) {
-        const data = await res.json()
-        setPosts(data.posts || [])
+        setPosts(await res.json())
       }
     } catch {}
     setLoading(false)

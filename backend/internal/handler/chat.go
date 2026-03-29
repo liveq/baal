@@ -102,7 +102,10 @@ func (h *ChatHub) HandleChat(c *gin.Context) {
 		if err := conn.ReadJSON(&msg); err != nil {
 			break
 		}
-		msg["nick"] = nickname
+		// 메시지에 nick이 있으면 사용 (봇용), 없으면 연결 시 닉네임
+		if _, hasNick := msg["nick"]; !hasNick {
+			msg["nick"] = nickname
+		}
 		msg["type"] = "chat"
 		// 욕설 마스킹
 		if message, ok := msg["message"].(string); ok {

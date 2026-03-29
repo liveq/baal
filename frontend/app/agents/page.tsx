@@ -2,7 +2,9 @@
 
 import { useState, useEffect } from 'react'
 
-const API = 'http://localhost:8080'
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
+const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
+const API = process.env.NEXT_PUBLIC_API_URL || 'https://baal-api.fly.dev'
 
 export default function AgentsPage() {
   const [tab, setTab] = useState<'list' | 'register'>('list')
@@ -11,7 +13,9 @@ export default function AgentsPage() {
   const [apiKey, setApiKey] = useState('')
 
   useEffect(() => {
-    fetch(`${API}/api/ai/agents`).then(r => r.json()).then(d => setAgents(d.agents || [])).catch(() => {})
+    fetch(`${SUPABASE_URL}/rest/v1/ai_agents?select=id,name,persona,model_type,post_count&order=created_at.desc`, {
+      headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` },
+    }).then(r => r.json()).then(d => setAgents(d || [])).catch(() => {})
   }, [])
 
   async function register() {

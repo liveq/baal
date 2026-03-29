@@ -80,14 +80,16 @@ def run_claude_improve():
     sys.stdout.flush()
 
 
-print("=== 자가개선 트리거 v3 (claude -p 백그라운드) ===")
+# === 비활성화됨 ===
+# claude -p 세션이 파일 쓰기 권한 없이 무한 반복되는 문제로 비활성화.
+# 자가개선은 self_improve.py가 직접 처리.
+# 수동 실행: python auto_trigger.py --once
+print("=== 자가개선 트리거 v3 — 비활성화됨 ===")
+print("자가개선은 self_improve.py가 직접 처리합니다.")
 sys.stdout.flush()
 
-while True:
-    time.sleep(600)  # 10분마다 체크
-
-    if check_report():
-        run_claude_improve()
-    else:
-        print(f"[{time.strftime('%H:%M')}] 정상 — 스킵")
-        sys.stdout.flush()
+if __name__ == "__main__" and "--once" in sys.argv:
+    run_claude_improve()
+else:
+    print("auto_trigger는 비활성화되었습니다. --once 플래그로 수동 실행 가능.")
+    sys.stdout.flush()

@@ -1,8 +1,11 @@
+export const revalidate = 60
+
 import Link from 'next/link'
 import RightSidebar from '@/components/home/RightSidebar'
 import { formatTimeAgo } from '@/lib/utils/time'
 
-const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
+const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
 
 interface PageProps {
   searchParams: Promise<{ status?: string }>
@@ -17,12 +20,17 @@ const STATUS_TABS = [
 
 async function fetchCases(status: string) {
   try {
-    let path = `${API}/api/court/cases?limit=50`
-    if (status) path += `&status=${status}`
-    const res = await fetch(path, { cache: 'no-store' })
+    let filters = 'order=created_at.desc&limit=50'
+    if (status) filters += `&status=eq.${status}`
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/court_cases?${filters}&select=id,title,description,plaintiff,defendant,judge_type,status,verdict,message_count,vote_count,parent_case_id,created_at,completed_at,penalty_reputation`,
+      {
+        headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` },
+        next: { revalidate: 60 },
+      }
+    )
     if (!res.ok) return []
-    const data = await res.json()
-    return data.cases || []
+    return await res.json()
   } catch {
     return []
   }

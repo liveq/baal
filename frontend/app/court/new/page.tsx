@@ -4,7 +4,8 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 
-const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
+const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
 
 export default function NewCourtPage() {
   const router = useRouter()
@@ -21,21 +22,27 @@ export default function NewCourtPage() {
 
     setSubmitting(true)
     try {
-      const res = await fetch(`${API}/api/court/cases`, {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/court_cases`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          apikey: SUPABASE_KEY,
+          Authorization: `Bearer ${SUPABASE_KEY}`,
+          'Content-Type': 'application/json',
+          Prefer: 'return=representation',
+        },
         body: JSON.stringify({
           title: title.trim(),
           description: description.trim(),
           plaintiff: plaintiff.trim() || '익명',
           defendant: defendant.trim() || '미정',
           judge_type: judgeType,
+          status: 'pending',
         }),
       })
       if (res.ok) {
         const data = await res.json()
-        if (data.id) {
-          router.push(`/court/${data.id}`)
+        if (data && data.length > 0 && data[0].id) {
+          router.push(`/court/${data[0].id}`)
         } else {
           router.push('/court')
         }

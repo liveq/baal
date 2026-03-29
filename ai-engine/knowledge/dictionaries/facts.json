@@ -1,0 +1,68 @@
+{
+  "meta": {
+    "description": "2026년 현재 주요 팩트. LLM 출력의 팩트체크 기준으로 사용.",
+    "version": "1.0.0",
+    "updated": "2026-03-29",
+    "confidence": "verified"
+  },
+  "korea": {
+    "president": {
+      "name": "이재명",
+      "party": "더불어민주당",
+      "term_start": "2025-05",
+      "note": "윤석열 탄핵 후 조기대선으로 취임"
+    },
+    "previous_president": {
+      "name": "윤석열",
+      "party": "국민의힘",
+      "term": "2022-05 ~ 2024-12 (탄핵)",
+      "note": "2024년 12월 비상계엄 선포 후 탄핵소추, 헌법재판소 인용"
+    },
+    "prime_minister": "정진석 (2025년 취임)",
+    "ruling_party": "더불어민주당",
+    "opposition_party": "국민의힘",
+    "population": "약 5,150만 명 (2026년 추정)",
+    "capital": "서울특별시",
+    "minimum_wage_2026": "10,030원 (시급)",
+    "minimum_wage_2025": "10,030원 (시급)",
+    "gdp_per_capita_2025": "약 35,000 USD",
+    "total_fertility_rate": "약 0.72 (2024년 기준, 세계 최저 수준)",
+    "military_service": "육군 18개월, 해군 20개월, 공군 21개월 (2025년 기준)",
+    "administrative_divisions": {
+      "special_city": ["서울특별시"],
+      "metropolitan_cities": ["부산광역시", "대구광역시", "인천광역시", "광주광역시", "대전광역시", "울산광역시"],
+      "special_autonomous_city": ["세종특별자치시"],
+      "provinces": ["경기도", "강원특별자치도", "충청북도", "충청남도", "전북특별자치도", "전라남도", "경상북도", "경상남도"],
+      "special_autonomous_province": ["제주특별자치도"]
+    }
+  },
+  "world_leaders": {
+    "usa": {"name": "도널드 트럼프", "title": "대통령", "since": "2025-01"},
+    "china": {"name": "시진핑", "title": "국가주석", "since": "2013-03"},
+    "russia": {"name": "블라디미르 푸틴", "title": "대통령", "since": "2024-05 (5기)"},
+    "japan": {"name": "이시바 시게루", "title": "총리", "since": "2024-10"},
+    "uk": {"name": "키어 스타머", "title": "총리", "since": "2024-07"},
+    "france": {"name": "에마뉘엘 마크롱", "title": "대통령", "since": "2022-05 (2기)"},
+    "germany": {"name": "프리드리히 메르츠", "title": "총리", "since": "2025-03"},
+    "india": {"name": "나렌드라 모디", "title": "총리", "since": "2024-06 (3기)"},
+    "canada": {"name": "마크 카니", "title": "총리", "since": "2025-03"},
+    "brazil": {"name": "룰라 다 시우바", "title": "대통령", "since": "2023-01"},
+    "north_korea": {"name": "김정은", "title": "국무위원장", "since": "2011-12"},
+    "taiwan": {"name": "라이칭더", "title": "총통", "since": "2024-05"},
+    "ukraine": {"name": "볼로디미르 젤렌스키", "title": "대통령", "since": "2019-05"},
+    "israel": {"name": "베냐민 네타냐후", "title": "총리", "since": "2022-12"},
+    "italy": {"name": "조르자 멜로니", "title": "총리", "since": "2022-10"},
+    "un_secretary_general": {"name": "안토니우 구테흐스", "title": "유엔 사무총장", "since": "2017-01"}
+  },
+  "ongoing_conflicts": [
+    {"name": "러시아-우크라이나 전쟁", "since": "2022-02-24", "status": "진행 중"},
+    {"name": "이스라엘-하마스 전쟁", "since": "2023-10-07", "status": "진행 중"},
+    {"name": "미얀마 내전", "since": "2021-02", "status": "진행 중"}
+  ],
+  "key_economic_facts": {
+    "us_federal_funds_rate": "약 4.25~4.50% (2025 말 기준)",
+    "korea_base_rate": "약 2.75% (2025년 기준)",
+    "usd_krw_range": "약 1,350~1,450원 (2025~2026 범위)",
+    "bitcoin_range": "약 80,000~100,000 USD (2026년 초 기준)"
+  }
+}

@@ -1,19 +1,29 @@
+export const revalidate = 60
+
 import Link from 'next/link'
 import BestPosts from '@/components/home/BestPosts'
 import BoardSection from '@/components/home/BoardSection'
 import RightSidebar from '@/components/home/RightSidebar'
 import { formatTimeAgo } from '@/lib/utils/time'
 
-const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
+const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
 
 async function fetchBoard(board: string) {
   try {
-    const res = await fetch(`${API}/api/community/posts?board=${board}&limit=8`, {
-      cache: 'no-store',
-    })
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/posts?board_type=eq.${board}&is_deleted=eq.false&order=created_at.desc&limit=8&select=id,title,author_nickname,created_at,comment_count`,
+      {
+        headers: {
+          apikey: SUPABASE_KEY,
+          Authorization: `Bearer ${SUPABASE_KEY}`,
+        },
+        next: { revalidate: 60 },
+      }
+    )
     if (!res.ok) return []
     const data = await res.json()
-    return (data.posts || []).map((p: any) => ({
+    return (data || []).map((p: any) => ({
       id: p.id,
       title: p.title,
       author: p.author_nickname || '익명',

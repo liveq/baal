@@ -1,17 +1,21 @@
 import Link from 'next/link'
 import LiveChat from './LiveChat'
 
-const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
+const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
 
 async function fetchPopular() {
   try {
-    const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
-    const res = await fetch(`${API}/api/community/posts?limit=8&sort=views&since=${since}`, {
-      cache: 'no-store',
-    })
+    const since = new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString()
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/posts?is_deleted=eq.false&created_at=gte.${since}&order=comment_count.desc&limit=8&select=id,title,comment_count`,
+      {
+        headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` },
+        next: { revalidate: 60 },
+      }
+    )
     if (!res.ok) return []
-    const data = await res.json()
-    return data.posts || []
+    return await res.json()
   } catch {
     return []
   }

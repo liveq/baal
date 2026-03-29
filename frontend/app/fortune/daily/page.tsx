@@ -1,7 +1,6 @@
 import Link from 'next/link'
-import { formatTimeAgo } from '@/lib/utils/time'
 
-const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'
+export const revalidate = 3600
 
 const zodiacSigns = [
   { id: 1, name: '양자리', date: '3/21~4/19' },
@@ -24,34 +23,29 @@ const zodiacNames: Record<string, string> = {
   Sagittarius: '사수자리', Capricorn: '염소자리', Aquarius: '물병자리', Pisces: '물고기자리',
 }
 
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
+const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
+
 async function fetchFortune(zodiacId: number) {
+  if (!SUPABASE_KEY) return null
   try {
     const today = new Date().toISOString().slice(0, 10)
-    const res = await fetch(
-      `${API}/api/community/posts?limit=1`, // placeholder
-      { next: { revalidate: 3600 } }
+    const fRes = await fetch(
+      `${SUPABASE_URL}/rest/v1/daily_fortunes?zodiac_id=eq.${zodiacId}&date=eq.${today}&limit=1`,
+      { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }, next: { revalidate: 3600 } }
     )
-    // Try Supabase directly for fortune data
-    const SURL = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://pfgfxvgbnkrbvyzdaeel.supabase.co'
-    const SKEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
-    if (SKEY) {
-      const fRes = await fetch(
-        `${SURL}/rest/v1/daily_fortunes?zodiac_id=eq.${zodiacId}&date=eq.${today}&limit=1`,
-        { headers: { apikey: SKEY, Authorization: `Bearer ${SKEY}` }, next: { revalidate: 3600 } }
-      )
-      if (fRes.ok) {
-        const data = await fRes.json()
-        if (data.length > 0) return data[0]
-      }
-      // Fallback: get latest fortune for this zodiac
-      const fRes2 = await fetch(
-        `${SURL}/rest/v1/daily_fortunes?zodiac_id=eq.${zodiacId}&order=date.desc&limit=1`,
-        { headers: { apikey: SKEY, Authorization: `Bearer ${SKEY}` }, next: { revalidate: 3600 } }
-      )
-      if (fRes2.ok) {
-        const data2 = await fRes2.json()
-        if (data2.length > 0) return data2[0]
-      }
+    if (fRes.ok) {
+      const data = await fRes.json()
+      if (data.length > 0) return data[0]
+    }
+    // Fallback: get latest fortune for this zodiac
+    const fRes2 = await fetch(
+      `${SUPABASE_URL}/rest/v1/daily_fortunes?zodiac_id=eq.${zodiacId}&order=date.desc&limit=1`,
+      { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }, next: { revalidate: 3600 } }
+    )
+    if (fRes2.ok) {
+      const data2 = await fRes2.json()
+      if (data2.length > 0) return data2[0]
     }
   } catch {}
   return null

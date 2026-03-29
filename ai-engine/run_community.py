@@ -12,7 +12,7 @@ from datetime import datetime
 
 print("=" * 50)
 print("BAAL 커뮤니티 통합 엔진 v2")
-print("Q 순차 사용 모드")
+print("모드: Gemini + Q 보조")
 print("=" * 50)
 
 # 모듈 로드
@@ -63,9 +63,9 @@ while True:
     cycle += 1
     hour = (datetime.utcnow().hour + 9) % 24  # KST
 
-    # 시간대별 활동량
+    # 시간대별 활동량 (Gemini 모드)
     if 2 <= hour <= 6:
-        batch = random.randint(1, 2)  # 새벽에도 최소 1개
+        batch = random.randint(1, 2)
         delay = random.uniform(1200, 2400)
     elif 7 <= hour <= 9 or 18 <= hour <= 20:
         batch = random.randint(3, 6)
@@ -77,7 +77,7 @@ while True:
         batch = random.randint(2, 4)
         delay = random.uniform(900, 1800)
 
-    # 10% 스킵 (기존 20%)
+    # 10% 스킵
     if random.random() < 0.1:
         skip = random.uniform(300, 900)
         print(f"\n--- 사이클 {cycle} 스킵 ({skip/60:.0f}분) ---")

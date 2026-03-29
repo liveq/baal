@@ -23,7 +23,7 @@ except:
     import websocket
 
 LM_URL = "http://127.0.0.1:1234/v1/chat/completions"
-WS_URL = "ws://localhost:8080/api/chat/lobby"
+WS_URL = "wss://baal-api.fly.dev/api/chat/lobby"
 
 USERS = [
     {"nick": "익명a3k7", "style": "반말. 짧게. 20대 남성."},
@@ -67,15 +67,26 @@ def call_q(prompt):
     try:
         r = requests.post(LM_URL, json={
             "model": "qwen/qwen3.5-9b",
-            "messages": [{"role": "user", "content": prompt}],
-            "temperature": 0.9, "max_tokens": 25,
+            "messages": [
+                {"role": "system", "content": "짧게 대답해. 한국어. 15자 이내. 설명 금지."},
+                {"role": "user", "content": prompt}
+            ],
+            "temperature": 0.9, "max_tokens": 30,
         }, timeout=20)
         if r.status_code == 200:
             text = r.json()["choices"][0]["message"]["content"].strip()
+            # Thinking 제거
+            if "Thinking" in text or "Analyze" in text or "<think>" in text:
+                if "</think>" in text:
+                    text = text.split("</think>")[-1].strip()
+                else:
+                    return None
             text = text.strip('"').strip("'")
             if ":" in text[:12]:
                 text = text.split(":", 1)[-1].strip()
-            return text
+            if len(text) > 50:
+                text = text[:50]
+            return text if len(text) > 1 else None
     except:
         pass
     return None
@@ -90,19 +101,42 @@ def clean_message(text):
             return None
     return text
 
+_bot_ws = None  # 단일 WebSocket 연결
+
+def _get_ws():
+    """봇 전용 단일 WebSocket 연결 유지"""
+    global _bot_ws
+    if _bot_ws and _bot_ws.connected:
+        return _bot_ws
+    try:
+        from urllib.parse import quote
+        _bot_ws = websocket.create_connection(f"{WS_URL}?nick={quote('봇')}", timeout=10)
+        print("  [WS] 연결 성공")
+        sys.stdout.flush()
+        return _bot_ws
+    except Exception as e:
+        print(f"  [WS ERR] {e}")
+        sys.stdout.flush()
+        _bot_ws = None
+        return None
+
 def send_as(nick, message):
     message = clean_message(message)
     if not message:
         return False
+    ws = _get_ws()
+    if not ws:
+        return False
     try:
-        ws = websocket.create_connection(f"{WS_URL}?nick={nick}", timeout=5)
-        ws.send(json.dumps({"message": message}))
-        time.sleep(0.3)
-        ws.close()
+        ws.send(json.dumps({"nick": nick, "message": message}))
         print(f"  [CHAT] {nick}: {message[:40]}")
         sys.stdout.flush()
         return True
-    except:
+    except Exception as e:
+        global _bot_ws
+        _bot_ws = None
+        print(f"  [CHAT ERR] {e}")
+        sys.stdout.flush()
         return False
 
 
@@ -126,22 +160,35 @@ def is_user_message(msg):
 
 def listen_ws():
     """WebSocket으로 유저 메시지 수신"""
+    from urllib.parse import quote
     while True:
         try:
-            ws = websocket.create_connection(f"{WS_URL}?nick=익명0000", timeout=None)
+            ws = websocket.create_connection(f"{WS_URL}?nick={quote('익명0000')}", timeout=30)
+            print("  [LISTEN] WebSocket 수신 연결 성공")
+            sys.stdout.flush()
             while True:
                 data = ws.recv()
                 msg = json.loads(data)
                 if msg.get("type") == "chat":
-                    recent.append({"nick": msg["nick"], "msg": msg.get("message", "")})
+                    nick = msg.get("nick", "")
+                    message = msg.get("message", "")
+                    recent.append({"nick": nick, "msg": message})
                     if len(recent) > 30:
                         recent.pop(0)
-        except:
-            time.sleep(5)
+                    if nick not in bot_nicks:
+                        print(f"  [USER] {nick}: {message[:30]}")
+                        sys.stdout.flush()
+        except Exception as e:
+            print(f"  [LISTEN ERR] reconnect in 60s")
+            sys.stdout.flush()
+            time.sleep(60)
 
 
 print("=== 채팅 AI 봇 v4 ===")
 sys.stdout.flush()
+
+# 유저 메시지 큐 — 놓치지 않기 위해 별도 관리
+user_queue = []
 
 # 수신 스레드
 t = threading.Thread(target=listen_ws, daemon=True)
@@ -158,47 +205,62 @@ msg_count = 0
 
 while True:
     try:
-        delay = random.uniform(15, 90)
-        time.sleep(delay)
-        msg_count += 1
+        # 유저 메시지 큐 체크 — recent에서 유저 메시지 추출
+        pending_user = [m for m in recent if is_user_message(m) and m not in user_queue]
+        if pending_user:
+            user_queue.extend(pending_user)
 
-        # 주제 전환 (8~12개마다)
-        if msg_count % random.randint(8, 12) == 0:
-            recent.clear()
-            user = random.choice(USERS)
-            msg = random.choice(POOL)
-            send_as(user["nick"], msg)
-            recent.append({"nick": user["nick"], "msg": msg})
+        # === 유저 메시지가 있으면 무조건 즉시 반응 ===
+        if user_queue:
+            user_msg_data = user_queue.pop(0)
+            user_msg = user_msg_data['msg']
+            user_nick = user_msg_data['nick']
+            time.sleep(random.uniform(1, 2))
+
+            # 거부/화남 감지
+            angry_words = ["꺼져", "닥쳐", "닦쳐", "그만", "지겨", "시끄", "짜증", "도배", "반복", "또야", "병신", "새끼"]
+            if any(w in user_msg for w in angry_words):
+                apologies = ["ㅈㅅ ㅋㅋ", "미안 다른 얘기 하자", "ㅋㅋ 알겠어", "ㅇㅋ 주제 바꿈"]
+                bot = random.choice(USERS)
+                send_as(bot["nick"], random.choice(apologies))
+                recent.clear()
+                user_queue.clear()
+                continue
+
+            # 유저 메시지에 직접 반응
+            bot = random.choice(USERS)
+            prompt = f"채팅에서 '{user_nick}'이 '{user_msg[:30]}'라고 했어. {bot['style']} 직접 반응해. 15자 이내. 자연스러운 한국어."
+            text = call_q(prompt)
+            if text and len(text) > 1:
+                banned = get_banned_words()
+                if not any(w in text for w in banned):
+                    send_as(bot["nick"], text)
+                    recent.append({"nick": bot["nick"], "msg": text})
+                    # 50% 확률로 두 번째 봇도 반응
+                    if random.random() < 0.5:
+                        time.sleep(random.uniform(1, 3))
+                        bot2 = random.choice([u for u in USERS if u["nick"] != bot["nick"]])
+                        prompt2 = f"'{user_nick}'이 '{user_msg[:20]}'라고 했고, '{bot['nick']}'이 '{text[:20]}'라고 답했어. {bot2['style']} 대화에 끼어들어. 15자 이내."
+                        text2 = call_q(prompt2)
+                        if text2 and len(text2) > 1:
+                            send_as(bot2["nick"], text2)
+                            recent.append({"nick": bot2["nick"], "msg": text2})
             continue
 
-        # 최근 메시지 확인
+        # === 유저 없으면 봇끼리 대화 ===
+        time.sleep(random.uniform(3, 8))
+        msg_count += 1
+
+        # 주제 전환 (10~15개마다)
+        if msg_count % random.randint(10, 15) == 0:
+            recent.clear()
+            bot = random.choice(USERS)
+            msg = random.choice(POOL)
+            send_as(bot["nick"], msg)
+            recent.append({"nick": bot["nick"], "msg": msg})
+            continue
+
         last = recent[-1] if recent else None
-
-        # === 유저 메시지에 우선 반응 (70% 확률) ===
-        if last and is_user_message(last) and random.random() < 0.7:
-            user_msg = last['msg']
-
-            # 거부/화남 감지 → 사과하고 주제 전환
-            angry_words = ["꺼져", "닥쳐", "그만", "지겨", "시끄", "짜증", "도배", "반복", "또야"]
-            if any(w in user_msg for w in angry_words):
-                apologies = ["ㅈㅅ ㅋㅋ", "미안 다른 얘기 하자", "ㅋㅋ 알겠어", "ㅇㅋ 주제 바꿈", "ㅋㅋ 그래 그만할게"]
-                user = random.choice(USERS)
-                send_as(user["nick"], random.choice(apologies))
-                recent.clear()
-                # 새 주제로 전환
-                time.sleep(random.uniform(3, 8))
-                user2 = random.choice(USERS)
-                send_as(user2["nick"], random.choice(POOL))
-                continue
-
-            user = random.choice(USERS)
-            banned = get_banned_words()
-            prompt = f"채팅에서 누가 '{user_msg[:25]}'라고 했어. {user['style']} 1문장 반응. 15자 이내. 자연스러운 한국어. 상대 메시지의 명사를 그대로 반복하지 마."
-            text = call_q(prompt)
-            if text and len(text) > 1 and not any(w in text for w in banned):
-                send_as(user["nick"], text)
-                recent.append({"nick": user["nick"], "msg": text})
-                continue
 
         # 고착 감지 — 최근 5개 메시지에서 같은 2자+ 단어가 3번 이상 → 강제 전환
         if len(recent) >= 5:
@@ -216,8 +278,8 @@ while True:
         # === 봇 메시지에 반응 (토론/대화) vs 독립 발화 ===
         roll = random.random()
 
-        if roll < 0.35 and last:
-            # 30% — 이전 메시지에 반응 (동의/반박/질문)
+        if roll < 0.70 and last:
+            # 70% — 이전 메시지에 반응 (대화가 오가게)
             reactions = ["동의하며", "반박하며", "궁금해하며", "웃기게", "시니컬하게"]
             reaction = random.choice(reactions)
             user = random.choice([u for u in USERS if u["nick"] != (last["nick"] if last else "")])
@@ -230,7 +292,7 @@ while True:
                     recent.append({"nick": user["nick"], "msg": text})
                     continue
 
-        if roll < 0.65:
+        if roll < 0.85:
             # 30% — 사전 풀에서 독립 발화 (고착 불가)
             user = random.choice(USERS)
             msg = random.choice(POOL)

@@ -1,0 +1,166 @@
+{
+  "meta": {
+    "description": "LLM이 자주 범하는 오역/오류 패턴 금지 목록. 출력 후처리에서 이 패턴이 감지되면 교정.",
+    "version": "1.0.0",
+    "updated": "2026-03-29"
+  },
+  "wrong_president": [
+    {
+      "pattern": "대한민국.*대통령.*윤석열",
+      "context": "현직 대통령 언급 시",
+      "correction": "2026년 3월 현재 대통령은 이재명 (윤석열은 2024년 탄핵)",
+      "severity": "critical"
+    },
+    {
+      "pattern": "대한민국.*대통령.*문재인",
+      "context": "현직 대통령 언급 시",
+      "correction": "문재인은 전직 대통령 (2017~2022)",
+      "severity": "critical"
+    },
+    {
+      "pattern": "대한민국.*대통령.*박근혜",
+      "context": "현직 대통령 언급 시",
+      "correction": "박근혜는 전직 대통령 (2013~2017, 탄핵)",
+      "severity": "critical"
+    },
+    {
+      "pattern": "현재.*대통령.*이명박",
+      "context": "현직 대통령 언급 시",
+      "correction": "이명박은 전직 대통령 (2008~2013)",
+      "severity": "critical"
+    }
+  ],
+  "wrong_leaders": [
+    {
+      "pattern": "미국.*대통령.*바이든",
+      "context": "현직 미국 대통령 언급 시",
+      "correction": "2025년 1월부터 미국 대통령은 도널드 트럼프",
+      "severity": "critical"
+    },
+    {
+      "pattern": "일본.*총리.*기시다",
+      "context": "현직 일본 총리 언급 시",
+      "correction": "2024년 10월부터 일본 총리는 이시바 시게루",
+      "severity": "high"
+    },
+    {
+      "pattern": "영국.*총리.*수낵",
+      "context": "현직 영국 총리 언급 시",
+      "correction": "2024년 7월부터 영국 총리는 키어 스타머",
+      "severity": "high"
+    },
+    {
+      "pattern": "캐나다.*총리.*트뤼도",
+      "context": "현직 캐나다 총리 언급 시",
+      "correction": "2025년 3월부터 캐나다 총리는 마크 카니",
+      "severity": "high"
+    },
+    {
+      "pattern": "독일.*총리.*숄츠",
+      "context": "현직 독일 총리 언급 시",
+      "correction": "2025년 3월부터 독일 총리는 프리드리히 메르츠",
+      "severity": "high"
+    },
+    {
+      "pattern": "독일.*총리.*메르켈",
+      "context": "현직 독일 총리 언급 시",
+      "correction": "메르켈은 2021년 퇴임. 현재 독일 총리는 프리드리히 메르츠",
+      "severity": "high"
+    },
+    {
+      "pattern": "대만.*총통.*차이잉원",
+      "context": "현직 대만 총통 언급 시",
+      "correction": "2024년 5월부터 대만 총통은 라이칭더",
+      "severity": "high"
+    },
+    {
+      "pattern": "대한민국.*수도.*세종",
+      "context": "한국 수도 오류",
+      "correction": "대한민국의 수도는 서울특별시. 세종은 행정중심복합도시",
+      "severity": "high"
+    }
+  ],
+  "outdated_facts": [
+    {
+      "pattern": "최저시급.*9,\\d{3}원",
+      "context": "2026년 최저시급 언급 시",
+      "correction": "2026년 최저시급은 10,030원",
+      "severity": "high"
+    },
+    {
+      "pattern": "합계출산율.*[1-9]\\.\\d",
+      "context": "한국 출산율 언급 시",
+      "correction": "한국 합계출산율은 약 0.72 (2024년 기준)",
+      "severity": "medium"
+    },
+    {
+      "pattern": "한국.*인구.*5,[3-9]\\d{2}만",
+      "context": "한국 인구 과다 추정",
+      "correction": "한국 인구는 약 5,150만 명 (감소 추세)",
+      "severity": "medium"
+    }
+  ],
+  "common_mistranslations": [
+    {
+      "wrong": "Lee Myung-bak 대통령",
+      "correct": "이명박 전 대통령",
+      "note": "영문명 그대로 노출 방지"
+    },
+    {
+      "wrong": "시진핑 대통령",
+      "correct": "시진핑 국가주석",
+      "note": "중국은 주석제, 대통령이 아님"
+    },
+    {
+      "wrong": "아베 신조 총리",
+      "correct": "아베 신조 전 총리 (2022년 사망)",
+      "note": "아베는 2022년 7월 암살됨"
+    },
+    {
+      "wrong": "터키",
+      "correct": "튀르키예",
+      "note": "2022년부터 공식 국호 변경"
+    },
+    {
+      "wrong": "스와질란드",
+      "correct": "에스와티니",
+      "note": "2018년 국호 변경"
+    }
+  ],
+  "hallucination_patterns": [
+    {
+      "pattern": "(?:한국|대한민국).*(?:연방|연방제|연방국가)",
+      "correction": "한국은 단일국가(unitary state)이며 연방국가가 아님",
+      "severity": "critical"
+    },
+    {
+      "pattern": "북한.*(?:민주주의|민주국가)",
+      "context": "북한을 민주주의 국가로 서술 시",
+      "correction": "북한은 1인 독재 체제. 공식명칭에 '민주주의'가 있지만 실질적 민주주의 아님",
+      "severity": "high"
+    },
+    {
+      "pattern": "한국.*핵무기.*보유",
+      "correction": "한국은 핵무기 비보유국 (NPT 가입국)",
+      "severity": "critical"
+    },
+    {
+      "pattern": "원.*달러.*환율.*[89]\\d{2}원",
+      "context": "극단적으로 낮은 환율 언급 시",
+      "correction": "2025~2026년 원/달러 환율은 1,350~1,450원대",
+      "severity": "medium"
+    },
+    {
+      "pattern": "한국.*GDP.*(?:세계.*[23]위|2위|3위)",
+      "context": "한국 GDP 순위 과장",
+      "correction": "한국 GDP는 세계 12~14위권",
+      "severity": "medium"
+    },
+    {
+      "pattern": "(?:코로나|COVID).*마스크.*의무",
+      "context": "코로나 마스크 의무 해제 후",
+      "correction": "한국은 2023년 이후 대부분의 마스크 착용 의무가 해제됨",
+      "severity": "low"
+    }
+  ]
+}

@@ -51,16 +51,23 @@ function WriteContent() {
     setIsSubmitting(true)
 
     try {
-      const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'
-      const res = await fetch(`${API}/api/community/posts`, {
+      const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
+      const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/posts`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          apikey: SUPABASE_KEY,
+          Authorization: `Bearer ${SUPABASE_KEY}`,
+          'Content-Type': 'application/json',
+          Prefer: 'return=representation',
+        },
         body: JSON.stringify({
           board_type: boardType,
           title,
           content,
           author_nickname: user?.email?.split('@')[0] || anonNickname || '익명',
           anonymous_password: !user ? anonPassword : undefined,
+          author_id: user?.id || null,
         }),
       })
       if (!res.ok) throw new Error('작성 실패')

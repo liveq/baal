@@ -90,6 +90,21 @@ def check_chinese_content():
         print(f"  중국어 글 삭제: {deleted}개")
 
 
+def check_model_pollution():
+    """모델 출력 오염 글 삭제 (Thinking Process 등)"""
+    posts = query("posts", "select=id,title&is_deleted=eq.false&order=created_at.desc&limit=50")
+    deleted = 0
+    pollution = ['Thinking Process', 'thinking process', "Here's a", "I'll ", "Let me ", "Sure,"]
+    for p in posts:
+        title = p.get("title", "")
+        if any(pol in title for pol in pollution):
+            patch("posts", p["id"], {"is_deleted": True})
+            deleted += 1
+            print(f"  [DEL POLLUTION] {title[:30]}")
+    if deleted:
+        print(f"  모델 출력 오염 삭제: {deleted}개")
+
+
 def check_duplicates():
     """중복 글 정리 (같은 게시판, 제목 앞 10자)"""
     posts = query("posts", "select=id,title,board_type,created_at&is_deleted=eq.false&order=created_at.desc")
@@ -326,6 +341,7 @@ def run_check():
 
     check_empty_titles()
     check_chinese_content()
+    check_model_pollution()
     check_duplicates()
     check_short_content()
     check_comment_count_sync()

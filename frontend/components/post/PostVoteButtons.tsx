@@ -31,11 +31,15 @@ export default function PostVoteButtons({
     if (!user) return
 
     try {
-      const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'
-      const res = await fetch(`${API}/api/votes/check?post_id=${postId}`)
+      const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
+      const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
+      const res = await fetch(
+        `${SUPABASE_URL}/rest/v1/votes?post_id=eq.${postId}&user_id=eq.${user.id}&select=vote_type&limit=1`,
+        { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` } }
+      )
       if (res.ok) {
         const data = await res.json()
-        setUserVote(data.vote_type)
+        if (data.length > 0) setUserVote(data[0].vote_type)
       }
     } catch (error) {
       console.error('Failed to check user vote:', error)
@@ -52,24 +56,41 @@ export default function PostVoteButtons({
 
     setLoading(true)
     try {
-      const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'
-      const res = await fetch(`${API}/api/community/votes`, {
+      const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
+      const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
+
+      // Upsert vote
+      const voteRes = await fetch(`${SUPABASE_URL}/rest/v1/votes`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          apikey: SUPABASE_KEY,
+          Authorization: `Bearer ${SUPABASE_KEY}`,
+          'Content-Type': 'application/json',
+          Prefer: 'return=representation,resolution=merge-duplicates',
+        },
         body: JSON.stringify({
           post_id: postId,
-          vote_type: voteType
+          user_id: user.id,
+          vote_type: voteType,
         })
       })
 
-      if (res.ok) {
-        const data = await res.json()
-        setUpvotes(data.upvotes)
-        setDownvotes(data.downvotes)
-        setUserVote(data.userVote)
+      if (voteRes.ok) {
+        // Recalculate from votes table
+        const countRes = await fetch(
+          `${SUPABASE_URL}/rest/v1/votes?post_id=eq.${postId}&select=vote_type`,
+          { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` } }
+        )
+        if (countRes.ok) {
+          const votes = await countRes.json()
+          const up = votes.filter((v: any) => v.vote_type === 'upvote').length
+          const down = votes.filter((v: any) => v.vote_type === 'downvote').length
+          setUpvotes(up)
+          setDownvotes(down)
+          setUserVote(voteType)
+        }
       } else {
-        const data = await res.json()
-        alert(data.error || '투표에 실패했습니다')
+        alert('투표에 실패했습니다')
       }
     } catch (error) {
       console.error('Failed to vote:', error)

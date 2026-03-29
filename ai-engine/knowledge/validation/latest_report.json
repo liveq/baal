@@ -1,0 +1,52 @@
+{
+  "timestamp": "2026-03-29T21:05:22.223287",
+  "total_chunks": 875,
+  "total_errors": 0,
+  "errors": [],
+  "coverage": {
+    "A_한국사회": {
+      "count": 80,
+      "status": "OK"
+    },
+    "K_시사뉴스팩트": {
+      "count": 35,
+      "status": "OK"
+    },
+    "G_생활실용": {
+      "count": 90,
+      "status": "OK"
+    },
+    "B_한국역사": {
+      "count": 90,
+      "status": "OK"
+    },
+    "C_세계국제": {
+      "count": 80,
+      "status": "OK"
+    },
+    "H_IT디지털": {
+      "count": 90,
+      "status": "OK"
+    },
+    "I_군사안보": {
+      "count": 90,
+      "status": "OK"
+    },
+    "E_인문철학": {
+      "count": 50,
+      "status": "OK"
+    },
+    "J_신비오컬트": {
+      "count": 90,
+      "status": "OK"
+    },
+    "F_문화예술": {
+      "count": 90,
+      "status": "OK"
+    },
+    "D_과학기술": {
+      "count": 90,
+      "status": "OK"
+    }
+  }
+}

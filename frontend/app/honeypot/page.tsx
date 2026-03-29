@@ -2,7 +2,8 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react'
 
-const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
+const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
 
 interface Ad {
   id: string
@@ -27,10 +28,12 @@ function LeaderboardSection() {
 
   async function load() {
     try {
-      const res = await fetch(`${API}/api/honey/leaderboard`)
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/honey_leaderboard?order=points.desc&limit=20&select=*`, {
+        headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` },
+      })
       if (res.ok) {
         const d = await res.json()
-        setData(d.leaderboard || [])
+        setData(d || [])
       }
     } catch {}
   }
@@ -95,7 +98,11 @@ export default function HoneypotPage() {
 
   const loadStats = useCallback(async () => {
     try {
-      const res = await fetch(`${API}/api/honey/stats`)
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/get_honey_stats`, {
+        method: 'POST',
+        headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json' },
+        body: '{}',
+      })
       if (res.ok) {
         const d = await res.json()
         setTotalPoints(d.total_points || 0)
@@ -107,20 +114,24 @@ export default function HoneypotPage() {
 
   const loadAds = useCallback(async () => {
     try {
-      const res = await fetch(`${API}/api/honey/ads`)
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/honey_ads?select=id,ad_type,title,description,reward_points,duration,daily_limit&order=created_at.desc`, {
+        headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` },
+      })
       if (res.ok) {
         const d = await res.json()
-        setAds(d.ads || [])
+        setAds(d || [])
       }
     } catch {}
   }, [])
 
   const loadHistory = useCallback(async () => {
     try {
-      const res = await fetch(`${API}/api/honey/history`)
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/honey_history?order=completed_at.desc&limit=50&select=id,points_earned,completed_at,honey_ads(title,ad_type)`, {
+        headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` },
+      })
       if (res.ok) {
         const d = await res.json()
-        setHistory(d.history || [])
+        setHistory(d || [])
       }
     } catch {}
   }, [])
@@ -155,10 +166,14 @@ export default function HoneypotPage() {
 
   async function claimReward(adId: string) {
     try {
-      const res = await fetch(`${API}/api/honey/claim`, {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/claim_honey_reward`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ad_id: adId }),
+        headers: {
+          apikey: SUPABASE_KEY,
+          Authorization: `Bearer ${SUPABASE_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ p_ad_id: adId }),
       })
       const d = await res.json()
       if (res.ok) {

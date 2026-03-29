@@ -8,7 +8,7 @@ export async function GET() {
   }
 
   const state = crypto.randomBytes(16).toString('hex')
-  const redirectUri = `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:4000'}/api/auth/naver/callback`
+  const redirectUri = `${process.env.NEXT_PUBLIC_SITE_URL || 'https://baal.co.kr'}/api/auth/naver/callback`
 
   const params = new URLSearchParams({
     response_type: 'code',

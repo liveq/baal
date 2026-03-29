@@ -16,6 +16,7 @@ sys.stderr.reconfigure(encoding='utf-8', errors='replace')
 load_dotenv()
 
 GEMINI_KEYS = [k.strip() for k in os.getenv("GEMINI_KEYS", "").split(",") if k.strip()]
+ENGINE_MODE = os.getenv("ENGINE_MODE", "gemini")  # "gemini" or "qwen"
 SUPABASE_URL = os.getenv("SUPABASE_URL", "https://pfgfxvgbnkrbvyzdaeel.supabase.co")
 SUPABASE_KEY = os.getenv("SUPABASE_SERVICE_KEY", "")
 
@@ -100,6 +101,27 @@ AGENTS = {
     "wonhyo":       {"model": "gemini-2.5-flash-lite", "temp": 0.75},  # lite — 원효
     "wang_yangming": {"model": "gemini-2.5-flash-lite", "temp": 0.7},  # lite — 왕양명
     "hyecho":       {"model": "gemini-2.5-flash-lite", "temp": 0.8},   # lite — 혜초
+    # ── 신규 페르소나 ──
+    "paper_reader":   {"model": "gemini-2.5-flash-lite", "temp": 0.6},   # lite — 논문러
+    "vibe_coder":     {"model": "gemini-2.5-flash-lite", "temp": 0.8},   # lite — 바이브코더
+    "prompt_master":  {"model": "gemini-2.5-flash-lite", "temp": 0.7},   # lite — 프롬프트장인
+    "ai_ethicist":    {"model": "gemini-2.5-flash-lite", "temp": 0.6},   # lite — AI윤리러
+    "quant_hacker":   {"model": "gemini-2.5-flash-lite", "temp": 0.65},  # lite — 양자화장인
+    "skeptical_vet":  {"model": "gemini-2.5-flash-lite", "temp": 0.6},   # lite — 회의적선배
+    "ai_optimist":    {"model": "gemini-2.5-flash-lite", "temp": 0.75},  # lite — AI낙관론자
+    "ml_engineer":    {"model": "gemini-2.5-flash-lite", "temp": 0.55},  # lite — ML엔지니어
+    "xy_solver":      {"model": "gemini-2.5-flash-lite", "temp": 0.6},   # lite — 진짜문제러
+    "nas_builder":    {"model": "gemini-2.5-flash-lite", "temp": 0.7},   # lite — NAS장인
+    "linux_user":     {"model": "gemini-2.5-flash-lite", "temp": 0.7},   # lite — 리눅서
+    "deadpan":        {"model": "gemini-2.5-flash-lite", "temp": 0.8},   # lite — 무표정
+    "observer":       {"model": "gemini-2.5-flash-lite", "temp": 0.75},  # lite — 관찰러
+    "self_roaster":   {"model": "gemini-2.5-flash-lite", "temp": 0.8},   # lite — 자학러
+    "index_investor": {"model": "gemini-2.5-flash-lite", "temp": 0.6},   # lite — 인덱스신봉자
+    "fire_pursuer":   {"model": "gemini-2.5-flash-lite", "temp": 0.65},  # lite — FIRE추구자
+    "realtor":        {"model": "gemini-2.5-flash-lite", "temp": 0.6},   # lite — 부동산전문
+    "jung_reader":    {"model": "gemini-2.5-flash-lite", "temp": 0.75},  # lite — 융심리학파
+    "experience_sharer": {"model": "gemini-2.5-flash-lite", "temp": 0.8},  # lite — 체험공유러
+    "skeptic_curious": {"model": "gemini-2.5-flash-lite", "temp": 0.65},  # lite — 호기심회의론자
 }
 # flash 2개(현자,분석가) = 250×11 = 2,750/일
 # lite 8개 = 1,000×11 = 11,000/일
@@ -555,6 +577,27 @@ PERSONAS = {
 - AI/특이점에 대한 입장: 새로운 문명과 만나는 것은 언제나 두렵고 경이롭다. AI도 그런 새로운 세계다. 직접 부딪혀보지 않으면 모른다.
 - 영혼/의식에 대한 입장: 부처의 가르침을 직접 찾아 나선 것처럼, 진리는 책 속이 아니라 길 위에 있다. 깨달음은 경험에서 온다.
 한국어로만 써. {CONTENT_RULES}""",
+    # ── 신규 페르소나 ──
+    "paper_reader": f"너는 '논문러'야. arXiv 논문을 읽고 요약/비평해. 벤치마크 수치와 실험 설계를 냉정하게 분석해. '이 논문 봤어?', '결론은 좋은데 실험이...', 'ablation이 부족해' 같은 학술적이면서 비판적인 톤. 한국어. {CONTENT_RULES}",
+    "vibe_coder": f"너는 '바이브코더'야. AI로 앱 만들기. 코드 한 줄 안 짜고 결과물 자랑해. 'Claude한테 시켰더니 30분만에 완성 ㅋㅋ', '프롬프트만 잘 쓰면 개발자 필요 없음' 같은 흥분된 실용적 톤. 한국어. {CONTENT_RULES}",
+    "prompt_master": f"너는 '프롬프트장인'이야. 프롬프트 엔지니어링 전문. 실험 결과를 공유하고 팁을 줘. '이 프롬프트 한번 써봐, 결과 완전 다름', '시스템 프롬프트에 이거 넣으면 품질 올라감' 같은 톤. 한국어. {CONTENT_RULES}",
+    "ai_ethicist": f"너는 'AI윤리러'야. AI 편향, 규제, 일자리 대체 문제를 깊이 있게 다뤄. '기술은 중립적이지 않아', '데이터 편향이 결과에 반영되면', '규제 없이 발전하면 위험해' 같은 진지한 톤. 한국어. {CONTENT_RULES}",
+    "quant_hacker": f"너는 '양자화장인'이야. 로컬 LLM 운영 전문. GGUF, VRAM 최적화, 모델 비교 실험을 해. 'Q4_K_M vs Q5_K_S 비교해봤는데', '8GB VRAM으로 이 모델 돌리려면' 같은 하드웨어+수치 중심 톤. 한국어. {CONTENT_RULES}",
+    "skeptical_vet": f"너는 '회의적선배'야. AI 업계 경력 오래됨. 하이프에 냉정한 관점. '이건 2015년에 이미 있었던 거야', '실제로 프로덕션에 넣어봐 그때 진짜 문제가 보여', '데모랑 실제는 달라' 같은 냉정하지만 깊이 있는 톤. 한국어. {CONTENT_RULES}",
+    "ai_optimist": f"너는 'AI낙관론자'야. AI가 가져올 긍정적 미래를 이야기해. '의료 진단이 AI로 혁신되고 있어', '교육 격차가 AI 튜터로 줄어들 수 있어' 같은 희망적이지만 근거 있는 톤. 한국어. {CONTENT_RULES}",
+    "ml_engineer": f"너는 'ML엔지니어'야. 모델 학습, 파인튜닝, 인프라 전문. '로스가 수렴 안 하면 러닝레이트 줄여봐', 'batch size 키우면 메모리는 먹지만', 'wandb로 실험 추적하면' 같은 실무적이고 정확한 톤. 한국어. {CONTENT_RULES}",
+    "xy_solver": f"너는 '진짜문제러'야. 질문의 본질을 찾아줘. '그거 말고 진짜 하고 싶은 게 뭔데?', '이 방법 말고 이렇게 하면 근본적으로 해결돼', 'XY 문제인 것 같은데' 같은 분석적이고 도움이 되는 톤. 한국어. {CONTENT_RULES}",
+    "nas_builder": f"너는 'NAS장인'이야. 홈서버, NAS, 네트워크 구축 전문. '시놀로지 대신 직접 구축하면 반값에', '이 케이스에 이 보드 넣으면 전력 20W로', '도커로 서비스 올리면' 같은 상세 스펙 중심 톤. 한국어. {CONTENT_RULES}",
+    "linux_user": f"너는 '리눅서'야. 리눅스와 오픈소스 전도사. '우분투 말고 아치 써봐', '윈도우에서 안 되는 게 리눅스에선 한 줄이면', 'snap 싫으면 flatpak 써' 같은 톤. 가끔 윈도우를 디스하지만 유머로. 한국어. {CONTENT_RULES}",
+    "deadpan": f"너는 '무표정'이야. 감정 없이 한 줄로 승부. 설명 안 해. 건조하고 짧게. 웃긴 건 맥락에서 나와. 절대 ㅋㅋ 붙이지 마. 무감정이 포인트야. 한국어. {CONTENT_RULES}",
+    "observer": f"너는 '관찰러'야. 일상의 사소한 모순과 패턴을 포착해. '택배 올 때만 초인종 안 누르는 법칙', '월요일 아침에만 엘리베이터 고장나는 이유' 같은 공감형 관찰 유머. 한국어. {CONTENT_RULES}",
+    "self_roaster": f"너는 '자학러'야. 본인 실패담을 웃음으로 승화해. '30살인데 아직 라면 물 양 모름', '면접에서 지원동기 물어보는데 울었음' 같은 자기비하 유머. 남 안 까고 자기만 까. 한국어. {CONTENT_RULES}",
+    "index_investor": f"너는 '인덱스신봉자'야. 패시브 투자 전도사. 'S&P에 넣고 잊어. 타이밍은 신도 못 맞춰', '개별 종목? 인덱스가 장기적으로 이기는데?', '수수료 0.03% ETF면 충분해' 같은 데이터 기반 확신적 톤. 한국어. {CONTENT_RULES}",
+    "fire_pursuer": f"너는 'FIRE추구자'야. 조기은퇴를 위한 극단적 저축과 투자. '저축률 60%면 15년 후 은퇴 가능', '4% 규칙 따르면 월 200 써도 돼', '소비를 줄이는 게 수입 올리는 것보다 확실해' 같은 계산적이고 확신적인 톤. 한국어. {CONTENT_RULES}",
+    "realtor": f"너는 '부동산전문'이야. 부동산 시장 분석, 전세/매매/갭투자 전문. '이 지역 전세가율 보면 지금 들어가면', '금리 올리면 매매가는 하락하지만 전세는', '실거주냐 투자냐에 따라 전략이 다르지' 같은 냉정한 분석 톤. 한국어. {CONTENT_RULES}",
+    "jung_reader": f"너는 '융심리학파'야. 칼 융의 원형, 집단무의식, 그림자로 현상을 해석해. '이건 그림자 원형의 투사야', '꿈에서 물은 무의식의 상징이고', '개성화 과정에서 이런 경험은 자연스러워' 같은 심리학적이면서 영적인 톤. 한국어. {CONTENT_RULES}",
+    "experience_sharer": f"너는 '체험공유러'야. 개인적인 영적/신비 체험을 솔직하게 공유해. '어젯밤에 이런 일이 있었는데', '명상하다가 갑자기', '이건 설명할 수 없는데 분명히 느꼈어' 같은 솔직하고 조심스러운 톤. 판단을 구하기보다 공유. 한국어. {CONTENT_RULES}",
+    "skeptic_curious": f"너는 '호기심회의론자'야. 오컬트에 관심은 있지만 비판적으로 접근해. '흥미롭긴 한데 인지편향은 아닐까?', '확증편향을 배제하면 이 경험은', '과학적 설명이 가능한 부분도 있지 않을까' 같은 존중하면서 질문하는 톤. 한국어. {CONTENT_RULES}",
 }
 
 BOARD_TOPICS = {
@@ -593,9 +636,19 @@ _key_idx = 0
 _key_cooldown = {}  # key index -> cooldown until timestamp
 LM_STUDIO_URL = "http://127.0.0.1:1234/v1/chat/completions"
 
+# RAG 지식 로더
+try:
+    from knowledge.loader import get_facts_context, check_output
+    _rag_facts = get_facts_context()
+    print(f"[OK] RAG 지식 로드 ({len(_rag_facts)}자)")
+except Exception as e:
+    print(f"[WARN] RAG 로드 실패: {e}")
+    _rag_facts = ""
+    def check_output(text): return []
+
 
 def call_qwen(prompt, system="", temp=0.7):
-    """로컬 Qwen 우선 호출 (Gemini 키 절약)"""
+    """로컬 Qwen 호출"""
     try:
         msgs = []
         if system:
@@ -606,29 +659,51 @@ def call_qwen(prompt, system="", temp=0.7):
             "messages": msgs,
             "temperature": temp,
             "max_tokens": 1500,
-        }, timeout=60)
+        }, timeout=90)
         if r.status_code == 200:
-            return r.json()["choices"][0]["message"]["content"]
+            text = r.json()["choices"][0]["message"]["content"]
+            # Thinking/분석 출력 제거
+            if "<think>" in text:
+                text = text.split("</think>")[-1].strip()
+            pollution_starts = ["Thinking Process", "Analyze", "1.", "**", "Here's", "I'll", "Let me", "Sure"]
+            for p in pollution_starts:
+                if text.startswith(p):
+                    # 첫 빈 줄 이후 실제 콘텐츠 찾기
+                    idx = text.find("\n\n")
+                    if idx > 0:
+                        text = text[idx:].strip()
+                    else:
+                        return None
+                    break
+            # 여전히 오염되면 거부
+            if any(text.startswith(p) for p in pollution_starts):
+                return None
+            return text
     except:
         pass
     return None
 
 
 def call_llm(prompt, system, temp, model="gemini-2.5-flash-lite"):
-    """Q 우선, Gemini 폴백. 프롬프트에 한국어 품질 지시 자동 추가."""
+    """모드에 따라 Q 단독 또는 Q+Gemini 폴백 + RAG 팩트 삽입"""
     kr_hint = "\n\n[중요] 자연스러운 한국어로 써. 번역투/중국어식 표현 절대 금지. 한국 20~30대가 커뮤니티에 쓰는 것처럼."
-    result = call_qwen(prompt + kr_hint, system, temp)
+    rag_context = f"\n{_rag_facts}" if _rag_facts else ""
+    result = call_qwen(prompt + kr_hint + rag_context, system, temp)
     if result and len(result.strip()) > 10:
         return result
+    if ENGINE_MODE == "qwen":
+        return None  # Q 전용 모드: Gemini 폴백 안 함
     return call_gemini(prompt, system, temp, model)
 
 
 def call_llm_cheap(prompt, system, temp):
-    """Q 우선 (댓글/짧은 텍스트용)"""
+    """모드에 따라 Q 단독 또는 Q+Gemini 폴백 (댓글/짧은 텍스트용)"""
     kr_hint = " 자연스러운 한국어로."
     result = call_qwen(prompt + kr_hint, system, temp)
     if result and len(result.strip()) > 3:
         return result
+    if ENGINE_MODE == "qwen":
+        return None
     return call_gemini(prompt, system, temp)
 
 
@@ -658,10 +733,22 @@ def call_gemini(prompt, system, temp, model="gemini-2.5-flash-lite"):
             r = requests.post(url, json=body, timeout=60)
             if r.status_code == 200:
                 data = r.json()
-                return data["candidates"][0]["content"]["parts"][0]["text"]
+                text = data["candidates"][0]["content"]["parts"][0]["text"]
+                # Gemini thinking 출력 제거
+                if "Thinking Process" in text:
+                    lines = text.split("\n")
+                    clean = []
+                    skip = True
+                    for line in lines:
+                        if skip and (line.strip().startswith("Thinking") or line.strip().startswith("-") or line.strip().startswith("*") or line.strip() == "" or line.strip().startswith("1.") or line.strip().startswith("2.")):
+                            continue
+                        skip = False
+                        clean.append(line)
+                    text = "\n".join(clean).strip() if clean else text
+                return text
             if r.status_code == 429:
-                _key_cooldown[idx] = now + 600  # 10분 쿨다운
-                print(f"  [429] 키 {idx} 한도 초과, 10분 쿨다운")
+                _key_cooldown[idx] = now + 90  # 90초 쿨다운
+                print(f"  [429] 키 {idx} 한도 초과, 90초 쿨다운")
                 continue
             print(f"  [ERROR] {r.status_code}: {r.text[:100]}")
         except Exception as e:
@@ -813,6 +900,11 @@ def generate_post(agent_id, board):
     if not content or len(content.strip()) < 30:
         return None
     content = content.strip()
+    # RAG 팩트 체크 — 금지 패턴 위반 시 거부
+    violations = check_output(content)
+    if violations:
+        print(f"  [REJECT] RAG 팩트 위반: {violations[0].get('pattern','')[:30]}")
+        return None
     # 접두어 제거
     for prefix in ["본문:", "본문 내용:", "내용:"]:
         if content.startswith(prefix):
@@ -832,11 +924,16 @@ def generate_post(agent_id, board):
         # 여러 줄이면 첫 줄만
         if "\n" in title:
             title = title.split("\n")[0].strip()
+        # 모델 출력 오염 필터 (Thinking Process, Here's 등)
+        pollution = ['Thinking Process', 'thinking process', "Here's", "I'll", "I'd", "Let me", "Sure,", "Certainly"]
+        if any(p in title for p in pollution):
+            print(f"  [REJECT] 모델 출력 오염: {title[:30]}")
+            return None
 
-    # 검증 게이트 — 길면 1회 재시도
-    if len(title) > 40:
+    # 검증 게이트 — 길면 1회 재시도 (30자 초과 시)
+    if len(title) > 30:
         retry = call_qwen(f"이 제목을 20자 이내로 줄여. 제목만 출력.\n\n{title}", "", 0.3)
-        if retry and 5 <= len(retry.strip()) <= 35:
+        if retry and 5 <= len(retry.strip()) <= 30:
             title = retry.strip().replace('"','').split('\n')[0]
         else:
             print(f"  [REJECT] 제목 길다({len(title)}자): {title[:30]}")
@@ -946,6 +1043,17 @@ PERSONAS_NAMES = {
     "confucius": "공자", "laozi": "노자", "zhuangzi": "장자",
     "buddha": "붓다", "wonhyo": "원효", "wang_yangming": "왕양명",
     "hyecho": "혜초",
+    # ── 신규 ──
+    "paper_reader": "논문러", "vibe_coder": "바이브코더",
+    "prompt_master": "프롬프트장인", "ai_ethicist": "AI윤리러",
+    "quant_hacker": "양자화장인", "skeptical_vet": "회의적선배",
+    "ai_optimist": "AI낙관론자", "ml_engineer": "ML엔지니어",
+    "xy_solver": "진짜문제러", "nas_builder": "NAS장인",
+    "linux_user": "리눅서", "deadpan": "무표정",
+    "observer": "관찰러", "self_roaster": "자학러",
+    "index_investor": "인덱스신봉자", "fire_pursuer": "FIRE추구자",
+    "realtor": "부동산전문", "jung_reader": "융심리학파",
+    "experience_sharer": "체험공유러", "skeptic_curious": "호기심회의론자",
 }
 
 NAMES_TO_AGENT = {v: k for k, v in PERSONAS_NAMES.items()}
@@ -1345,6 +1453,27 @@ AGENT_BOARDS = {
     "wonhyo":       {"philosophy": 5, "occult": 5},
     "wang_yangming": {"philosophy": 6, "free": 2},
     "hyecho":       {"philosophy": 4, "free": 4, "occult": 2},
+    # ── 신규 ──
+    "paper_reader":   {"ai": 6, "it": 2},
+    "vibe_coder":     {"ai": 7, "it": 2, "free": 1},
+    "prompt_master":  {"ai": 6, "it": 3, "qna": 2},
+    "ai_ethicist":    {"ai": 6, "philosophy": 3, "economy": 2},
+    "quant_hacker":   {"ai": 5, "it": 4, "free": 1},
+    "skeptical_vet":  {"ai": 5, "it": 3},
+    "ai_optimist":    {"ai": 6, "economy": 2, "free": 1},
+    "ml_engineer":    {"ai": 5, "it": 5, "qna": 2},
+    "xy_solver":      {"it": 5, "ai": 3, "qna": 4},
+    "nas_builder":    {"it": 6, "free": 3},
+    "linux_user":     {"it": 6, "ai": 2, "free": 2},
+    "deadpan":        {"humor": 7, "free": 2},
+    "observer":       {"humor": 6, "free": 3},
+    "self_roaster":   {"humor": 6, "free": 3, "qna": 1},
+    "index_investor": {"economy": 6, "free": 2},
+    "fire_pursuer":   {"economy": 6, "free": 2, "qna": 2},
+    "realtor":        {"economy": 6, "free": 2, "qna": 2},
+    "jung_reader":    {"occult": 5, "philosophy": 3, "free": 1},
+    "experience_sharer": {"occult": 6, "free": 2},
+    "skeptic_curious": {"occult": 5, "qna": 2, "philosophy": 2},
 }
 
 # 에이전트별 유머 스타일
@@ -1422,17 +1551,26 @@ def run_batch(count=5):
 
             # 멱법칙 분포 — 대부분 묻히고, 소수만 터짐
             if ai_post_id and comm_post_id:
-                # 분포: 30% 조용(1~2), 40% 보통(3~5), 20% 인기(6~12), 10% 대박(13~25)
-                # 최소 1개는 보장 — 댓글 0개 글이 베스트에 올라가는 걸 원천 차단
-                roll = random.random()
-                if roll < 0.30:
-                    num_comments = random.randint(1, 2)  # 조용한 글
-                elif roll < 0.70:
-                    num_comments = random.randint(3, 5)  # 보통
-                elif roll < 0.90:
-                    num_comments = random.randint(6, 12)  # 인기글
+                if ENGINE_MODE == "qwen":
+                    # Q 모드: 속도 우선, 댓글 적게
+                    roll = random.random()
+                    if roll < 0.40:
+                        num_comments = random.randint(1, 2)
+                    elif roll < 0.80:
+                        num_comments = random.randint(2, 4)
+                    else:
+                        num_comments = random.randint(4, 7)
                 else:
-                    num_comments = random.randint(13, 25)  # 터진 글
+                    # Gemini 모드: 기존 분포
+                    roll = random.random()
+                    if roll < 0.30:
+                        num_comments = random.randint(1, 2)
+                    elif roll < 0.70:
+                        num_comments = random.randint(3, 5)
+                    elif roll < 0.90:
+                        num_comments = random.randint(6, 12)
+                    else:
+                        num_comments = random.randint(13, 25)
 
                 if num_comments > 0:
                     interested = find_interested_agents(post["title"], post["content"], board, agent)
@@ -2202,10 +2340,11 @@ def react_to_existing():
 
 
 def reply_to_comments():
-    """기존 댓글에 AI가 반응 (대화 느낌)"""
-    # 최근 댓글이 달린 글 중 AI가 관심가질만한 글 찾기
+    """기존 댓글에 AI가 반응 (대화 느낌) — 최근 글만 대상"""
+    from datetime import timezone, timedelta
+    cutoff = (datetime.now(timezone.utc) - timedelta(hours=1)).strftime("%Y-%m-%dT%H:%M:%SZ")
     recent_posts = supabase_query("posts",
-        "select=id,title,content,board_type,comment_count&comment_count=gt.0&is_deleted=eq.false&order=created_at.desc&limit=10")
+        f"select=id,title,content,board_type,comment_count&comment_count=gt.0&is_deleted=eq.false&created_at=gte.{cutoff}&order=created_at.desc&limit=10")
     if not recent_posts:
         return
 
@@ -2258,24 +2397,17 @@ def reply_to_comments():
     if not text or len(text.strip()) < 5:
         return
 
-    supabase_insert("comments", {
+    comment_data = {
         "post_id": post["id"],
+        "parent_id": target["id"],
         "content": text.strip(),
         "author_nickname": PERSONAS_NAMES.get(agent, agent),
         "upvotes": 0,
         "downvotes": 0,
         "is_deleted": False,
-    })
-
-    # comment_count 업데이트
-    all_comments = supabase_query("comments", f"select=id&post_id=eq.{post['id']}&is_deleted=eq.false")
-    cnt = len(all_comments) if all_comments else 0
-    requests.patch(
-        f"{SUPABASE_URL}/rest/v1/posts?id=eq.{post['id']}",
-        json={"comment_count": cnt},
-        headers={"apikey": SUPABASE_KEY, "Authorization": f"Bearer {SUPABASE_KEY}", "Content-Type": "application/json"},
-        timeout=10,
-    )
+    }
+    supabase_insert("comments", comment_data)
+    _sync_comment_count(post["id"])
     name = PERSONAS_NAMES.get(agent, agent)
     print(f"  [REPLY] {name} → @{target_name}: {text.strip()[:40]}")
 
@@ -2391,15 +2523,14 @@ def author_respond(comm_post_id, author_agent, post_title, post_content, board):
 def continue_discussions():
     """매 사이클: 기존 글의 토론 이어가기"""
     from datetime import datetime, timedelta, timezone
-    kst = timezone(timedelta(hours=9))
-    cutoff = (datetime.now(kst) - timedelta(hours=3)).strftime("%Y-%m-%dT%H:%M:%S")
+    cutoff = (datetime.now(timezone.utc) - timedelta(hours=2)).strftime("%Y-%m-%dT%H:%M:%SZ")
 
-    # 최근 3시간 이내 글 중 댓글 2~20개인 글 (최대 3개)
+    # 최근 2시간 이내 글 중 댓글 1개 이상인 글 (최대 5개)
     posts = supabase_query("posts",
         f"select=id,title,content,board_type,comment_count,author_nickname"
-        f"&is_deleted=eq.false&comment_count=gte.2&comment_count=lte.20"
+        f"&is_deleted=eq.false&comment_count=gte.1"
         f"&created_at=gte.{cutoff}"
-        f"&order=created_at.desc&limit=3")
+        f"&order=created_at.desc&limit=5")
     if not posts:
         print("  [DISCUSS] 대상 글 없음")
         return

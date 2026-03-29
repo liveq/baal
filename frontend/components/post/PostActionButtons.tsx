@@ -11,7 +11,8 @@ interface PostActionButtonsProps {
   hasAnonymousPassword: boolean
 }
 
-const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
+const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
 
 export default function PostActionButtons({
   postId, authorId, boardType, commentCount, hasAnonymousPassword
@@ -25,10 +26,15 @@ export default function PostActionButtons({
   async function handleReport() {
     if (!reportReason.trim()) return
     try {
-      const res = await fetch(`${API}/api/community/posts/${postId}/report`, {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/reports`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ reason: reportReason }),
+        headers: {
+          apikey: SUPABASE_KEY,
+          Authorization: `Bearer ${SUPABASE_KEY}`,
+          'Content-Type': 'application/json',
+          Prefer: 'return=minimal',
+        },
+        body: JSON.stringify({ post_id: postId, reason: reportReason }),
       })
       if (res.ok) {
         alert('신고가 접수되었습니다. 바알의 저울에서 심리됩니다.')
@@ -42,17 +48,26 @@ export default function PostActionButtons({
 
   async function handleDelete() {
     try {
-      const res = await fetch(`${API}/api/community/posts/${postId}`, {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password: deletePassword }),
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/posts?id=eq.${postId}&anonymous_password=eq.${encodeURIComponent(deletePassword)}`, {
+        method: 'PATCH',
+        headers: {
+          apikey: SUPABASE_KEY,
+          Authorization: `Bearer ${SUPABASE_KEY}`,
+          'Content-Type': 'application/json',
+          Prefer: 'return=representation',
+        },
+        body: JSON.stringify({ is_deleted: true }),
       })
       if (res.ok) {
-        alert('삭제되었습니다.')
-        router.push(`/board/${boardType}`)
-      } else {
         const data = await res.json()
-        alert(data.error || '삭제 실패')
+        if (data && data.length > 0) {
+          alert('삭제되었습니다.')
+          router.push(`/board/${boardType}`)
+        } else {
+          alert('비밀번호가 일치하지 않습니다.')
+        }
+      } else {
+        alert('삭제 실패')
       }
     } catch {
       alert('삭제 실패')

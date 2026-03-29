@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>모달 디버깅 테스트</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        .debug-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-btn {
+            padding: 10px 20px;
+            margin: 5px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .test-btn:hover {
+            background: #764ba2;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+        }
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        .status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+        pre {
+            background: #f4f4f4;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 별자리 모달 디버깅 페이지</h1>
+    
+    <div class="debug-section">
+        <h2>1. 스크립트 로딩 상태</h2>
+        <div id="scriptStatus"></div>
+    </div>
+    
+    <div class="debug-section">
+        <h2>2. 함수 존재 여부</h2>
+        <div id="functionStatus"></div>
+    </div>
+    
+    <div class="debug-section">
+        <h2>3. zodiacDescriptions 데이터 상태</h2>
+        <div id="dataStatus"></div>
+    </div>
+    
+    <div class="debug-section">
+        <h2>4. DOM 요소 확인</h2>
+        <div id="domStatus"></div>
+    </div>
+    
+    <div class="debug-section">
+        <h2>5. 모달 테스트</h2>
+        <button class="test-btn" onclick="testModal(1)">양자리 모달 테스트</button>
+        <button class="test-btn" onclick="testModal(5)">사자자리 모달 테스트</button>
+        <button class="test-btn" onclick="testModal(12)">물고기자리 모달 테스트</button>
+        <div id="testResult"></div>
+    </div>
+    
+    <div class="debug-section">
+        <h2>6. 콘솔 로그</h2>
+        <pre id="consoleLog"></pre>
+    </div>
+    
+    <!-- 모달 HTML 복사 -->
+    <div id="zodiacModal" class="zodiac-modal" style="display: none;" onclick="closeModalOnOutside(event)">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeZodiacModal()">×</button>
+            <h2 id="modalTitle" class="modal-title"></h2>
+            <div id="modalBody" class="modal-body"></div>
+        </div>
+    </div>
+    
+    <!-- 스크립트 로드 -->
+    <script src="../api/zodiac-api-real.js"></script>
+    <script src="zodiac.js"></script>
+    <script src="functions-fix.js"></script>
+    <script src="init.js"></script>
+    
+    <script>
+        // 콘솔 로그 캡처
+        const originalLog = console.log;
+        const originalError = console.error;
+        const logMessages = [];
+        
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            logMessages.push('[LOG] ' + args.join(' '));
+            updateConsoleDisplay();
+        };
+        
+        console.error = function(...args) {
+            originalError.apply(console, args);
+            logMessages.push('[ERROR] ' + args.join(' '));
+            updateConsoleDisplay();
+        };
+        
+        function updateConsoleDisplay() {
+            const consoleDiv = document.getElementById('consoleLog');
+            if (consoleDiv) {
+                consoleDiv.textContent = logMessages.slice(-20).join('\n');
+            }
+        }
+        
+        // 페이지 로드 후 상태 체크
+        window.addEventListener('DOMContentLoaded', function() {
+            checkStatus();
+        });
+        
+        function checkStatus() {
+            // 1. 스크립트 로딩 상태
+            const scriptStatus = document.getElementById('scriptStatus');
+            scriptStatus.innerHTML = `
+                <div class="status ${typeof zodiacAPI !== 'undefined' ? 'success' : 'error'}">
+                    zodiacAPI: ${typeof zodiacAPI !== 'undefined' ? '✅ 로드됨' : '❌ 없음'}
+                </div>
+            `;
+            
+            // 2. 함수 존재 여부
+            const functionStatus = document.getElementById('functionStatus');
+            const functions = [
+                'showZodiacModal',
+                'closeZodiacModal',
+                'closeModalOnOutside',
+                'selectZodiac',
+                'showIntroPage'
+            ];
+            
+            let funcHtml = '';
+            functions.forEach(func => {
+                const exists = typeof window[func] === 'function';
+                funcHtml += `<div class="status ${exists ? 'success' : 'error'}">
+                    window.${func}: ${exists ? '✅ 있음' : '❌ 없음'}
+                </div>`;
+            });
+            functionStatus.innerHTML = funcHtml;
+            
+            // 3. zodiacDescriptions 데이터 상태
+            const dataStatus = document.getElementById('dataStatus');
+            const dataInfo = {
+                exists: !!window.zodiacDescriptions,
+                type: typeof window.zodiacDescriptions,
+                isNull: window.zodiacDescriptions === null,
+                keys: window.zodiacDescriptions ? Object.keys(window.zodiacDescriptions).length : 0,
+                sample: window.zodiacDescriptions && window.zodiacDescriptions[1] ? 
+                    window.zodiacDescriptions[1].name : 'N/A'
+            };
+            
+            dataStatus.innerHTML = `
+                <div class="status ${dataInfo.exists && dataInfo.keys > 0 ? 'success' : 'error'}">
+                    존재: ${dataInfo.exists ? '✅' : '❌'}<br>
+                    타입: ${dataInfo.type}<br>
+                    null 여부: ${dataInfo.isNull}<br>
+                    키 개수: ${dataInfo.keys}<br>
+                    샘플 데이터: ${dataInfo.sample}
+                </div>
+            `;
+            
+            // 4. DOM 요소 확인
+            const domStatus = document.getElementById('domStatus');
+            const domElements = {
+                modal: document.getElementById('zodiacModal'),
+                title: document.getElementById('modalTitle'),
+                body: document.getElementById('modalBody')
+            };
+            
+            domStatus.innerHTML = `
+                <div class="status ${domElements.modal && domElements.title && domElements.body ? 'success' : 'error'}">
+                    #zodiacModal: ${domElements.modal ? '✅' : '❌'}<br>
+                    #modalTitle: ${domElements.title ? '✅' : '❌'}<br>
+                    #modalBody: ${domElements.body ? '✅' : '❌'}
+                </div>
+            `;
+        }
+        
+        // 모달 테스트 함수
+        function testModal(zodiacId) {
+            const resultDiv = document.getElementById('testResult');
+            resultDiv.innerHTML = '<div class="status info">모달 열기 시도 중...</div>';
+            
+            try {
+                if (typeof window.showZodiacModal === 'function') {
+                    const result = window.showZodiacModal(zodiacId);
+                    
+                    setTimeout(() => {
+                        const modal = document.getElementById('zodiacModal');
+                        if (modal && modal.style.display === 'block') {
+                            resultDiv.innerHTML = '<div class="status success">✅ 모달이 성공적으로 열렸습니다!</div>';
+                        } else {
+                            resultDiv.innerHTML = '<div class="status error">❌ 모달이 열리지 않았습니다. 콘솔 로그를 확인하세요.</div>';
+                        }
+                    }, 1500); // 재시도 로직 대기
+                } else {
+                    resultDiv.innerHTML = '<div class="status error">❌ showZodiacModal 함수가 없습니다.</div>';
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="status error">❌ 오류 발생: ${error.message}</div>`;
+            }
+        }
+        
+        // 1초마다 상태 업데이트
+        setInterval(checkStatus, 1000);
+    </script>
+    
+    <style>
+        /* 모달 스타일 추가 */
+        .zodiac-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+            animation: slideIn 0.3s ease;
+        }
+        
+        .modal-close {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            color: #aaa;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-close:hover {
+            color: #000;
+        }
+    </style>
+</body>
+</html>

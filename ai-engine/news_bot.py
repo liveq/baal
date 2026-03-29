@@ -35,7 +35,9 @@ PROPER_NAMES = {
     "스페이스엑스": "스페이스X", "스페이스 엑스": "스페이스X",
     "틱톡": "틱톡", "넷플릭스": "넷플릭스",
     "온리팬즈": "온리팬스", "온니팬스": "온리팬스",
-    # 인물
+    # 인물 (2026년 기준)
+    "이명박 대통령": "이재명 대통령", "이명박": "이재명",  # Q 오역 방지
+    "문재인 대통령": "이재명 대통령",
     "트럼프": "트럼프", "바이든": "바이든", "일론 머스크": "일론 머스크",
     "젤렌스키": "젤렌스키", "젤렌스키이": "젤렌스키", "제렌스키": "젤렌스키",
     "제린스키": "젤렌스키", "젤렌스키야": "젤렌스키",
@@ -347,6 +349,12 @@ def translate_story(story):
 - 고유명사는 한국식 표기 (Pentagon→펜타곤)
 - 자연스러운 한국어. 번역투 금지. 숫자 띄어쓰기 하지 마 (10조, 1년 O / 10 조, 1 년 X)
 - 이모지 금지
+- 중국어/일본어 표현 절대 금지
+[중요 - 2026년 현재 정보]
+- 한국 대통령: 이재명 (Lee Jae Myung). 이명박/박근혜/윤석열은 전직 대통령.
+- 미국 대통령: 트럼프 (2기)
+- 우크라이나 대통령: 젤렌스키
+- 원문의 인명을 정확히 음역할 것. 모르면 영어 그대로 표기.
 """
     result = translate(prompt)
     if result:
@@ -474,6 +482,11 @@ def run_news_cycle():
                 continue
         if re.search(r'[\u4e00-\u9fff]', title):
             print(f"  [SKIP] 중국어 포함")
+            continue
+        # 모델 출력 오염 필터
+        pollution = ['Thinking Process', 'thinking process', "Here's", "I'll", "Let me", "Sure,"]
+        if any(p in title for p in pollution) or any(p in content for p in pollution):
+            print(f"  [SKIP] 모델 출력 오염")
             continue
 
         # 원문 링크 보장 — Q가 빼먹어도 코드에서 강제 추가

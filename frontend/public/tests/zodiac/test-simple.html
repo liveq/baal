@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>별자리 운세 테스트</title>
+</head>
+<body>
+    <h1>별자리 운세 시스템 테스트</h1>
+    
+    <button onclick="testSelectZodiac(1)">양자리 테스트</button>
+    <button onclick="testSelectZodiac(2)">황소자리 테스트</button>
+    
+    <div id="result"></div>
+    
+    <script src="../api/zodiac-api-real.js"></script>
+    <script src="zodiac.js"></script>
+    <script>
+        function testSelectZodiac(id) {
+            console.log('Selecting zodiac:', id);
+            if (typeof selectZodiac === 'function') {
+                selectZodiac(id);
+            } else if (typeof window.selectZodiac === 'function') {
+                window.selectZodiac(id);
+            } else {
+                console.error('selectZodiac is not defined');
+                console.log('Available functions:', Object.keys(window).filter(k => k.includes('Zodiac')));
+            }
+        }
+        
+        // 페이지 로드 후 확인
+        window.addEventListener('load', () => {
+            console.log('Page loaded');
+            console.log('zodiacAPI exists?', typeof zodiacAPI !== 'undefined');
+            console.log('selectZodiac exists?', typeof selectZodiac !== 'undefined');
+            console.log('window.selectZodiac exists?', typeof window.selectZodiac !== 'undefined');
+        });
+    </script>
+</body>
+</html>

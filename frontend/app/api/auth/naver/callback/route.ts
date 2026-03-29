@@ -6,7 +6,7 @@ export async function GET(request: NextRequest) {
   const code = searchParams.get('code')
   const state = searchParams.get('state')
   const savedState = request.cookies.get('naver_oauth_state')?.value
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:4000'
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://baal.co.kr'
 
   // CSRF 검증
   if (!state || !savedState || state !== savedState) {

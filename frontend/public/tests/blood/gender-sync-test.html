@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>성별 동기화 테스트</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-section { 
+            margin: 20px 0; 
+            padding: 15px; 
+            border: 1px solid #ddd; 
+            border-radius: 5px; 
+        }
+        .gender-btn, .gender-btn-new, .gender-tab-btn, 
+        .gender-btn-compact, .gender-btn-mini { 
+            margin: 5px; 
+            padding: 10px 15px; 
+            border: none; 
+            background: #f0f0f0; 
+            cursor: pointer; 
+            border-radius: 3px; 
+        }
+        .gender-btn.active, .gender-btn-new.active, .gender-tab-btn.active,
+        .gender-btn-compact.active, .gender-btn-mini.active { 
+            background: #4CAF50; 
+            color: white; 
+        }
+        .nav-trait { 
+            font-weight: bold; 
+            color: #666; 
+        }
+        .debug-output {
+            background: #f9f9f9;
+            padding: 10px;
+            border-radius: 3px;
+            margin: 10px 0;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <h1>혈액형 테스트 - 성별 동기화 시스템 테스트</h1>
+    
+    <div class="test-section">
+        <h3>1. 메인 사이드바 성별 버튼</h3>
+        <button class="gender-btn active" id="gender-male" onclick="selectGender('male')">남성</button>
+        <button class="gender-btn" id="gender-female" onclick="selectGender('female')">여성</button>
+    </div>
+    
+    <div class="test-section">
+        <h3>2. 탭 영역 성별 토글 버튼</h3>
+        <button class="gender-tab-btn active" onclick="selectGenderTab('male')" title="남성">♂</button>
+        <button class="gender-tab-btn" onclick="selectGenderTab('female')" title="여성">♀</button>
+    </div>
+    
+    <div class="test-section">
+        <h3>3. 개별 혈액형 성별 버튼</h3>
+        <div>
+            A형: 
+            <button class="gender-btn-new male" onclick="selectBloodTypeAndGender('A', 'male')" data-blood="A" data-gender="male">남성</button>
+            <button class="gender-btn-new female" onclick="selectBloodTypeAndGender('A', 'female')" data-blood="A" data-gender="female">여성</button>
+        </div>
+        <div>
+            B형: 
+            <button class="gender-btn-new male" onclick="selectBloodTypeAndGender('B', 'male')" data-blood="B" data-gender="male">남성</button>
+            <button class="gender-btn-new female" onclick="selectBloodTypeAndGender('B', 'female')" data-blood="B" data-gender="female">여성</button>
+        </div>
+        <div>
+            O형: 
+            <button class="gender-btn-new male" onclick="selectBloodTypeAndGender('O', 'male')" data-blood="O" data-gender="male">남성</button>
+            <button class="gender-btn-new female" onclick="selectBloodTypeAndGender('O', 'female')" data-blood="O" data-gender="female">여성</button>
+        </div>
+        <div>
+            AB형: 
+            <button class="gender-btn-new male" onclick="selectBloodTypeAndGender('AB', 'male')" data-blood="AB" data-gender="male">남성</button>
+            <button class="gender-btn-new female" onclick="selectBloodTypeAndGender('AB', 'female')" data-blood="AB" data-gender="female">여성</button>
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <h3>4. 컴팩트 성별 버튼</h3>
+        <button class="gender-btn-compact" data-gender="male">남성 (컴팩트)</button>
+        <button class="gender-btn-compact" data-gender="female">여성 (컴팩트)</button>
+    </div>
+    
+    <div class="test-section">
+        <h3>5. 미니 성별 버튼</h3>
+        <button class="gender-btn-mini" data-gender="male">남성 (미니)</button>
+        <button class="gender-btn-mini" data-gender="female">여성 (미니)</button>
+    </div>
+    
+    <div class="test-section">
+        <h3>6. 성별별 특성 텍스트</h3>
+        <div>
+            A형: <span class="nav-trait" data-blood="A">세심함</span><br>
+            B형: <span class="nav-trait" data-blood="B">창의적</span><br>
+            O형: <span class="nav-trait" data-blood="O">추진력</span><br>
+            AB형: <span class="nav-trait" data-blood="AB">논리적</span>
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <h3>7. 디버그 정보</h3>
+        <button onclick="debugGenderSystem()">디버그 출력</button>
+        <button onclick="showCurrentState()">현재 상태 보기</button>
+        <div id="debug-output" class="debug-output"></div>
+    </div>
+    
+    <script src="blood-type-sidebar.js"></script>
+    <script>
+        // 현재 상태 표시
+        function showCurrentState() {
+            const output = document.getElementById('debug-output');
+            output.innerHTML = `
+                현재 혈액형: ${currentBloodType || '선택되지 않음'}<br>
+                현재 성별: ${currentGender}<br>
+                localStorage 성별: ${localStorage.getItem('selectedGender') || '저장되지 않음'}<br>
+                활성화된 성별 버튼 수: ${document.querySelectorAll('[class*="gender-btn"].active').length}개
+            `;
+        }
+        
+        // 페이지 로드 시 상태 표시
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(showCurrentState, 100);
+        });
+    </script>
+</body>
+</html>

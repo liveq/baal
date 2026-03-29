@@ -1,3 +1,5 @@
+export const revalidate = 30
+
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { formatTimeAgo } from '@/lib/utils/time'
@@ -35,7 +37,8 @@ const boardInfo: Record<string, { title: string; description: string }> = {
   best: { title: '베스트', description: '인기 게시글 모음' }
 }
 
-const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
+const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
 const POSTS_PER_PAGE = 20
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -76,17 +79,38 @@ export default async function BoardPage({ params, searchParams }: PageProps) {
   ]
 
   try {
-    const sort = type === 'best' ? '&min_upvotes=10&min_comments=8' : ''
-    const boardParam = type === 'best' ? '' : `&board=${type}`
-    const catFilter = (type === 'hardware' && activeCat) ? `&news_category=${encodeURIComponent(activeCat)}` : ''
+    const offset = (page - 1) * POSTS_PER_PAGE
+    const select = 'id,title,board_type,author_nickname,created_at,comment_count,upvotes,downvotes,view_count,is_pinned,news_category'
+    let filters = `is_deleted=eq.false`
+    if (type === 'best') {
+      filters += `&upvotes=gte.10`
+    } else {
+      filters += `&board_type=eq.${type}`
+    }
+    if (type === 'hardware' && activeCat) {
+      filters += `&news_category=eq.${encodeURIComponent(activeCat)}`
+    }
+    const order = 'order=created_at.desc'
+
+    // Fetch posts
     const res = await fetch(
-      `${API}/api/community/posts?page=${page}&limit=${POSTS_PER_PAGE}${boardParam}${sort}${catFilter}`,
-      { cache: 'no-store' }
+      `${SUPABASE_URL}/rest/v1/posts?${filters}&${order}&offset=${offset}&limit=${POSTS_PER_PAGE}&select=${select}`,
+      {
+        headers: {
+          apikey: SUPABASE_KEY,
+          Authorization: `Bearer ${SUPABASE_KEY}`,
+          Prefer: 'count=exact',
+        },
+        next: { revalidate: 30 },
+      }
     )
     if (res.ok) {
-      const data = await res.json()
-      posts = data.posts || []
-      total = data.total || 0
+      posts = await res.json()
+      const contentRange = res.headers.get('content-range')
+      if (contentRange) {
+        const match = contentRange.match(/\/(\d+)/)
+        if (match) total = parseInt(match[1], 10)
+      }
     }
   } catch {}
 

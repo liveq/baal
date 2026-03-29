@@ -29,12 +29,18 @@ export default function CommentSection({ postId, initialCommentCount }: CommentS
   const loadComments = async () => {
     try {
       setLoading(true)
-      const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'
-      const res = await fetch(`${API}/api/community/posts/${postId}/comments`)
+      const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
+      const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
+      const res = await fetch(
+        `${SUPABASE_URL}/rest/v1/comments?post_id=eq.${postId}&is_deleted=eq.false&order=created_at.asc&select=id,post_id,content,author_nickname,author_id,created_at,upvotes`,
+        {
+          headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` },
+        }
+      )
       const data = await res.json()
-      if (data.comments) {
-        setComments(data.comments)
-        setCommentCount(data.comments.length)
+      if (Array.isArray(data)) {
+        setComments(data)
+        setCommentCount(data.length)
       }
     } catch (error) {
       console.error('Failed to load comments:', error)
@@ -56,14 +62,21 @@ export default function CommentSection({ postId, initialCommentCount }: CommentS
 
     setSubmitting(true)
     try {
-      const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'
-      const res = await fetch(`${API}/api/community/posts/${postId}/comments`, {
+      const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
+      const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/comments`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          apikey: SUPABASE_KEY,
+          Authorization: `Bearer ${SUPABASE_KEY}`,
+          'Content-Type': 'application/json',
+          Prefer: 'return=representation',
+        },
         body: JSON.stringify({
+          post_id: postId,
           content,
-          parent_id: parentId,
-          anonymous_nickname: !user ? anonymousNickname.trim() : undefined
+          author_nickname: user?.email?.split('@')[0] || anonymousNickname.trim() || '익명',
+          author_id: user?.id || null,
         })
       })
 

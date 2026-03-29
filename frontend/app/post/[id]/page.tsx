@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 import { notFound } from 'next/navigation'
 import { formatTimeAgo } from '@/lib/utils/time'
 import Link from 'next/link'
@@ -23,7 +25,8 @@ const boardInfo: Record<string, { title: string; description: string }> = {
   free: { title: '자유', description: '자유로운 소통 공간' }
 }
 
-const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
+const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
 
 export default async function PostDetailPage({ params }: PageProps) {
   const { id } = await params
@@ -32,11 +35,42 @@ export default async function PostDetailPage({ params }: PageProps) {
   let comments: any[] = []
 
   try {
-    const res = await fetch(`${API}/api/community/posts/${id}`, { cache: 'no-store' })
-    if (!res.ok) return notFound()
-    const data = await res.json()
-    post = data.post
-    comments = data.comments || []
+    // Fetch post
+    const postRes = await fetch(
+      `${SUPABASE_URL}/rest/v1/posts?id=eq.${id}&is_deleted=eq.false&select=id,title,content,board_type,author_nickname,author_id,created_at,updated_at,comment_count,upvotes,downvotes,view_count,anonymous_password,news_category&limit=1`,
+      {
+        headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` },
+        cache: 'no-store',
+      }
+    )
+    if (!postRes.ok) return notFound()
+    const postData = await postRes.json()
+    if (!postData || postData.length === 0) return notFound()
+    post = postData[0]
+
+    // Increment view count via RPC or direct update
+    fetch(`${SUPABASE_URL}/rest/v1/posts?id=eq.${id}`, {
+      method: 'PATCH',
+      headers: {
+        apikey: SUPABASE_KEY,
+        Authorization: `Bearer ${SUPABASE_KEY}`,
+        'Content-Type': 'application/json',
+        Prefer: 'return=minimal',
+      },
+      body: JSON.stringify({ view_count: (post.view_count || 0) + 1 }),
+    }).catch(() => {})
+
+    // Fetch comments
+    const commRes = await fetch(
+      `${SUPABASE_URL}/rest/v1/comments?post_id=eq.${id}&is_deleted=eq.false&order=created_at.asc&select=id,post_id,content,author_nickname,author_id,created_at,upvotes`,
+      {
+        headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` },
+        cache: 'no-store',
+      }
+    )
+    if (commRes.ok) {
+      comments = await commRes.json()
+    }
   } catch {
     return notFound()
   }
@@ -49,10 +83,16 @@ export default async function PostDetailPage({ params }: PageProps) {
   // 같은 게시판 다른 글
   let relatedPosts: any[] = []
   try {
-    const res = await fetch(`${API}/api/community/posts?board=${post.board_type}&limit=10`, { cache: 'no-store' })
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/posts?board_type=eq.${post.board_type}&is_deleted=eq.false&order=created_at.desc&limit=10&select=id,title,author_nickname,created_at,comment_count`,
+      {
+        headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` },
+        cache: 'no-store',
+      }
+    )
     if (res.ok) {
       const data = await res.json()
-      relatedPosts = (data.posts || [])
+      relatedPosts = (data || [])
         .filter((p: any) => p.id !== id)
         .map((p: any) => ({
           id: p.id,

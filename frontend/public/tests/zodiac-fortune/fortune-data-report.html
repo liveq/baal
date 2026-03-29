@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>쥐띠 운세 데이터 완성도 보고서</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans KR', sans-serif;
+            background: #fff;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .info {
+            background: #f0f0f0;
+            padding: 10px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            color: #666;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            font-size: 14px;
+            border: 2px solid #333;
+        }
+
+        th, td {
+            border: 1px solid #999;
+            padding: 12px 8px;
+            text-align: center;
+        }
+
+        th {
+            background: #4472C4;
+            color: white;
+            font-weight: 600;
+        }
+
+        .category-col {
+            background: #D9E1F2;
+            font-weight: 600;
+            text-align: left;
+            padding-left: 15px;
+        }
+
+        .complete {
+            background: #C6EFCE;
+            color: #006100;
+            font-weight: 600;
+        }
+
+        .incomplete {
+            background: #FFC7CE;
+            color: #9C0006;
+            font-weight: 600;
+        }
+
+        .partial {
+            background: #FFEB9C;
+            color: #9C5700;
+            font-weight: 600;
+        }
+
+        .year-header {
+            background: #5B9BD5;
+            color: white;
+            font-weight: 600;
+        }
+
+        tbody tr:hover {
+            background: #f5f5f5;
+        }
+
+        .note {
+            font-size: 12px;
+            color: #666;
+            margin-top: 10px;
+            padding: 10px;
+            background: #f9f9f9;
+            border-left: 3px solid #4472C4;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 30px 0 15px 0;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🐭 쥐띠 운세 데이터 완성도 보고서</h1>
+        <div class="info">
+            생성일: 2025-10-15 | 최종 업데이트: 2025-10-16 | 데이터 기준: 남녀 각각 집계 | 6개 년도 (2008, 1996, 1984, 1972, 1960, 1948) | ✅ 궁합, 평생, 일년, 주간, 월간 완성!
+        </div>
+
+        <!-- 남성 데이터 -->
+        <div class="section-title">남성 (Male) 데이터 완성도</div>
+        <table>
+            <thead>
+                <tr>
+                    <th rowspan="2">카테고리</th>
+                    <th rowspan="2">필요 문구 수<br>(1인 기준)</th>
+                    <th colspan="6">출생 년도별 완성 현황</th>
+                    <th rowspan="2">전체<br>완성률</th>
+                </tr>
+                <tr class="year-header">
+                    <th>2008년<br>(17세)</th>
+                    <th>1996년<br>(29세)</th>
+                    <th>1984년<br>(41세)</th>
+                    <th>1972년<br>(53세)</th>
+                    <th>1960년<br>(65세)</th>
+                    <th>1948년<br>(77세)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="category-col">궁합 (compatibility)</td>
+                    <td>12개 띠<br>(자신 포함)</td>
+                    <td class="complete">12/12</td>
+                    <td class="complete">12/12</td>
+                    <td class="complete">12/12</td>
+                    <td class="complete">12/12</td>
+                    <td class="complete">12/12</td>
+                    <td class="complete">12/12</td>
+                    <td class="complete">100%</td>
+                </tr>
+                <tr>
+                    <td class="category-col">평생 (lifetime)</td>
+                    <td>11개 섹션</td>
+                    <td class="complete">11/11</td>
+                    <td class="complete">11/11</td>
+                    <td class="complete">11/11</td>
+                    <td class="complete">11/11</td>
+                    <td class="complete">11/11</td>
+                    <td class="complete">11/11</td>
+                    <td class="complete">100%</td>
+                </tr>
+                <tr>
+                    <td class="category-col">일년 (yearly)</td>
+                    <td>17개 섹션</td>
+                    <td class="complete">17/17</td>
+                    <td class="complete">17/17</td>
+                    <td class="complete">17/17</td>
+                    <td class="complete">17/17</td>
+                    <td class="complete">17/17</td>
+                    <td class="complete">17/17</td>
+                    <td class="complete">100%</td>
+                </tr>
+                <tr>
+                    <td class="category-col">한달 (monthly)</td>
+                    <td>7개 섹션 × 12개월<br>= 84개 섹션</td>
+                    <td class="complete">84/84</td>
+                    <td class="complete">84/84</td>
+                    <td class="complete">84/84</td>
+                    <td class="complete">84/84</td>
+                    <td class="complete">84/84</td>
+                    <td class="complete">84/84</td>
+                    <td class="complete">100%</td>
+                </tr>
+                <tr>
+                    <td class="category-col">주간 (weekly)</td>
+                    <td>7개 요일 패턴<br>= 7개 섹션</td>
+                    <td class="complete">7/7</td>
+                    <td class="complete">7/7</td>
+                    <td class="complete">7/7</td>
+                    <td class="complete">7/7</td>
+                    <td class="complete">7/7</td>
+                    <td class="complete">7/7</td>
+                    <td class="incomplete">100%</td>
+                </tr>
+                <tr>
+                    <td class="category-col">일자 (daily)</td>
+                    <td>365개 일자</td>
+                    <td class="incomplete">0/365</td>
+                    <td class="incomplete">0/365</td>
+                    <td class="incomplete">0/365</td>
+                    <td class="incomplete">0/365</td>
+                    <td class="incomplete">0/365</td>
+                    <td class="incomplete">0/365</td>
+                    <td class="incomplete">0%</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- 여성 데이터 -->
+        <div class="section-title">여성 (Female) 데이터 완성도</div>
+        <table>
+            <thead>
+                <tr>
+                    <th rowspan="2">카테고리</th>
+                    <th rowspan="2">필요 문구 수<br>(1인 기준)</th>
+                    <th colspan="6">출생 년도별 완성 현황</th>
+                    <th rowspan="2">전체<br>완성률</th>
+                </tr>
+                <tr class="year-header">
+                    <th>2008년<br>(17세)</th>
+                    <th>1996년<br>(29세)</th>
+                    <th>1984년<br>(41세)</th>
+                    <th>1972년<br>(53세)</th>
+                    <th>1960년<br>(65세)</th>
+                    <th>1948년<br>(77세)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="category-col">궁합 (compatibility)</td>
+                    <td>12개 띠<br>(자신 포함)</td>
+                    <td class="complete">12/12</td>
+                    <td class="complete">12/12</td>
+                    <td class="complete">12/12</td>
+                    <td class="complete">12/12</td>
+                    <td class="complete">12/12</td>
+                    <td class="complete">12/12</td>
+                    <td class="complete">100%</td>
+                </tr>
+                <tr>
+                    <td class="category-col">평생 (lifetime)</td>
+                    <td>11개 섹션</td>
+                    <td class="complete">11/11</td>
+                    <td class="complete">11/11</td>
+                    <td class="complete">11/11</td>
+                    <td class="complete">11/11</td>
+                    <td class="complete">11/11</td>
+                    <td class="complete">11/11</td>
+                    <td class="complete">100%</td>
+                </tr>
+                <tr>
+                    <td class="category-col">일년 (yearly)</td>
+                    <td>17개 섹션</td>
+                    <td class="complete">17/17</td>
+                    <td class="complete">17/17</td>
+                    <td class="complete">17/17</td>
+                    <td class="complete">17/17</td>
+                    <td class="complete">17/17</td>
+                    <td class="complete">17/17</td>
+                    <td class="complete">100%</td>
+                </tr>
+                <tr>
+                    <td class="category-col">한달 (monthly)</td>
+                    <td>7개 섹션 × 12개월<br>= 84개 섹션</td>
+                    <td class="complete">84/84</td>
+                    <td class="complete">84/84</td>
+                    <td class="complete">84/84</td>
+                    <td class="complete">84/84</td>
+                    <td class="complete">84/84</td>
+                    <td class="complete">84/84</td>
+                    <td class="complete">100%</td>
+                </tr>
+                <tr>
+                    <td class="category-col">주간 (weekly)</td>
+                    <td>7개 요일 패턴<br>= 7개 섹션</td>
+                    <td class="complete">7/7</td>
+                    <td class="complete">7/7</td>
+                    <td class="complete">7/7</td>
+                    <td class="complete">7/7</td>
+                    <td class="complete">7/7</td>
+                    <td class="complete">7/7</td>
+                    <td class="incomplete">100%</td>
+                </tr>
+                <tr>
+                    <td class="category-col">일자 (daily)</td>
+                    <td>365개 일자</td>
+                    <td class="incomplete">0/365</td>
+                    <td class="incomplete">0/365</td>
+                    <td class="incomplete">0/365</td>
+                    <td class="incomplete">0/365</td>
+                    <td class="incomplete">0/365</td>
+                    <td class="incomplete">0/365</td>
+                    <td class="incomplete">0%</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- 전체 통합 요약 -->
+        <div class="section-title">전체 통합 요약</div>
+        <table>
+            <thead>
+                <tr>
+                    <th>구분</th>
+                    <th>완성</th>
+                    <th>미완성</th>
+                    <th>완성률</th>
+                    <th>비고</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="category-col">총 파일 수</td>
+                    <td class="complete">192개</td>
+                    <td class="complete">0개</td>
+                    <td class="incomplete">0%</td>
+                    <td>yearly(12) + lifetime(12) + monthly(144) + daily_weekly(12) + compatibility(12)</td>
+                </tr>
+                <tr>
+                    <td class="category-col">궁합 데이터</td>
+                    <td class="complete">12개</td>
+                    <td class="complete">0개</td>
+                    <td class="incomplete">0%</td>
+                    <td>쥐 × 12띠 (쥐, 소, 호랑이, 토끼, 용, 뱀, 말, 양, 원숭이, 닭, 개, 돼지)</td>
+                </tr>
+                <tr>
+                    <td class="category-col">평생 운세</td>
+                    <td class="complete">132개 섹션</td>
+                    <td class="complete">0개</td>
+                    <td class="incomplete">0%</td>
+                    <td>11개 섹션 × 12명 (남녀 각 6년도) 완성</td>
+                </tr>
+                <tr>
+                    <td class="category-col">일년 운세</td>
+                    <td class="complete">204개 섹션</td>
+                    <td class="complete">0개</td>
+                    <td class="incomplete">0%</td>
+                    <td>17개 섹션 × 12명 (남녀 각 6년도) 완성</td>
+                </tr>
+                <tr>
+                    <td class="category-col">한달 운세</td>
+                    <td class="complete">1,008개 섹션</td>
+                    <td class="complete">0개</td>
+                    <td class="complete">100%</td>
+                    <td>144개 파일 완성 (2025-10-16) - 나이별 어조 차별화 적용</td>
+                </tr>
+                <tr>
+                    <td class="category-col">주간 운세</td>
+                    <td class="complete">84개 섹션</td>
+                    <td class="complete">0개</td>
+                    <td class="incomplete">0%</td>
+                    <td>7개 패턴 × 12명 (남녀 각 6년도) 완성</td>
+                </tr>
+                <tr>
+                    <td class="category-col">일자 운세</td>
+                    <td class="incomplete">0개</td>
+                    <td class="incomplete">4,380개</td>
+                    <td class="incomplete">0%</td>
+                    <td>365일 × 6년도 × 남녀 = 미생성</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="note">
+            <strong>📌 참고사항</strong><br>
+            • 초록색: 완성 (100%)<br>
+            • 빨간색: 미완성 (0%)<br>
+            • <strong>✅ 월간운세 144개 파일 완성!</strong> (2025-10-16) - 6년도 × 남녀 × 12개월, 나이별 어조 차별화 (17-41세 반말, 53-77세 존댓말)<br>
+            • compatibility는 연도/성별 무관하게 쥐띠 × 12띠 공통 사용 (12개 파일)<br>
+            • daily_weekly는 현재 주간 패턴만 있고, 일자별(365일) 데이터는 미생성<br>
+            • ✅ 궁합 데이터: 쥐띠 × 12띠 (자신 포함) = 12개 파일 완성! (2025-10-15)<br>
+            • ✅ 평생운세: 6년도 × 남녀 = 12개 파일 완성! (나이별 어조 적용)<br>
+            • ✅ 일년운세: 6년도 × 남녀 = 12개 파일 완성! (나이별 어조 적용)<br>
+            • ✅ 주간운세: 6년도 × 남녀 = 12개 파일 완성! (나이별 어조 적용)<br>
+            • ✅ 월간운세: 6년도 × 남녀 × 12개월 = 144개 파일 완성! (나이별 어조 적용)<br>
+            • ❌ 일자 데이터: 365일 × 6년도 × 남녀 = 4,380개 섹션 미생성<br>
+            • 📋 매뉴얼 준수: 부정/차별/성차별 표현 금지, 유쾌/위안/희망 톤 적용
+        </div>
+
+    </div>
+</body>
+</html>

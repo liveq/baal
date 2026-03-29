@@ -58,8 +58,8 @@ def call_q(prompt):
 def fill_best_comments(max_posts=5, max_per_post=10):
     """최근 글 중 댓글 부족한 글에 추가 댓글 — 오래된 글에는 안 달림"""
     from datetime import datetime, timedelta, timezone
-    # 최근 3시간 이내 글만 대상 (현실적 시간 window)
-    cutoff = (datetime.now(timezone.utc) - timedelta(hours=3)).strftime("%Y-%m-%dT%H:%M:%SZ")
+    # 최근 1시간 이내 글만 대상 — 오래된 글은 자연스럽게 묻힘
+    cutoff = (datetime.now(timezone.utc) - timedelta(hours=1)).strftime("%Y-%m-%dT%H:%M:%SZ")
     posts = requests.get(
         f"{SUPABASE_URL}/rest/v1/posts?select=id,title,content,upvotes,comment_count"
         f"&is_deleted=eq.false&created_at=gte.{cutoff}&order=created_at.desc&limit=20",

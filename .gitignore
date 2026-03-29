@@ -21,3 +21,7 @@ chat_bot.log
 # Claude sessions
 claude_posts.json
 self_improve_report.txt
+
+# Wiki raw data (large files)
+ai-engine/knowledge/wiki_raw/
+ai-engine/knowledge/kowiki-dump.xml.bz2

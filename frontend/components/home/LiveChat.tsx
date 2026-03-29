@@ -5,7 +5,7 @@ import { useAuthStore } from '@/store/auth-store'
 
 const WS_URL = (typeof window !== 'undefined' && window.location.hostname === 'localhost')
   ? 'ws://localhost:8080/api/chat/lobby'
-  : 'wss://api.baal.co.kr/api/chat/lobby'
+  : 'wss://baal-api.fly.dev/api/chat/lobby'
 
 interface ChatMsg {
   type: string
