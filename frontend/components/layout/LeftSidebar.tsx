@@ -63,7 +63,8 @@ export default function LeftSidebar({ isOpen, onClose }: LeftSidebarProps) {
 
   // 유용한도구 항목 (내부 임베드)
   const toolItems = [
-    { name: 'CAD 뷰어', url: 'https://cad.baal.co.kr', external: true, embedUrl: '/tools/cad' },
+    { name: 'CAD 뷰어', url: '/tools/cad', external: true, extUrl: 'https://cad.baal.co.kr' },
+    { name: '음악 생성기', url: '/tools/music', external: false },
     { name: '도면 배치', url: '/tools/plan', external: false },
     { name: '텍스트 분할기', url: '/tools/split', external: false },
     { name: 'PDF 변환', url: '/tools/pdf', external: false },
@@ -84,6 +85,12 @@ export default function LeftSidebar({ isOpen, onClose }: LeftSidebarProps) {
     { name: '컬러 피커', url: '/tools/color', external: false },
     { name: '정규식 테스터', url: '/tools/regex', external: false },
     { name: '파일 변환', url: '/tools/convert', external: false },
+    { name: '문서 허브', url: '/tools/docs', external: true, extUrl: 'https://docs.baal.co.kr' },
+    { name: '워드 뷰어', url: '/tools/doc', external: true, extUrl: 'https://doc.baal.co.kr' },
+    { name: '한글 뷰어', url: '/tools/hwp', external: true, extUrl: 'https://hwp.baal.co.kr' },
+    { name: '엑셀 뷰어', url: '/tools/sheet', external: true, extUrl: 'https://sheet.baal.co.kr' },
+    { name: 'PPT 뷰어', url: '/tools/slide', external: true, extUrl: 'https://slide.baal.co.kr' },
+    { name: '코드 뷰어', url: '/tools/code', external: true, extUrl: 'https://code.baal.co.kr' },
   ]
 
   // TOP 5 정부서비스
@@ -497,17 +504,17 @@ export default function LeftSidebar({ isOpen, onClose }: LeftSidebarProps) {
                     key={idx}
                     className="px-5 py-3 transition-all duration-200 text-sm text-baal-text-dark border-l-[3px] border-transparent hover:bg-baal-bg-gray hover:border-l-baal-gold hover:text-baal-gold flex justify-between items-center group"
                   >
-                    <Link href={item.embedUrl || `/tools/${item.url.split('//')[1]?.split('.')[0] || 'tool'}`}>
+                    <Link href={item.url} className="flex-1">
                       <span>{item.name}</span>
                     </Link>
                     <span className="flex items-center gap-1.5">
                       <Link
-                        href={item.embedUrl || `/tools/${item.url.split('//')[1]?.split('.')[0] || 'tool'}`}
+                        href={item.url}
                         className="w-6 h-6 flex items-center justify-center rounded text-[11px] text-baal-text-light hover:text-baal-gold hover:bg-baal-bg-section transition-all"
-                        title="임베디드로 보기"
+                        title="현재 창에서 보기"
                       >→</Link>
                       <a
-                        href={item.url}
+                        href={item.extUrl || item.url}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="w-6 h-6 flex items-center justify-center rounded text-[11px] text-baal-text-light hover:text-baal-gold hover:bg-baal-bg-section transition-all"
