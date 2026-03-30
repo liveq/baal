@@ -7,6 +7,8 @@ import { showToast } from '@/lib/utils/toast'
 
 type TabType = 'psychology' | 'tools' | 'government' | 'favorites'
 type FavoritesFilterType = 'all' | 'psychology' | 'tools' | 'government'
+type ToolViewMode = 'all' | 'category'
+type ToolSortMode = 'default' | 'asc' | 'desc' | 'views'
 
 interface LeftSidebarProps {
   isOpen: boolean
@@ -30,6 +32,14 @@ export default function LeftSidebar({ isOpen, onClose }: LeftSidebarProps) {
     favorites: []
   })
   const [favoritesFilter, setFavoritesFilter] = useState<FavoritesFilterType>('all')
+  const [toolViewMode, setToolViewMode] = useState<ToolViewMode>('all')
+  const [toolSortMode, setToolSortMode] = useState<ToolSortMode>('default')
+  const [toolViews, setToolViews] = useState<Record<string, number>>(() => {
+    if (typeof window !== 'undefined') {
+      try { return JSON.parse(localStorage.getItem('toolViews') || '{}') } catch { return {} }
+    }
+    return {}
+  })
 
   // 사이드바가 열릴 때 body 스크롤 잠금
   useEffect(() => {
@@ -61,37 +71,58 @@ export default function LeftSidebar({ isOpen, onClose }: LeftSidebarProps) {
     { name: '궁합', url: '/fortune/compat' },
   ]
 
-  // 유용한도구 항목 (내부 임베드)
+  // 유용한도구 항목
   const toolItems = [
-    { name: 'CAD 뷰어', url: '/tools/cad', external: true, extUrl: 'https://cad.baal.co.kr' },
-    { name: '음악 생성기', url: '/tools/music', external: false },
-    { name: '도면 배치', url: '/tools/plan', external: false },
-    { name: '텍스트 분할기', url: '/tools/split', external: false },
-    { name: 'PDF 변환', url: '/tools/pdf', external: false },
-    { name: 'QR 코드', url: '/tools/qr', external: false },
-    { name: 'OCR', url: '/tools/ocr', external: false },
-    { name: '이미지 리사이즈', url: '/tools/resize', external: false },
-    { name: '이미지 압축', url: '/tools/compress', external: false },
-    { name: '배경 제거', url: '/tools/bg', external: false },
-    { name: '업스케일', url: '/tools/upscale', external: false },
-    { name: '바코드', url: '/tools/barcode', external: false },
-    { name: '워터마크', url: '/tools/watermark', external: false },
-    { name: '차트 생성', url: '/tools/chart', external: false },
-    { name: 'CSV 에디터', url: '/tools/csv', external: false },
-    { name: 'JSON 포맷터', url: '/tools/json', external: false },
-    { name: '마크다운', url: '/tools/md', external: false },
-    { name: '해시 생성기', url: '/tools/hash', external: false },
-    { name: 'Base64', url: '/tools/base64', external: false },
-    { name: '컬러 피커', url: '/tools/color', external: false },
-    { name: '정규식 테스터', url: '/tools/regex', external: false },
-    { name: '파일 변환', url: '/tools/convert', external: false },
-    { name: '문서 허브', url: '/tools/docs', external: true, extUrl: 'https://docs.baal.co.kr' },
-    { name: '워드 뷰어', url: '/tools/doc', external: true, extUrl: 'https://doc.baal.co.kr' },
-    { name: '한글 뷰어', url: '/tools/hwp', external: true, extUrl: 'https://hwp.baal.co.kr' },
-    { name: '엑셀 뷰어', url: '/tools/sheet', external: true, extUrl: 'https://sheet.baal.co.kr' },
-    { name: 'PPT 뷰어', url: '/tools/slide', external: true, extUrl: 'https://slide.baal.co.kr' },
-    { name: '코드 뷰어', url: '/tools/code', external: true, extUrl: 'https://code.baal.co.kr' },
+    { name: 'CAD 뷰어', url: '/tools/cad', external: true, extUrl: 'https://cad.baal.co.kr', cat: '뷰어' },
+    { name: '음악 생성기', url: '/tools/music', external: false, cat: '미디어' },
+    { name: '도면 배치', url: '/tools/plan', external: false, cat: '설계' },
+    { name: '텍스트 분할기', url: '/tools/split', external: false, cat: '텍스트' },
+    { name: 'PDF 변환', url: '/tools/pdf', external: false, cat: '변환' },
+    { name: 'QR 코드', url: '/tools/qr', external: false, cat: '생성' },
+    { name: 'OCR', url: '/tools/ocr', external: false, cat: '이미지' },
+    { name: '이미지 리사이즈', url: '/tools/resize', external: false, cat: '이미지' },
+    { name: '이미지 압축', url: '/tools/compress', external: false, cat: '이미지' },
+    { name: '배경 제거', url: '/tools/bg', external: false, cat: '이미지' },
+    { name: '업스케일', url: '/tools/upscale', external: false, cat: '이미지' },
+    { name: '바코드', url: '/tools/barcode', external: false, cat: '생성' },
+    { name: '워터마크', url: '/tools/watermark', external: false, cat: '이미지' },
+    { name: '차트 생성', url: '/tools/chart', external: false, cat: '생성' },
+    { name: 'CSV 에디터', url: '/tools/csv', external: false, cat: '텍스트' },
+    { name: 'JSON 포맷터', url: '/tools/json', external: false, cat: '텍스트' },
+    { name: '마크다운', url: '/tools/md', external: false, cat: '텍스트' },
+    { name: '해시 생성기', url: '/tools/hash', external: false, cat: '개발' },
+    { name: 'Base64', url: '/tools/base64', external: false, cat: '개발' },
+    { name: '컬러 피커', url: '/tools/color', external: false, cat: '개발' },
+    { name: '정규식 테스터', url: '/tools/regex', external: false, cat: '개발' },
+    { name: '파일 변환', url: '/tools/convert', external: false, cat: '변환' },
+    { name: '문서 허브', url: '/tools/docs', external: true, extUrl: 'https://docs.baal.co.kr', cat: '뷰어' },
+    { name: '워드 뷰어', url: '/tools/doc', external: true, extUrl: 'https://doc.baal.co.kr', cat: '뷰어' },
+    { name: '한글 뷰어', url: '/tools/hwp', external: true, extUrl: 'https://hwp.baal.co.kr', cat: '뷰어' },
+    { name: '엑셀 뷰어', url: '/tools/sheet', external: true, extUrl: 'https://sheet.baal.co.kr', cat: '뷰어' },
+    { name: 'PPT 뷰어', url: '/tools/slide', external: true, extUrl: 'https://slide.baal.co.kr', cat: '뷰어' },
+    { name: '코드 뷰어', url: '/tools/code', external: true, extUrl: 'https://code.baal.co.kr', cat: '뷰어' },
   ]
+
+  // 조회수 기록
+  const trackView = (toolUrl: string) => {
+    const updated = { ...toolViews, [toolUrl]: (toolViews[toolUrl] || 0) + 1 }
+    setToolViews(updated)
+    localStorage.setItem('toolViews', JSON.stringify(updated))
+  }
+
+  // 정렬 함수
+  const sortTools = (items: typeof toolItems) => {
+    const sorted = [...items]
+    switch (toolSortMode) {
+      case 'asc': return sorted.sort((a, b) => a.name.localeCompare(b.name, 'ko'))
+      case 'desc': return sorted.sort((a, b) => b.name.localeCompare(a.name, 'ko'))
+      case 'views': return sorted.sort((a, b) => (toolViews[b.url] || 0) - (toolViews[a.url] || 0))
+      default: return sorted
+    }
+  }
+
+  // 카테고리 목록
+  const toolCategories = [...new Set(toolItems.map(t => t.cat))].sort((a, b) => a.localeCompare(b, 'ko'))
 
   // TOP 5 정부서비스
   const topFiveServices = [
@@ -224,7 +255,7 @@ export default function LeftSidebar({ isOpen, onClose }: LeftSidebarProps) {
   if (activeTab === 'psychology') {
     filteredPsychItems = psychologyItems.filter(item => matchSearch(item.name, searchQuery))
   } else if (activeTab === 'tools') {
-    filteredToolItems = toolItems.filter(item => matchSearch(item.name, searchQuery))
+    filteredToolItems = sortTools(toolItems.filter(item => matchSearch(item.name, searchQuery)))
   } else if (activeTab === 'government') {
     filteredGovServices = getFilteredGovServices()
   }
@@ -497,46 +528,61 @@ export default function LeftSidebar({ isOpen, onClose }: LeftSidebarProps) {
         ) : (
           // 유용한도구 — 링크 포함 렌더링
           activeTab === 'tools' ? (
-            filteredToolItems.length > 0 ? (
-              filteredToolItems.map((item, idx) => (
-                item.external ? (
-                  <div
-                    key={idx}
-                    className="px-5 py-3 transition-all duration-200 text-sm text-baal-text-dark border-l-[3px] border-transparent hover:bg-baal-bg-gray hover:border-l-baal-gold hover:text-baal-gold flex justify-between items-center group"
+            <>
+              {/* 정렬 컨트롤 */}
+              <div className="px-4 py-2 flex items-center gap-1.5 border-b border-baal-border bg-baal-bg-light">
+                <button
+                  onClick={() => setToolViewMode(toolViewMode === 'all' ? 'category' : 'all')}
+                  className={`px-2 py-1 rounded text-[11px] font-medium transition-all ${
+                    toolViewMode === 'category' ? 'bg-baal-gold text-white' : 'bg-white text-baal-text-gray border border-baal-input-border hover:border-baal-gold hover:text-baal-gold'
+                  }`}
+                >
+                  {toolViewMode === 'all' ? '전체' : '카테고리'}
+                </button>
+                <span className="text-baal-text-light text-[10px]">|</span>
+                {([['default', '기본'], ['asc', '가나다'], ['desc', '가나다↓'], ['views', '조회수']] as const).map(([key, label]) => (
+                  <button
+                    key={key}
+                    onClick={() => setToolSortMode(key)}
+                    className={`px-2 py-1 rounded text-[11px] font-medium transition-all ${
+                      toolSortMode === key ? 'bg-baal-gold text-white' : 'bg-white text-baal-text-gray border border-baal-input-border hover:border-baal-gold hover:text-baal-gold'
+                    }`}
                   >
-                    <Link href={item.url} className="flex-1">
-                      <span>{item.name}</span>
-                    </Link>
-                    <span className="flex items-center gap-1.5">
-                      <Link
-                        href={item.url}
-                        className="w-6 h-6 flex items-center justify-center rounded text-[11px] text-baal-text-light hover:text-baal-gold hover:bg-baal-bg-section transition-all"
-                        title="현재 창에서 보기"
-                      >→</Link>
-                      <a
-                        href={item.extUrl || item.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="w-6 h-6 flex items-center justify-center rounded text-[11px] text-baal-text-light hover:text-baal-gold hover:bg-baal-bg-section transition-all"
-                        title="새 탭에서 열기"
-                      >↗</a>
-                    </span>
-                  </div>
-                ) : (
-                  <Link
-                    key={idx}
-                    href={item.url}
-                    className="px-5 py-3 cursor-pointer transition-all duration-200 text-sm text-baal-text-dark border-l-[3px] border-transparent hover:bg-baal-bg-gray hover:border-l-baal-gold hover:text-baal-gold flex justify-between items-center group block"
-                  >
-                    <span>{item.name}</span>
-                  </Link>
-                )
-              ))
-            ) : (
-              <div className="px-5 py-5 text-center text-baal-text-light text-[13px]">
-                검색 결과가 없습니다
+                    {label}
+                  </button>
+                ))}
               </div>
-            )
+
+              {/* 도구 목록 */}
+              {filteredToolItems.length > 0 ? (
+                toolViewMode === 'category' ? (
+                  // 카테고리 뷰
+                  toolCategories.map(cat => {
+                    const catItems = sortTools(filteredToolItems.filter(t => t.cat === cat))
+                    if (catItems.length === 0) return null
+                    return (
+                      <div key={cat}>
+                        <div className="px-5 py-2 text-[11px] font-semibold text-baal-gold bg-baal-bg-light border-b border-baal-border-gray uppercase tracking-wider">
+                          {cat}
+                        </div>
+                        {catItems.map((item, idx) => (
+                          <ToolRow key={`${cat}-${idx}`} item={item} onTrack={trackView} views={toolViews[item.url] || 0} />
+                        ))}
+                      </div>
+                    )
+                  })
+                ) : (
+                  // 전체 뷰
+                  filteredToolItems.map((item, idx) => (
+                    <ToolRow key={idx} item={item} onTrack={trackView} views={toolViews[item.url] || 0} />
+                  ))
+                )
+              ) : (
+                <div className="px-5 py-5 text-center text-baal-text-light text-[13px]">
+                  검색 결과가 없습니다
+                </div>
+              )}
+            </>
           ) : (
           // 심리테스트 평면 리스트 렌더링
           filteredPsychItems.length > 0 ? (
@@ -557,5 +603,48 @@ export default function LeftSidebar({ isOpen, onClose }: LeftSidebarProps) {
         )}
       </div>
     </div>
+  )
+}
+
+// 도구 항목 렌더링 컴포넌트
+function ToolRow({ item, onTrack, views }: { item: any; onTrack: (url: string) => void; views: number }) {
+  const handleClick = () => onTrack(item.url)
+
+  if (item.external) {
+    return (
+      <div className="px-5 py-3 transition-all duration-200 text-sm text-baal-text-dark border-l-[3px] border-transparent hover:bg-baal-bg-gray hover:border-l-baal-gold hover:text-baal-gold flex justify-between items-center group">
+        <Link href={item.url} className="flex-1" onClick={handleClick}>
+          <span>{item.name}</span>
+        </Link>
+        <span className="flex items-center gap-1.5">
+          {views > 0 && <span className="text-[10px] text-baal-text-light mr-1">{views}</span>}
+          <Link
+            href={item.url}
+            onClick={handleClick}
+            className="w-6 h-6 flex items-center justify-center rounded text-[11px] text-baal-text-light hover:text-baal-gold hover:bg-baal-bg-section transition-all"
+            title="현재 창에서 보기"
+          >→</Link>
+          <a
+            href={item.extUrl || item.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={handleClick}
+            className="w-6 h-6 flex items-center justify-center rounded text-[11px] text-baal-text-light hover:text-baal-gold hover:bg-baal-bg-section transition-all"
+            title="새 탭에서 열기"
+          >↗</a>
+        </span>
+      </div>
+    )
+  }
+
+  return (
+    <Link
+      href={item.url}
+      onClick={handleClick}
+      className="px-5 py-3 cursor-pointer transition-all duration-200 text-sm text-baal-text-dark border-l-[3px] border-transparent hover:bg-baal-bg-gray hover:border-l-baal-gold hover:text-baal-gold flex justify-between items-center group block"
+    >
+      <span>{item.name}</span>
+      {views > 0 && <span className="text-[10px] text-baal-text-light">{views}</span>}
+    </Link>
   )
 }
