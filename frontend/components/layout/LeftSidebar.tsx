@@ -63,7 +63,7 @@ export default function LeftSidebar({ isOpen, onClose }: LeftSidebarProps) {
 
   // 유용한도구 항목 (내부 임베드)
   const toolItems = [
-    { name: 'CAD 뷰어', url: 'https://cad.baal.co.kr', external: true },
+    { name: 'CAD 뷰어', url: 'https://cad.baal.co.kr', external: true, embedUrl: '/tools/cad' },
     { name: '도면 배치', url: '/tools/plan', external: false },
     { name: '텍스트 분할기', url: '/tools/split', external: false },
     { name: 'PDF 변환', url: '/tools/pdf', external: false },
@@ -497,13 +497,15 @@ export default function LeftSidebar({ isOpen, onClose }: LeftSidebarProps) {
                     key={idx}
                     className="px-5 py-3 transition-all duration-200 text-sm text-baal-text-dark border-l-[3px] border-transparent hover:bg-baal-bg-gray hover:border-l-baal-gold hover:text-baal-gold flex justify-between items-center group"
                   >
-                    <span>{item.name}</span>
+                    <Link href={item.embedUrl || `/tools/${item.url.split('//')[1]?.split('.')[0] || 'tool'}`}>
+                      <span>{item.name}</span>
+                    </Link>
                     <span className="flex items-center gap-1.5">
-                      <a
-                        href={item.url}
+                      <Link
+                        href={item.embedUrl || `/tools/${item.url.split('//')[1]?.split('.')[0] || 'tool'}`}
                         className="w-6 h-6 flex items-center justify-center rounded text-[11px] text-baal-text-light hover:text-baal-gold hover:bg-baal-bg-section transition-all"
-                        title="현재 창에서 열기"
-                      >→</a>
+                        title="임베디드로 보기"
+                      >→</Link>
                       <a
                         href={item.url}
                         target="_blank"

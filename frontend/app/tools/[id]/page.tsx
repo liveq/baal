@@ -8,6 +8,7 @@ const subdomainUrls: Record<string, string> = {
   plan: 'https://plan.baal.co.kr',
   split: 'https://split.baal.co.kr',
   pdf: 'https://pdf.baal.co.kr',
+  cad: 'https://cad.baal.co.kr',
 }
 
 export default async function ToolPage({ params }: Props) {
