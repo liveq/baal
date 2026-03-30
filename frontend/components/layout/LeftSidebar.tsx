@@ -493,16 +493,26 @@ export default function LeftSidebar({ isOpen, onClose }: LeftSidebarProps) {
             filteredToolItems.length > 0 ? (
               filteredToolItems.map((item, idx) => (
                 item.external ? (
-                  <a
+                  <div
                     key={idx}
-                    href={item.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="px-5 py-3 cursor-pointer transition-all duration-200 text-sm text-baal-text-dark border-l-[3px] border-transparent hover:bg-baal-bg-gray hover:border-l-baal-gold hover:text-baal-gold flex justify-between items-center group block"
+                    className="px-5 py-3 transition-all duration-200 text-sm text-baal-text-dark border-l-[3px] border-transparent hover:bg-baal-bg-gray hover:border-l-baal-gold hover:text-baal-gold flex justify-between items-center group"
                   >
                     <span>{item.name}</span>
-                    <span className="text-xs text-baal-text-light">↗</span>
-                  </a>
+                    <span className="flex items-center gap-1.5">
+                      <a
+                        href={item.url}
+                        className="w-6 h-6 flex items-center justify-center rounded text-[11px] text-baal-text-light hover:text-baal-gold hover:bg-baal-bg-section transition-all"
+                        title="현재 창에서 열기"
+                      >→</a>
+                      <a
+                        href={item.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-6 h-6 flex items-center justify-center rounded text-[11px] text-baal-text-light hover:text-baal-gold hover:bg-baal-bg-section transition-all"
+                        title="새 탭에서 열기"
+                      >↗</a>
+                    </span>
+                  </div>
                 ) : (
                   <Link
                     key={idx}
