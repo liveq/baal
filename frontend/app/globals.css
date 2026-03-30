@@ -23,6 +23,11 @@ body.sidebar-open {
   overflow: hidden;
 }
 
+/* 사이드바 스크롤 독립 (메인 영역으로 전파 방지) */
+.sidebar-scroll-contain {
+  overscroll-behavior: contain;
+}
+
 /* 스크롤바 스타일 (골드 톤) */
 ::-webkit-scrollbar {
   width: 10px;

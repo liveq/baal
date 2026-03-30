@@ -349,7 +349,7 @@ export default function LeftSidebar({ isOpen, onClose }: LeftSidebarProps) {
       </div>
 
       {/* Sidebar Content */}
-      <div className="flex-1 overflow-y-auto py-2">
+      <div className="flex-1 overflow-y-auto py-2 sidebar-scroll-contain">
         {activeTab === 'government' ? (
           // 정부서비스 아코디언 렌더링
           Object.keys(filteredGovServices).length > 0 ? (
