@@ -27,6 +27,7 @@ const tools = [
 ]
 
 const externalTools = [
+  { name: 'CAD 뷰어', url: 'https://cad.baal.co.kr', desc: 'STL, STEP, DXF 등 CAD 파일 뷰어' },
   { name: '도면 배치', url: 'https://plan.baal.co.kr', desc: '평면도 그리기 + 가구 배치' },
   { name: '텍스트 분할', url: 'https://split.baal.co.kr', desc: '대용량 텍스트 파일 분할' },
   { name: 'PDF 도구', url: 'https://pdf.baal.co.kr', desc: 'PDF 변환/분할' },

@@ -63,6 +63,7 @@ export default function LeftSidebar({ isOpen, onClose }: LeftSidebarProps) {
 
   // 유용한도구 항목 (내부 임베드)
   const toolItems = [
+    { name: 'CAD 뷰어', url: 'https://cad.baal.co.kr', external: true },
     { name: '도면 배치', url: '/tools/plan', external: false },
     { name: '텍스트 분할기', url: '/tools/split', external: false },
     { name: 'PDF 변환', url: '/tools/pdf', external: false },
