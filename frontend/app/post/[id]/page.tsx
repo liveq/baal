@@ -37,7 +37,7 @@ export default async function PostDetailPage({ params }: PageProps) {
   try {
     // Fetch post
     const postRes = await fetch(
-      `${SUPABASE_URL}/rest/v1/posts?id=eq.${id}&is_deleted=eq.false&select=id,title,content,board_type,author_nickname,author_id,created_at,updated_at,comment_count,upvotes,downvotes,view_count,anonymous_password,news_category&limit=1`,
+      `${SUPABASE_URL}/rest/v1/posts?id=eq.${id}&is_deleted=eq.false&select=id,title,content,board_type,author_nickname,author_id,created_at,updated_at,comment_count,upvotes,downvotes,view_count,news_category&limit=1`,
       {
         headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` },
         next: { revalidate: 3600 },
@@ -129,7 +129,7 @@ export default async function PostDetailPage({ params }: PageProps) {
                   authorId={post.author_id}
                   boardType={post.board_type}
                   commentCount={post.comment_count}
-                  hasAnonymousPassword={!!post.anonymous_password}
+                  hasAnonymousPassword={!post.author_id}
                 />
               </div>
               <div className="flex items-center gap-3 text-sm text-baal-text-light">
