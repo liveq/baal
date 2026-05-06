@@ -1,4 +1,4 @@
-export const revalidate = 30
+export const revalidate = 1800
 
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
@@ -101,7 +101,7 @@ export default async function BoardPage({ params, searchParams }: PageProps) {
           Authorization: `Bearer ${SUPABASE_KEY}`,
           Prefer: 'count=exact',
         },
-        next: { revalidate: 30 },
+        next: { revalidate: 1800 },
       }
     )
     if (res.ok) {

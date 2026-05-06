@@ -1,4 +1,4 @@
-export const dynamic = 'force-dynamic'
+export const revalidate = 3600
 
 import { notFound } from 'next/navigation'
 import { formatTimeAgo } from '@/lib/utils/time'
@@ -40,7 +40,7 @@ export default async function PostDetailPage({ params }: PageProps) {
       `${SUPABASE_URL}/rest/v1/posts?id=eq.${id}&is_deleted=eq.false&select=id,title,content,board_type,author_nickname,author_id,created_at,updated_at,comment_count,upvotes,downvotes,view_count,anonymous_password,news_category&limit=1`,
       {
         headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` },
-        cache: 'no-store',
+        next: { revalidate: 3600 },
       }
     )
     if (!postRes.ok) return notFound()
@@ -65,7 +65,7 @@ export default async function PostDetailPage({ params }: PageProps) {
       `${SUPABASE_URL}/rest/v1/comments?post_id=eq.${id}&is_deleted=eq.false&order=created_at.asc&select=id,post_id,content,author_nickname,author_id,created_at,upvotes`,
       {
         headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` },
-        cache: 'no-store',
+        next: { revalidate: 3600 },
       }
     )
     if (commRes.ok) {
@@ -87,7 +87,7 @@ export default async function PostDetailPage({ params }: PageProps) {
       `${SUPABASE_URL}/rest/v1/posts?board_type=eq.${post.board_type}&is_deleted=eq.false&order=created_at.desc&limit=10&select=id,title,author_nickname,created_at,comment_count`,
       {
         headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` },
-        cache: 'no-store',
+        next: { revalidate: 3600 },
       }
     )
     if (res.ok) {

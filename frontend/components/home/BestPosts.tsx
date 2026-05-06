@@ -25,7 +25,7 @@ async function fetchBest() {
           apikey: SUPABASE_KEY,
           Authorization: `Bearer ${SUPABASE_KEY}`,
         },
-        next: { revalidate: 60 },
+        next: { revalidate: 1800 },
       }
     )
     if (!res.ok) return []

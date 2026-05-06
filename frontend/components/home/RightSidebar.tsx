@@ -11,7 +11,7 @@ async function fetchPopular() {
       `${SUPABASE_URL}/rest/v1/posts?is_deleted=eq.false&created_at=gte.${since}&order=comment_count.desc&limit=8&select=id,title,comment_count`,
       {
         headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` },
-        next: { revalidate: 60 },
+        next: { revalidate: 1800 },
       }
     )
     if (!res.ok) return []

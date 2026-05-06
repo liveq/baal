@@ -1,4 +1,4 @@
-export const revalidate = 60
+export const revalidate = 1800
 
 import Link from 'next/link'
 import RightSidebar from '@/components/home/RightSidebar'
@@ -26,7 +26,7 @@ async function fetchCases(status: string) {
       `${SUPABASE_URL}/rest/v1/court_cases?${filters}&select=id,title,description,plaintiff,defendant,judge_type,status,verdict,message_count,vote_count,parent_case_id,created_at,completed_at,penalty_reputation`,
       {
         headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` },
-        next: { revalidate: 60 },
+        next: { revalidate: 1800 },
       }
     )
     if (!res.ok) return []

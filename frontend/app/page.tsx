@@ -1,4 +1,4 @@
-export const revalidate = 60
+export const revalidate = 1800
 
 import Link from 'next/link'
 import BestPosts from '@/components/home/BestPosts'
@@ -18,7 +18,7 @@ async function fetchBoard(board: string) {
           apikey: SUPABASE_KEY,
           Authorization: `Bearer ${SUPABASE_KEY}`,
         },
-        next: { revalidate: 60 },
+        next: { revalidate: 1800 },
       }
     )
     if (!res.ok) return []
