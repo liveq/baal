@@ -88,7 +88,7 @@ function WriteContent() {
         throw new Error(errBody?.error || `작성 실패 (${res.status})`)
       }
       // Clean up preview URLs
-      images.forEach(img => URL.revokeObjectURL(img.preview))
+      images.forEach(img => { if (img.preview) URL.revokeObjectURL(img.preview) })
       router.push(`/board/${boardType}`)
     } catch (error: any) {
       console.error('게시글 작성 오류:', error)
