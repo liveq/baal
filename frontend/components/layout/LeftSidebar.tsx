@@ -533,18 +533,30 @@ export default function LeftSidebar({ isOpen, onClose }: LeftSidebarProps) {
                 게임
               </div>
               {gameItems.map((item, idx) => (
-                <a
+                <div
                   key={idx}
-                  href={item.extUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={onClose}
                   className="px-5 py-3 transition-all duration-200 text-sm text-baal-text-dark border-l-[3px] border-transparent hover:bg-baal-bg-gray hover:border-l-baal-gold flex justify-between items-center"
                 >
-                  <span className="flex-1">{item.name}</span>
-                  <span className="text-baal-text-light" title="새 탭에서 열기">↗</span>
-                </a>
+                  <Link href={item.url} onClick={onClose} className="flex-1 hover:text-baal-gold transition-colors">
+                    {item.name}
+                  </Link>
+                  <div className="flex items-center gap-2">
+                    <Link href={item.url} onClick={onClose} className="text-baal-text-light hover:text-baal-gold transition-colors" title="임베드로 열기">
+                      ▶
+                    </Link>
+                    <a href={item.extUrl} target="_blank" rel="noopener noreferrer" className="text-baal-text-light hover:text-baal-gold transition-colors" title="새 탭에서 열기">
+                      ↗
+                    </a>
+                  </div>
+                </div>
               ))}
+              <Link
+                href="/games"
+                onClick={onClose}
+                className="px-5 py-3 cursor-pointer transition-all duration-200 text-[12px] text-baal-gold border-l-[3px] border-transparent hover:bg-baal-bg-gray hover:border-l-baal-gold flex items-center gap-1 block"
+              >
+                전체 보기 →
+              </Link>
             </>
           ) : activeTab === 'tools' ? (
             filteredToolItems.length > 0 ? (
