@@ -16,6 +16,11 @@ const subdomainUrls: Record<string, string> = {
   slide: 'https://slide.baal.co.kr',
   code: 'https://code.baal.co.kr',
   docs: 'https://docs.baal.co.kr',
+  comma: 'https://comma.baal.co.kr',
+  ascii: 'https://ascii.baal.co.kr',
+  puzzle: 'https://puzzle.baal.co.kr',
+  jigsaw: 'https://jigsaw.baal.co.kr',
+  assault: 'https://assault.baal.co.kr',
 }
 
 export default async function ToolPage({ params }: Props) {
