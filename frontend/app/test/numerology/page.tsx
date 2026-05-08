@@ -1,17 +1,15 @@
-import Link from 'next/link'
+import type { Metadata } from 'next'
+import ComingSoon from '@/components/common/ComingSoon'
+
+export const metadata: Metadata = {
+  title: '수비학 생명수 분석',
+  description: '생년월일로 알아보는 나의 생명수와 운명의 숫자. 피타고라스 수비학.',
+  openGraph: {
+    title: '수비학 생명수 분석 | BAAL',
+    description: '생년월일로 알아보는 나의 생명수와 운명의 숫자. 피타고라스 수비학.',
+  },
+}
 
 export default function TestPage() {
-  return (
-    <div className="w-full">
-      <div className="max-w-[900px] mx-auto px-5 py-4">
-        <Link href="/test" className="text-sm text-baal-text-light hover:text-baal-text-dark">← 심리테스트 목록</Link>
-      </div>
-      <iframe
-        src="/tests/numerology/index.html?embed=1"
-        className="w-full border-0"
-        style={{ minHeight: 'calc(100vh - 120px)' }}
-        title="수비학"
-      />
-    </div>
-  )
+  return <ComingSoon title="수비학 분석" description="생명수 분석을 준비 중입니다." backLink="/test" backText="심리테스트 목록" />
 }

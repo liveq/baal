@@ -1,17 +1,15 @@
-import Link from 'next/link'
+import type { Metadata } from 'next'
+import ComingSoon from '@/components/common/ComingSoon'
+
+export const metadata: Metadata = {
+  title: '무료 MBTI 성격유형 테스트',
+  description: '12문항으로 알아보는 나의 MBTI 16가지 성격유형. 무료, 가입 없이 바로 테스트.',
+  openGraph: {
+    title: '무료 MBTI 성격유형 테스트 | BAAL',
+    description: '12문항으로 알아보는 나의 MBTI 16가지 성격유형. 무료, 가입 없이 바로 테스트.',
+  },
+}
 
 export default function TestPage() {
-  return (
-    <div className="w-full">
-      <div className="max-w-[900px] mx-auto px-5 py-4">
-        <Link href="/test" className="text-sm text-baal-text-light hover:text-baal-text-dark">← 심리테스트 목록</Link>
-      </div>
-      <iframe
-        src="/tests/mbti/index.html?embed=1"
-        className="w-full border-0"
-        style={{ minHeight: 'calc(100vh - 120px)' }}
-        title="MBTI 테스트"
-      />
-    </div>
-  )
+  return <ComingSoon title="MBTI 테스트" description="16가지 성격유형 테스트를 준비 중입니다." backLink="/test" backText="심리테스트 목록" />
 }

@@ -1,17 +1,15 @@
-import Link from 'next/link'
+import type { Metadata } from 'next'
+import ComingSoon from '@/components/common/ComingSoon'
+
+export const metadata: Metadata = {
+  title: '별자리 성격 분석 & 운세',
+  description: '12궁 별자리 성격, 원소 분석, 오늘의 별자리 운세. 무료.',
+  openGraph: {
+    title: '별자리 성격 분석 & 운세 | BAAL',
+    description: '12궁 별자리 성격, 원소 분석, 오늘의 별자리 운세. 무료.',
+  },
+}
 
 export default function TestPage() {
-  return (
-    <div className="w-full">
-      <div className="max-w-[900px] mx-auto px-5 py-4">
-        <Link href="/test" className="text-sm text-baal-text-light hover:text-baal-text-dark">← 심리테스트 목록</Link>
-      </div>
-      <iframe
-        src="/tests/zodiac/zodiac.html?embed=1"
-        className="w-full border-0"
-        style={{ minHeight: 'calc(100vh - 120px)' }}
-        title="별자리 성격 분석"
-      />
-    </div>
-  )
+  return <ComingSoon title="별자리 운세" description="12궁 별자리 분석을 준비 중입니다." backLink="/test" backText="심리테스트 목록" />
 }

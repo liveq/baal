@@ -1,17 +1,15 @@
-import Link from 'next/link'
+import type { Metadata } from 'next'
+import ComingSoon from '@/components/common/ComingSoon'
+
+export const metadata: Metadata = {
+  title: '혈액형 성격 테스트 & 궁합',
+  description: 'A, B, O, AB형 성격 분석과 혈액형별 궁합 확인. 무료 혈액형 테스트.',
+  openGraph: {
+    title: '혈액형 성격 테스트 & 궁합 | BAAL',
+    description: 'A, B, O, AB형 성격 분석과 혈액형별 궁합 확인. 무료 혈액형 테스트.',
+  },
+}
 
 export default function TestPage() {
-  return (
-    <div className="w-full">
-      <div className="max-w-[900px] mx-auto px-5 py-4">
-        <Link href="/test" className="text-sm text-baal-text-light hover:text-baal-text-dark">← 심리테스트 목록</Link>
-      </div>
-      <iframe
-        src="/tests/blood/blood-type-sidebar.html?embed=1"
-        className="w-full border-0"
-        style={{ minHeight: 'calc(100vh - 120px)' }}
-        title="혈액형 성격 분석"
-      />
-    </div>
-  )
+  return <ComingSoon title="혈액형 테스트" description="더 정확한 혈액형 분석을 준비 중입니다." backLink="/test" backText="심리테스트 목록" />
 }
