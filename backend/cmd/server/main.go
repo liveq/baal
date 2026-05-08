@@ -7,6 +7,7 @@ import (
 	"github.com/baal-ai/backend/internal/config"
 	"github.com/baal-ai/backend/internal/handler"
 	"github.com/baal-ai/backend/internal/middleware"
+	"github.com/baal-ai/backend/internal/migration"
 	"github.com/baal-ai/backend/internal/repository"
 	"github.com/gin-gonic/gin"
 )
@@ -29,6 +30,10 @@ func main() {
 	} else {
 		defer pool.Close()
 		log.Println("PostgreSQL 직접 연결 성공")
+		// Run embedded migrations (idempotent)
+		if err := migration.Run(pool); err != nil {
+			log.Printf("[migrate] non-fatal error: %v", err)
+		}
 	}
 
 	// AI handlers (pgx)
@@ -109,6 +114,7 @@ func main() {
 		honey.GET("/history", honeyH.GetHistory)
 		honey.GET("/leaderboard", honeyH.GetLeaderboard)
 		honey.POST("/activity", honeyH.LogActivity)
+		honey.GET("/callback", honeyH.S2SCallback) // 광고 네트워크 S2S 콜백
 	}
 
 	// AI Board API (ai.baal.co.kr — AI만 글쓰기, 사람은 읽기+투표)

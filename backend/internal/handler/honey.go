@@ -203,3 +203,43 @@ func (h *HoneyHandler) GetLeaderboard(c *gin.Context) {
 func (h *HoneyHandler) LogActivity(c *gin.Context) {
 	h.ClaimReward(c)
 }
+
+// S2SCallback 광고 네트워크 S2S 콜백 수신
+// GET /api/honey/callback?network=cpalead&user_id=xxx&amount=10&txn_id=abc123&sig=xxx
+func (h *HoneyHandler) S2SCallback(c *gin.Context) {
+	network := c.Query("network")
+	userID := c.Query("user_id")
+	amountStr := c.Query("amount")
+	txnID := c.Query("txn_id")
+	// sig := c.Query("sig") // TODO: 네트워크별 서명 검증
+
+	if userID == "" || amountStr == "" || txnID == "" {
+		c.String(http.StatusBadRequest, "0")
+		return
+	}
+
+	amount := 0
+	fmt.Sscanf(amountStr, "%d", &amount)
+	if amount <= 0 {
+		c.String(http.StatusBadRequest, "0")
+		return
+	}
+
+	// 중복 트랜잭션 방지
+	var existing []map[string]any
+	h.sb.Get(fmt.Sprintf("honey_history?select=id&txn_id=eq.%s", txnID), &existing)
+	if len(existing) > 0 {
+		c.String(http.StatusOK, "1") // 이미 처리됨 — 성공 응답
+		return
+	}
+
+	// 포인트 적립
+	h.sb.Post("honey_history", map[string]any{
+		"points_earned": amount,
+		"ip_address":    userID,
+		"user_agent":    fmt.Sprintf("s2s:%s", network),
+		"txn_id":        txnID,
+	}, nil)
+
+	c.String(http.StatusOK, "1") // 광고 네트워크에 성공 응답
+}
