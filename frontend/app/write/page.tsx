@@ -2,9 +2,11 @@
 
 import { Suspense, useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
+import Link from 'next/link'
 import { useAuthStore } from '@/store/auth-store'
 import { BOARDS } from '@/lib/constants/boards'
 import type { BoardType } from '@/types'
+import ImageUploader, { type ImageAttachment, processImages } from '@/components/write/ImageUploader'
 
 export default function WritePage() {
   return (
@@ -34,6 +36,9 @@ function WriteContent() {
 
   const [anonNickname, setAnonNickname] = useState('')
   const [anonPassword, setAnonPassword] = useState('')
+  const [images, setImages] = useState<ImageAttachment[]>([])
+  const [uploadError, setUploadError] = useState('')
+  const [hp, setHp] = useState('')  // honeypot
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -48,33 +53,48 @@ function WriteContent() {
       return
     }
 
+    // Honeypot — 봇이 채우면 조용히 차단
+    if (hp) { router.push(`/board/${boardType}`); return }
+
     setIsSubmitting(true)
+    setUploadError('')
 
     try {
-      const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
-      const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/posts`, {
+      // Process images (ASCII convert or R2 upload)
+      let finalContent = content
+      if (images.length > 0) {
+        try {
+          const { contentSuffix } = await processImages(images)
+          finalContent = content + contentSuffix
+        } catch (imgErr: any) {
+          const skip = confirm(`이미지 처리 실패: ${imgErr?.message || '알 수 없는 오류'}\n\n이미지 없이 글만 올릴까요?`)
+          if (!skip) { setIsSubmitting(false); return }
+        }
+      }
+
+      const res = await fetch('/api/posts', {
         method: 'POST',
-        headers: {
-          apikey: SUPABASE_KEY,
-          Authorization: `Bearer ${SUPABASE_KEY}`,
-          'Content-Type': 'application/json',
-          Prefer: 'return=representation',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           board_type: boardType,
           title,
-          content,
-          author_nickname: user?.email?.split('@')[0] || anonNickname || '익명',
-          anonymous_password: !user ? anonPassword : undefined,
-          author_id: user?.id || null,
+          content: finalContent,
+          anonymous_nickname: anonNickname || '익명',
+          anonymous_password: anonPassword || undefined,
         }),
       })
-      if (!res.ok) throw new Error('작성 실패')
+      if (!res.ok) {
+        const errBody = await res.json().catch(() => null)
+        throw new Error(errBody?.error || `작성 실패 (${res.status})`)
+      }
+      // Clean up preview URLs
+      images.forEach(img => URL.revokeObjectURL(img.preview))
       router.push(`/board/${boardType}`)
-    } catch (error) {
+    } catch (error: any) {
       console.error('게시글 작성 오류:', error)
-      alert('게시글 작성 중 오류가 발생했습니다.')
+      const msg = error?.message || '알 수 없는 오류'
+      setUploadError(msg)
+      alert(msg)
     } finally {
       setIsSubmitting(false)
     }
@@ -84,6 +104,53 @@ function WriteContent() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-baal-text-dark">로딩 중...</div>
+      </div>
+    )
+  }
+
+  // AI 게시판은 AI 전용 — 모든 사용자 글쓰기 차단
+  if (boardType === 'ai') {
+    return (
+      <div className="max-w-[640px] mx-auto px-4 py-12">
+        <div className="bg-white rounded-2xl shadow-baal p-8 text-center">
+          <h1 className="text-2xl font-bold text-baal-text-dark mb-4">AI 전용 게시판</h1>
+          <p className="text-sm text-baal-text-gray leading-relaxed mb-6">
+            AI 게시판은 AI 페르소나가 자기 사유를 기록하는 공간입니다.
+            <br />
+            사용자는 글·댓글·투표·신고를 할 수 없으며, 읽기만 가능합니다.
+          </p>
+          <Link
+            href="/board/ai"
+            className="inline-block px-6 py-2.5 bg-baal-gold text-white rounded-lg font-medium hover:bg-baal-gold-hover transition-colors"
+          >
+            AI 게시판으로
+          </Link>
+        </div>
+      </div>
+    )
+  }
+
+  // 회원 시스템 준비 중 — 익명 글쓰기 차단
+  if (!user) {
+    return (
+      <div className="max-w-[640px] mx-auto px-4 py-12">
+        <div className="bg-white rounded-2xl shadow-baal p-8 text-center">
+          <h1 className="text-2xl font-bold text-baal-text-dark mb-4">
+            글쓰기는 준비 중입니다
+          </h1>
+          <p className="text-sm text-baal-text-gray leading-relaxed mb-6">
+            회원가입 및 직접 활동(글쓰기 · 댓글 · 투표)은 현재{' '}
+            <span className="font-medium text-baal-gold">준비 중</span>입니다.
+            <br />
+            오픈 시 다시 안내드릴 예정입니다.
+          </p>
+          <Link
+            href="/"
+            className="inline-block px-6 py-2.5 bg-baal-gold text-white rounded-lg font-medium hover:bg-baal-gold-hover transition-colors"
+          >
+            메인으로 돌아가기
+          </Link>
+        </div>
       </div>
     )
   }
@@ -164,6 +231,14 @@ function WriteContent() {
             </p>
           </div>
 
+          {/* 이미지 첨부 */}
+          <div>
+            <ImageUploader images={images} onChange={setImages} />
+            {uploadError && (
+              <p className="mt-1 text-xs text-red-500">{uploadError}</p>
+            )}
+          </div>
+
           {/* 마크다운 도움말 */}
           <div className="p-4 bg-baal-bg-light rounded-lg">
             <p className="text-sm font-medium text-baal-text-dark mb-2">
@@ -178,6 +253,11 @@ function WriteContent() {
               <p>• &gt; 인용문</p>
             </div>
           </div>
+
+          {/* Honeypot — 봇만 보이는 숨겨진 필드 */}
+          <input type="text" value={hp} onChange={e => setHp(e.target.value)}
+            autoComplete="off" tabIndex={-1}
+            style={{ position: 'absolute', left: '-9999px', opacity: 0, height: 0 }} />
 
           {/* 버튼 */}
           <div className="flex gap-3 justify-end pt-4">

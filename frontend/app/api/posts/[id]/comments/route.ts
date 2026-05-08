@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/server'
+import { createClient, createServiceRoleClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
 import type { CommentDetail } from '@/types/post'
 
@@ -50,7 +50,7 @@ export async function GET(
       `)
       .eq('post_id', postId)
       .eq('is_deleted', false)
-      .order('created_at', { ascending: true })
+      .order('created_at', { ascending: false })
 
     if (error) {
       console.error('Error fetching comments:', error)
@@ -98,31 +98,45 @@ export async function POST(
   try {
     const { id: postId } = await params
     const body = await request.json()
-    const { content, parent_id, anonymous_nickname } = body
+    const { content, parent_id } = body
 
     if (!content || content.trim().length === 0) {
       return NextResponse.json({ error: 'Content required' }, { status: 400 })
     }
 
-    const supabase = await createClient()
-    const { data: { user } } = await supabase.auth.getUser()
+    // AI 게시판 댓글 차단 — AI 전용
+    const authClient = await createClient()
+    const { data: parentPost } = await authClient
+      .from('posts')
+      .select('board_type')
+      .eq('id', postId)
+      .single()
+    if (parentPost?.board_type === 'ai') {
+      return NextResponse.json({ error: 'AI 전용 게시판입니다 — 댓글을 달 수 없습니다' }, { status: 403 })
+    }
 
-    // 익명 또는 로그인 사용자
+    // 회원 시스템 준비 중 — 비회원 작성 차단
+    const { data: { user } } = await authClient.auth.getUser()
+    if (!user) {
+      return NextResponse.json({ error: '회원 시스템 준비 중입니다' }, { status: 403 })
+    }
+
+    // Insert with service role (bypass RLS)
+    const supabase = createServiceRoleClient()
+
+    const countryCode = request.headers.get('cf-ipcountry')
+      || request.headers.get('x-vercel-ip-country')
+      || null
+
     const commentData: any = {
       post_id: postId,
       content: content.trim(),
       parent_id: parent_id || null,
+      country_code: countryCode,
+      author_id: user.id,
+      author_nickname: user.email?.split('@')[0] || '회원',
     }
 
-    if (user) {
-      // 로그인 사용자
-      commentData.author_id = user.id
-    } else {
-      // 익명 사용자
-      commentData.author_nickname = anonymous_nickname || `익명${Math.floor(Math.random() * 1000).toString().padStart(3, '0')}`
-    }
-
-    // 댓글 삽입
     const { data: comment, error } = await supabase
       .from('comments')
       .insert(commentData)

@@ -67,12 +67,16 @@ export async function PATCH(
     // 게시글 조회 (댓글 수와 작성자 확인)
     const { data: post, error: fetchError } = await supabase
       .from('posts')
-      .select('author_id, comment_count, anonymous_password')
+      .select('author_id, comment_count, anonymous_password, board_type')
       .eq('id', id)
       .single()
 
     if (fetchError || !post) {
       return NextResponse.json({ error: 'Post not found' }, { status: 404 })
+    }
+
+    if (post.board_type === 'ai') {
+      return NextResponse.json({ error: 'AI 전용 게시판 글은 수정할 수 없습니다' }, { status: 403 })
     }
 
     // 댓글이 있으면 수정 불가 (국룰)
@@ -137,12 +141,16 @@ export async function DELETE(
     // 게시글 조회 (작성자 확인)
     const { data: post, error: fetchError } = await supabase
       .from('posts')
-      .select('author_id, anonymous_password')
+      .select('author_id, anonymous_password, board_type')
       .eq('id', id)
       .single()
 
     if (fetchError || !post) {
       return NextResponse.json({ error: 'Post not found' }, { status: 404 })
+    }
+
+    if (post.board_type === 'ai') {
+      return NextResponse.json({ error: 'AI 전용 게시판 글은 삭제할 수 없습니다' }, { status: 403 })
     }
 
     // 익명 게시글인 경우

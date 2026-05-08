@@ -1,6 +1,5 @@
-import { createClient } from '@/lib/supabase/server'
+import { createClient, createServiceRoleClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
-import bcrypt from 'bcryptjs'
 
 export async function GET(request: Request) {
   try {
@@ -43,56 +42,53 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const body = await request.json()
-    const { board_type, title, content, anonymous_nickname, anonymous_password } = body
+    const { board_type, title, content } = body
 
     // 유효성 검사
     if (!board_type || !title || !content) {
-      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
+      return NextResponse.json({ error: '필수 항목을 입력해주세요' }, { status: 400 })
     }
 
-    const validBoardTypes = ['ai', 'humor', 'philosophy', 'occult', 'it', 'hardware', 'economy', 'qna', 'free']
+    if (board_type === 'ai') {
+      return NextResponse.json({ error: 'AI 전용 게시판입니다 — 사용자는 글을 쓸 수 없습니다' }, { status: 403 })
+    }
+    const validBoardTypes = ['humor', 'philosophy', 'occult', 'it', 'hardware', 'economy', 'qna', 'free', 'assault', 'compass']
     if (!validBoardTypes.includes(board_type)) {
-      return NextResponse.json({ error: 'Invalid board type' }, { status: 400 })
+      return NextResponse.json({ error: '잘못된 게시판입니다' }, { status: 400 })
     }
 
     if (title.trim().length < 2 || title.trim().length > 100) {
-      return NextResponse.json({ error: 'Title must be 2-100 characters' }, { status: 400 })
+      return NextResponse.json({ error: '제목은 2~100자로 입력해주세요' }, { status: 400 })
     }
 
-    if (content.trim().length < 10) {
-      return NextResponse.json({ error: 'Content must be at least 10 characters' }, { status: 400 })
+    if (content.trim().length < 2) {
+      return NextResponse.json({ error: '내용을 2자 이상 입력해주세요' }, { status: 400 })
     }
 
-    const supabase = await createClient()
-    const { data: { user } } = await supabase.auth.getUser()
+    // 회원 시스템 준비 중 — 비회원 작성 차단
+    const authClient = await createClient()
+    const { data: { user } } = await authClient.auth.getUser()
+    if (!user) {
+      return NextResponse.json({ error: '회원 시스템 준비 중입니다' }, { status: 403 })
+    }
 
-    // 익명 또는 로그인 사용자
+    // 게시글 삽입은 service role로 (RLS 우회)
+    const supabase = createServiceRoleClient()
+
+    // 국가코드 (Cloudflare CF-IPCountry > Vercel x-vercel-ip-country)
+    const countryCode = request.headers.get('cf-ipcountry')
+      || request.headers.get('x-vercel-ip-country')
+      || null
+
     const postData: any = {
       board_type,
       title: title.trim(),
-      content: content.trim()
+      content: content.trim(),
+      country_code: countryCode,
+      author_id: user.id,
+      author_nickname: user.email?.split('@')[0] || '회원',
     }
 
-    if (user) {
-      // 로그인 사용자
-      postData.author_id = user.id
-    } else {
-      // 익명 사용자
-      if (!anonymous_nickname || anonymous_nickname.trim().length === 0) {
-        return NextResponse.json({ error: 'Anonymous nickname required' }, { status: 400 })
-      }
-      if (!anonymous_password || anonymous_password.trim().length < 4) {
-        return NextResponse.json({ error: 'Password must be at least 4 characters' }, { status: 400 })
-      }
-
-      // 비밀번호 해싱
-      const hashedPassword = await bcrypt.hash(anonymous_password.trim(), 10)
-
-      postData.author_nickname = anonymous_nickname.trim()
-      postData.anonymous_password = hashedPassword
-    }
-
-    // 게시글 삽입
     const { data: post, error } = await supabase
       .from('posts')
       .insert(postData)

@@ -27,6 +27,22 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
+    // AI 게시판 투표 차단 — AI 전용
+    let aiBoardCheck: { board_type: string } | null = null
+    if (target_type === 'post') {
+      const { data } = await supabase.from('posts').select('board_type').eq('id', target_id).single()
+      aiBoardCheck = data
+    } else {
+      const { data: comm } = await supabase.from('comments').select('post_id').eq('id', target_id).single()
+      if (comm?.post_id) {
+        const { data } = await supabase.from('posts').select('board_type').eq('id', comm.post_id).single()
+        aiBoardCheck = data
+      }
+    }
+    if (aiBoardCheck?.board_type === 'ai') {
+      return NextResponse.json({ error: 'AI 전용 게시판입니다 — 투표할 수 없습니다' }, { status: 403 })
+    }
+
     // 기존 투표 확인
     const { data: existingVote } = await supabase
       .from('votes')

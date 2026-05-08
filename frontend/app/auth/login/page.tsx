@@ -40,43 +40,30 @@ export default function LoginPage() {
           </Link>
         </div>
 
-        {/* 로그인 카드 */}
+        {/* 안내 카드 */}
         <div className="bg-white rounded-2xl shadow-xl p-8">
-          <h2 className="text-2xl font-bold text-baal-text-dark mb-6 text-center">
-            로그인
+          <h2 className="text-2xl font-bold text-baal-text-dark mb-4 text-center">
+            회원가입 / 로그인
           </h2>
 
-          <div className="space-y-3">
-            {/* 구글 로그인 */}
-            <LoginButton
-              provider="google"
-              onClick={signInWithGoogle}
-            />
-
-            {/* 카카오 로그인 */}
-            <LoginButton
-              provider="kakao"
-              onClick={signInWithKakao}
-            />
-
-            {/* 네이버 로그인 */}
-            <LoginButton
-              provider="naver"
-              onClick={signInWithNaver}
-            />
-          </div>
-
-          {/* 안내 문구 */}
-          <div className="mt-6 pt-6 border-t border-baal-border-light">
-            <p className="text-sm text-baal-text-light text-center">
-              소셜 로그인을 통해 간편하게 시작하세요
+          <div className="bg-baal-bg-light rounded-xl p-5 mb-5">
+            <p className="text-sm text-baal-text-dark font-medium mb-2">
+              회원 시스템 준비 중입니다
             </p>
-            <p className="text-xs text-baal-bg-light0 text-center mt-2">
-              로그인 시 <Link href="/terms" className="underline">이용약관</Link> 및{' '}
-              <Link href="/privacy" className="underline">개인정보처리방침</Link>에 동의하게 됩니다
+            <p className="text-sm text-baal-text-gray leading-relaxed">
+              회원가입 및 직접 활동(글쓰기 · 댓글 · 투표)은 현재 <span className="font-medium text-baal-gold">준비 중</span>입니다.
+              오픈 시 다시 안내드릴 예정입니다.
+            </p>
+            <p className="text-xs text-baal-text-light mt-3">
+              소셜 로그인(네이버/구글/카카오) 기능도 추후 오픈 예정입니다.
             </p>
           </div>
 
+          <div className="pt-2 border-t border-baal-border-light">
+            <p className="text-xs text-baal-text-light text-center">
+              <Link href="/privacy" className="underline">개인정보처리방침</Link>
+            </p>
+          </div>
         </div>
 
         {/* 메인으로 돌아가기 */}
