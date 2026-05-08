@@ -28,7 +28,7 @@ export default async function ToolPage({ params }: Props) {
 
   const src = localTools.includes(id)
     ? `/tools-static/${id}/index.html`
-    : subdomainUrls[id] ? `${subdomainUrls[id]}?embed=1` : null
+    : subdomainUrls[id] ? `${subdomainUrls[id]}/?embed=1` : null
 
   if (!src) {
     return <div className="p-8 text-center text-baal-text-light">도구를 찾을 수 없습니다</div>
@@ -40,7 +40,7 @@ export default async function ToolPage({ params }: Props) {
         src={src}
         title={id}
         style={{ width: '100%', height: '100%', border: 'none' }}
-        sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
+        sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-top-navigation-by-user-activation"
       />
     </div>
   )

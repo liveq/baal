@@ -47,7 +47,7 @@ export default async function GamePage({ params }: Props) {
         src={`${src}/?embed=1`}
         title={id}
         style={{ width: '100%', height: '100%', border: 'none' }}
-        sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
+        sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-top-navigation-by-user-activation"
       />
     </div>
   )
