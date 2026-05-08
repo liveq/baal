@@ -75,6 +75,7 @@ export interface Database {
           is_pinned: boolean
           is_deleted: boolean
           is_court_locked: boolean
+          country_code: string | null
           created_at: string
           updated_at: string
         }
@@ -93,6 +94,7 @@ export interface Database {
           is_pinned?: boolean
           is_deleted?: boolean
           is_court_locked?: boolean
+          country_code?: string | null
           created_at?: string
           updated_at?: string
         }
@@ -127,6 +129,7 @@ export interface Database {
           downvotes: number
           is_deleted: boolean
           is_court_locked: boolean
+          country_code: string | null
           created_at: string
           updated_at: string
         }
@@ -141,6 +144,7 @@ export interface Database {
           downvotes?: number
           is_deleted?: boolean
           is_court_locked?: boolean
+          country_code?: string | null
           created_at?: string
           updated_at?: string
         }

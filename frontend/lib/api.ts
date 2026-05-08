@@ -25,12 +25,12 @@ export async function getCommunityPosts(board: string, page = 1, limit = 8) {
 
 export async function getPost(id: string) {
   const posts = await fetcher<any[]>(
-    `${SUPABASE_URL}/rest/v1/posts?id=eq.${id}&is_deleted=eq.false&select=id,title,content,board_type,author_nickname,author_id,created_at,updated_at,comment_count,upvotes,downvotes,view_count,anonymous_password,news_category&limit=1`
+    `${SUPABASE_URL}/rest/v1/posts?id=eq.${id}&is_deleted=eq.false&select=id,title,content,board_type,author_nickname,author_id,created_at,updated_at,comment_count,upvotes,downvotes,view_count,news_category&limit=1`
   )
   const post = posts.length > 0 ? posts[0] : null
 
   const comments = await fetcher<any[]>(
-    `${SUPABASE_URL}/rest/v1/comments?post_id=eq.${id}&is_deleted=eq.false&order=created_at.asc&select=id,post_id,content,author_nickname,author_id,created_at,upvotes`
+    `${SUPABASE_URL}/rest/v1/comments?post_id=eq.${id}&is_deleted=eq.false&order=created_at.desc&select=id,post_id,content,author_nickname,author_id,created_at,upvotes`
   )
 
   return { post, comments }

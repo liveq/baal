@@ -32,6 +32,7 @@ const categories = [
   { name: '뉴스', path: '/board/hardware' },
   { name: 'Q&A', path: '/board/qna' },
   { name: '자유', path: '/board/free' },
+  { name: '어썰트', path: '/board/assault' },
 ]
 
 export default async function RightSidebar() {

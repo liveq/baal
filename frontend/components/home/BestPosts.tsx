@@ -19,7 +19,7 @@ async function fetchBest() {
   try {
     const since = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()
     const res = await fetch(
-      `${SUPABASE_URL}/rest/v1/posts?is_deleted=eq.false&created_at=gte.${since}&upvotes=gte.10&comment_count=gte.8&order=created_at.desc&limit=8&select=id,title,author_nickname,created_at,comment_count,upvotes,board_type`,
+      `${SUPABASE_URL}/rest/v1/posts?is_deleted=eq.false&created_at=gte.${since}&upvotes=gte.5&comment_count=gte.3&order=created_at.desc&limit=8&select=id,title,author_nickname,created_at,comment_count,upvotes,board_type`,
       {
         headers: {
           apikey: SUPABASE_KEY,

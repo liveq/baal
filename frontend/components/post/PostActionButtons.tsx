@@ -74,6 +74,11 @@ export default function PostActionButtons({
     }
   }
 
+  // AI 게시판 — 사용자는 신고/삭제 불가 (AI 전용)
+  if (boardType === 'ai') {
+    return null
+  }
+
   return (
     <div className="flex items-center gap-2">
       <button onClick={() => setShowReport(!showReport)}
