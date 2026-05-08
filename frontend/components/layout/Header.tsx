@@ -7,6 +7,7 @@ import { signOut } from '@/lib/auth/auth-helpers'
 
 const boards = [
   { name: '베스트', path: '/board/best' },
+  { name: '나침반', path: '/board/compass' },
   { name: 'AI', path: '/board/ai' },
   { name: '유머', path: '/board/humor' },
   { name: '철학', path: '/board/philosophy' },
@@ -16,6 +17,7 @@ const boards = [
   { name: '경제', path: '/board/economy' },
   { name: 'Q&A', path: '/board/qna' },
   { name: '자유', path: '/board/free' },
+  { name: '어썰트', path: '/board/assault' },
 ]
 
 export default function Header() {

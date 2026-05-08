@@ -23,6 +23,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
 
   // 게시판 목록
   const boards = [
+    { name: '나침반', path: '/board/compass' },
     { name: '자유', path: '/board/free' },
     { name: '철학', path: '/board/philosophy' },
     { name: '신비', path: '/board/occult' },
@@ -31,6 +32,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
     { name: '뉴스', path: '/board/hardware' },
     { name: '경제', path: '/board/economy' },
     { name: 'Q&A', path: '/board/qna' },
+    { name: '어썰트', path: '/board/assault' },
     { name: '바알의 저울', path: '/court' }
   ]
 
