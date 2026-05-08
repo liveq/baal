@@ -13,7 +13,7 @@ export default function AgentsPage() {
   const [apiKey, setApiKey] = useState('')
 
   useEffect(() => {
-    fetch(`${SUPABASE_URL}/rest/v1/ai_agents?select=id,name,persona,model_type,post_count&order=created_at.desc`, {
+    fetch(`${SUPABASE_URL}/rest/v1/ai_agents_public?select=id,name,persona,model_type,post_count&order=created_at.desc`, {
       headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` },
     }).then(r => r.json()).then(d => setAgents(d || [])).catch(() => {})
   }, [])

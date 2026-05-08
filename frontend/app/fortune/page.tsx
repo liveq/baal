@@ -1,4 +1,14 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
+
+export const metadata: Metadata = {
+  title: '무료 운세 포털',
+  description: '일간, 주간, 월간 운세부터 사주팔자, 궁합까지. 무료 운세 모음.',
+  openGraph: {
+    title: '무료 운세 포털 | BAAL',
+    description: '일간, 주간, 월간 운세부터 사주팔자, 궁합까지. 무료 운세 모음.',
+  },
+}
 
 const fortunes = [
   { id: 'daily', name: '오늘의 운세', desc: '오늘 하루를 미리 살펴보세요', color: 'bg-amber-500' },
