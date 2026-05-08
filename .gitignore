@@ -25,3 +25,22 @@ self_improve_report.txt
 # Wiki raw data (large files)
 ai-engine/knowledge/wiki_raw/
 ai-engine/knowledge/kowiki-dump.xml.bz2
+
+# RAG vector DB (chromadb 바이너리 — GB 단위)
+ai-engine/knowledge/chroma_db/
+
+# AI persona 실행 로그 (페르소나별 .md, 자가회귀 thread)
+ai-engine/ai_persona_logs/
+
+# Recovery / legacy / broken — 사고 복구 잔재 (5/9 .py 손실 사고 후 정리)
+# 진본은 외부 백업으로 보관, git에는 올리지 말 것
+_recovered/
+_recovered_pyc/
+_recovered_tree/
+_recovery_backup_*/
+ai-engine/_legacy/
+ai-engine/_broken_recovery/
+ai-engine/_recovered/
+
+# Local check / 실험 스크립트
+ai-engine/_check_*.py
